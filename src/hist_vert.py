@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from functions import SeparacionPalabras
+from src import Splitting
 
-separar = SeparacionPalabras()
+split = Splitting.Splitting()
 
 
 def separar_lineas():
@@ -34,7 +34,7 @@ img = cv2.imread('D:\PycharmProjects\Lab_Osborne\met_1_vec_0_sig_-1_thr_180_binI
 rows, cols = img.shape
 
 sub_img = img[0:1791, 0:rows]
-hist = separar.histograma_vertical(sub_img)
+hist = split.vert_hist(sub_img)
 plt.plot(hist, color='r')
 
 smoothed_hist = average_smoothing(hist, 100)

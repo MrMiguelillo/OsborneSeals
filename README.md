@@ -10,4 +10,9 @@ umbralización adaptativa -> no lo hace
 
 ----------
 v0.2
-1. README ya es funcional 
+1. README ya es funcional
+
+----------
+v0.3
+1. Movidas las funciones de histogramas proyectados al archivo Splitting.py
+2. Actualizados hist_vert.py y hist_horiz.py para usar las nuevas funciones
