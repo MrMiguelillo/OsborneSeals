@@ -12,20 +12,6 @@ class ThreshMethod(Enum):
 
 class SeparacionPalabras:
     @staticmethod
-    def umbralizar_imagen(self, gray_image, t_method, thresh=180):
-        umb_img = gray_image
-        if t_method == ThreshMethod.OTSU:
-            ret, umb_img = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-        elif t_method == ThreshMethod.FIXED:
-            ret, umb_img = cv2.threshold(gray_image, thresh, 255, cv2.THRESH_BINARY)
-
-        elif t_method == ThreshMethod.ADAPTIVE:
-            umb_img = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-
-        return umb_img
-
-    @staticmethod
     def histograma_vertical(self, img):
         rows, cols = img.shape
         hist = np.zeros(rows)

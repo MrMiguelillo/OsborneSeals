@@ -1,10 +1,9 @@
 import cv2
 # import numpy as np
 
-from functions import ThreshMethod
-from functions import SeparacionPalabras
+from src import Thresholding
 
-separar = SeparacionPalabras()
+separar = Thresholding()
 
 
 def do_nothing(x):
@@ -26,7 +25,7 @@ cv2.createTrackbar('SWITCH', 'control_window', 0, 1, do_nothing)
 
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 filtered_img = gray_img
-bin_img = separar.umbralizar_imagen(filtered_img, ThreshMethod.FIXED, 180)
+bin_img = separar.thresholding_image(filtered_img, Thresholding.ThresholdMethod.fixed, 180)
 
 while 1:
     cv2.imshow('image_window', bin_img)
@@ -39,12 +38,12 @@ while 1:
     threshold = cv2.getTrackbarPos('Bin Threshold', 'control_window')
     switch = cv2.getTrackbarPos('SWITCH', 'control_window')
 
-    method_enum = ThreshMethod(method)
+    method_enum = Thresholding.ThresholdMethod(method)
 
     kernel = (vec_w*2 + 1, vec_h*2 + 1)
     if switch == 1:
         filtered_img = cv2.GaussianBlur(gray_img, kernel, sigX)
-        bin_img = separar.umbralizar_imagen(filtered_img, method_enum, threshold)
+        bin_img = separar.thresholding_image(filtered_img, method_enum, threshold)
 
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
