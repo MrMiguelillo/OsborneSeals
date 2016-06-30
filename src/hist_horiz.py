@@ -1,8 +1,8 @@
 import cv2
 import matplotlib.pyplot as plt
-from functions import SeparacionPalabras
+from src import Splitting
 
-separar = SeparacionPalabras()
+split = Splitting.Splitting()
 
 
 def separar_columnas(histograma):
@@ -37,7 +37,7 @@ def separar_columnas(histograma):
 
 img = cv2.imread('D:\PycharmProjects\Lab_Osborne\met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
 
-hist = separar.histograma_horizontal(img)
+hist = split.hor_hist(img)
 plt.plot(hist)
 plt.show()
 
