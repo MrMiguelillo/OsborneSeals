@@ -25,3 +25,7 @@ v0.3.1
 v0.4
 1. Creacion de la clase umbralizado y la funcion de umbralizar
 2. Tocada el archivo bin_test en relacion funcion umbralizar
+
+----------
+v0.4.1
+1. Cambio de las direcciones donde se encuentran las imagenes

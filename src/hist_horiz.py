@@ -35,7 +35,7 @@ def separar_columnas(histograma):
     return int(res_x)
 
 
-img = cv2.imread('D:\PycharmProjects\Lab_Osborne\met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
+img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
 
 hist = split.hor_hist(img)
 plt.plot(hist)

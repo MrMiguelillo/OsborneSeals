@@ -5,7 +5,7 @@ from functions import SeparacionPalabras
 from functions import ThreshMethod
 
 separar = SeparacionPalabras()
-img = cv2.imread('D:\PycharmProjects\Lab_Osborne\imgs\IMG_0003.png', 0)
+img = cv2.imread('../imgs/IMG_0003.png', 0)
 bin_img = separar.umbralizar_imagen(img, ThreshMethod.FIXED,180)
 
 #hist_vert = histograma_vertical(img)
