@@ -16,3 +16,7 @@ v0.2
 v0.3
 1. Movidas las funciones de histogramas proyectados al archivo Splitting.py
 2. Actualizados hist_vert.py y hist_horiz.py para usar las nuevas funciones
+
+----------
+v0.3.1
+1. Añadido .gitignore
