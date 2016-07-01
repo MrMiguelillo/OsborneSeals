@@ -33,3 +33,7 @@ v0.4.1
 ----------
 v0.5.1
 1. Se elimina Splitting y se traducen funciones relacionadas
+
+----------
+v0.5.2
+1. Se corrige la función separar_columnas para incluir el argumento self

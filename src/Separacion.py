@@ -28,7 +28,7 @@ class Separacion:
             suma = 0
         return hist
 
-    def separar_columnas(histograma):
+    def separar_columnas(self, histograma):
         long = histograma.size
         min_i = round(long / 3, 0)
         max_i = round(2 * long / 3, 0)
