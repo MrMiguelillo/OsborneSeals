@@ -41,3 +41,7 @@ v0.5.2
 ----------
 v0.5.3
 1. Se cambian los nombres de la clase Umbralizacion y la clase bin_test a español
+
+----------
+v0.5.4
+1. Se actualiza .gitignore
