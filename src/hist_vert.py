@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from src import Splitting
+from src import Separacion
 
-split = Splitting.Splitting()
+split = Separacion.Separacion()
 
 
 def separar_lineas():
