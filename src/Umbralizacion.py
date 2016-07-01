@@ -2,22 +2,21 @@ import cv2
 from enum import Enum
 
 
-class ThresholdMethod(Enum):
+class MetodoUmbralizado(Enum):
     otsu = 0
     fixed = 1
     adaptive = 2
 
 
-class Thresholding:
-    def thresholding_image(self, gray_image, threshold_method, threshold=180):
-        threshold_image = gray_image
-        if threshold_method == ThresholdMethod.otsu:
-            ret, threshold_image  = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+class Umbralizacion:
+    def umbralizar_imagen(self, imagen_grises, metodo_umbralizar, umbral=180):
+        imagen_umbralizada = imagen_grises
 
-        elif threshold_method == ThresholdMethod.fixed:
-            ret, threshold_image  = cv2.threshold(gray_image, threshold, 255, cv2.THRESH_BINARY)
+        if metodo_umbralizar == MetodoUmbralizado.otsu:
+            ret, imagen_umbralizada  = cv2.threshold(imagen_grises, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        elif metodo_umbralizar == MetodoUmbralizado.fixed:
+            ret, imagen_umbralizada  = cv2.threshold(imagen_grises, umbral, 255, cv2.THRESH_BINARY)
+        elif metodo_umbralizar == MetodoUmbralizado.adaptive:
+            imagen_umbralizada = cv2.adaptiveThreshold(imagen_grises, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
-        elif threshold_method == ThresholdMethod.adaptive:
-            threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-
-        return threshold_image
+        return imagen_umbralizada

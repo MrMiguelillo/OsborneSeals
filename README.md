@@ -37,3 +37,7 @@ v0.5.1
 ----------
 v0.5.2
 1. Se corrige la función separar_columnas para incluir el argumento self
+
+----------
+v0.5.3
+1. Se cambian los nombres de la clase Umbralizacion y la clase bin_test a español
