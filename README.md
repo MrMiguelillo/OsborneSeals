@@ -29,3 +29,7 @@ v0.4
 ----------
 v0.4.1
 1. Cambio de las direcciones donde se encuentran las imagenes
+
+----------
+v0.5.1
+1. Se elimina Splitting y se traducen funciones relacionadas
