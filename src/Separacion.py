@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class Separacion:
     def vert_hist(self, img):
         filas, colum = img.shape
@@ -28,6 +29,10 @@ class Separacion:
             suma = 0
         return hist
 
+    # Entrada: Histograma horizontal
+    # Salida: Tuplet: (Coordenada horizontal de la división de la página, longitud de la racha máxima de mínimos en el
+    #       histograma). El segundo valor del tuplet se utiliza para saber si el documento tiene una columna de texto
+    #       únicamente y no necesita ser dividido
     def columnas(self, histograma):
         long = histograma.size
         min_i = round(long / 3, 0)
@@ -58,6 +63,9 @@ class Separacion:
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
 
+    # Entrada:  1. Histograma
+    #           2. Ancho para convolucionar en el cálculo de la mediana
+    # Salida:   Histograma con la mediana calculada comparando cada punto con los n-vecinos, con n = ancho
     def filtro_mediana(self, histograma, ancho):
         long = histograma.size
         filt_hist = []
@@ -74,3 +82,25 @@ class Separacion:
             valor = ordenado[np.ceil(ordenado.size/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
 
         return filt_hist
+
+    def filtro_media(self, datos, ancho):
+        long = datos.size
+        datos_suavizados = []
+        for i in range(0, long):
+            suma = 0
+            rango = 0
+            if i < ancho:
+                for x in range(0, i + ancho):
+                    suma += datos[i]
+                    rango = i + ancho
+            if i > (long - ancho):
+                for x in range(i - ancho, long):
+                    suma += datos[i]
+                    rango = long - (i - ancho)
+            else:
+                for x in range(i - ancho, i + ancho):
+                    suma += datos[i]
+                    rango = 2 * ancho
+            datos_suavizados.append(suma / rango)
+
+        return datos_suavizados
