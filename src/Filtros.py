@@ -6,7 +6,7 @@ class Filtros:
     # Entrada:  1. Histograma
     #           2. Ancho para convolucionar en el cálculo de la mediana
     # Salida:   Histograma con la mediana calculada comparando cada punto con los n-vecinos, con n = ancho
-    def filtro_mediana(self, histograma, ancho):
+    def mediana(self, histograma, ancho):
         long = histograma.size
         filt_hist = []
 
@@ -25,8 +25,8 @@ class Filtros:
 
         return filt_hist
 
-    def filtro_media(self, datos, ancho):
-        long = datos.size
+    def media(self, histograma, ancho):
+        long = histograma.size
         datos_suavizados = []
         for i in range(0, long):
             suma = 0
@@ -34,15 +34,15 @@ class Filtros:
             if i < ancho:
                 rango = i + ancho
                 for x in range(0, i + ancho):
-                    suma += datos[i]
+                    suma += histograma[i]
             elif i > (long - ancho):
                 rango = long - (i - ancho)
                 for x in range(i - ancho, long):
-                    suma += datos[i]
+                    suma += histograma[i]
             else:
                 rango = 2 * ancho
                 for x in range(i - ancho, i + ancho):
-                    suma += datos[i]
+                    suma += histograma[i]
             datos_suavizados.append(suma / rango)
 
         return datos_suavizados

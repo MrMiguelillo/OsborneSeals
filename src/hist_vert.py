@@ -23,7 +23,7 @@ hist = split.vert_hist(sub_img)
 plt.plot(hist, color='r')
 
 
-smoothed_hist = filtro.filtro_mediana(hist, 10)
+smoothed_hist = filtro.mediana(hist, 10)
 
 plt.plot(smoothed_hist, color='b')
 

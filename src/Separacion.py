@@ -23,7 +23,6 @@ class Separacion:
 
         for y in range(0, colum):
             for x in range(0, filas):
-                max_x_hueco = 0
                 if img[x, y] == 0:
                     suma += 1
             hist[y] = suma
