@@ -71,6 +71,6 @@ class Separacion:
                 ordenado = sorted(histograma[i-ancho:long])
             else:
                 ordenado = sorted(histograma[i-ancho:i + ancho])
-            valor = ordenado[np.ceil(ordenado.size/2)]
+            valor = ordenado[np.ceil(ordenado.size/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
 
         return filt_hist
