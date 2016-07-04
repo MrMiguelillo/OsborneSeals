@@ -28,7 +28,7 @@ class Separacion:
             suma = 0
         return hist
 
-    def separar_columnas(self, histograma):
+    def columnas(self, histograma):
         long = histograma.size
         min_i = round(long / 3, 0)
         max_i = round(2 * long / 3, 0)
@@ -57,3 +57,20 @@ class Separacion:
 
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
+
+    def filtro_mediana(self, histograma, ancho):
+        long = histograma.size
+        filt_hist = []
+
+        for i in range(0, long):
+            valor = 0
+            ordenado = []
+            if i < ancho:
+                ordenado = sorted(histograma[0:i+ancho])
+            if i > (long - ancho):
+                ordenado = sorted(histograma[i-ancho:long])
+            else:
+                ordenado = sorted(histograma[i-ancho:i + ancho])
+            valor = ordenado[np.ceil(ordenado.size/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
+
+        return filt_hist

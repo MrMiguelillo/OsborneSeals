@@ -11,7 +11,7 @@ hist = separar.hor_hist(img)
 plt.plot(hist)
 plt.show()
 
-divx = separar.separar_columnas(hist)
+divx = separar.columnas(hist)
 print(divx)
 
 cv2.line(img, (divx, 0), (divx, 10000), 100, 5)
