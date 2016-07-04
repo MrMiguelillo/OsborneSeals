@@ -49,3 +49,14 @@ v0.5.4
 ----------
 v0.5.5
 1. Se cambia Separar.separar_columnas() a Separar.columnas()
+
+----------
+v0.5.6
+1. Comentadas funciones de columnas y filtro mediana
+2. average_smoothing -> filtro_media
+3. filtro_media movido a Separación.py
+4. Solucionado bug de filtro de media
+
+v0.6
+----------
+1. hist_vert ahora utiliza el filtro de mediana
