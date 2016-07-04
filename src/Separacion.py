@@ -64,4 +64,3 @@ class Separacion:
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
 
-

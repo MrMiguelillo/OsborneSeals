@@ -13,9 +13,9 @@ class Umbralizacion:
         imagen_umbralizada = imagen_grises
 
         if metodo_umbralizar == MetodoUmbralizado.otsu:
-            ret, imagen_umbralizada  = cv2.threshold(imagen_grises, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            ret, imagen_umbralizada = cv2.threshold(imagen_grises, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         elif metodo_umbralizar == MetodoUmbralizado.fixed:
-            ret, imagen_umbralizada  = cv2.threshold(imagen_grises, umbral, 255, cv2.THRESH_BINARY)
+            ret, imagen_umbralizada = cv2.threshold(imagen_grises, umbral, 255, cv2.THRESH_BINARY)
         elif metodo_umbralizar == MetodoUmbralizado.adaptive:
             imagen_umbralizada = cv2.adaptiveThreshold(imagen_grises, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
