@@ -81,5 +81,12 @@ v0.6.4
 v0.6.5
 1. Mejorar salida int funcion Separacion.filas
 
+----------
+v0.6.6
+1. Cambiado salida de filtros para que sean tipo ndarray
+2. Cambiado main_ramon acorde con el cambio 1.
+3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
+
+
 
 
