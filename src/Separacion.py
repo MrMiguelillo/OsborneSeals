@@ -73,13 +73,21 @@ class Separacion:
         for i in range(0, long):
             valor = 0
             ordenado = []
+            rango = 0
             if i < ancho:
                 ordenado = sorted(histograma[0:i+ancho])
-            if i > (long - ancho):
+                rango = i + ancho
+                #valor = ordenado[int(rango / 2)]
+            elif i > (long - ancho):
                 ordenado = sorted(histograma[i-ancho:long])
+                rango = long - (i-ancho)
+                #valor = ordenado[int(rango / 2)]
             else:
                 ordenado = sorted(histograma[i-ancho:i + ancho])
-            valor = ordenado[np.ceil(ordenado.size/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
+                rango = 2*ancho
+                #valor = ordenado[int(rango / 2)]
+            valor = ordenado[int(rango/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
+            filt_hist.append(valor)
 
         return filt_hist
 
@@ -90,17 +98,17 @@ class Separacion:
             suma = 0
             rango = 0
             if i < ancho:
+                rango = i + ancho
                 for x in range(0, i + ancho):
                     suma += datos[i]
-                    rango = i + ancho
-            if i > (long - ancho):
+            elif i > (long - ancho):
+                rango = long - (i - ancho)
                 for x in range(i - ancho, long):
                     suma += datos[i]
-                    rango = long - (i - ancho)
             else:
+                rango = 2 * ancho
                 for x in range(i - ancho, i + ancho):
                     suma += datos[i]
-                    rango = 2 * ancho
             datos_suavizados.append(suma / rango)
 
         return datos_suavizados

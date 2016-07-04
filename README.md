@@ -56,3 +56,7 @@ v0.5.6
 2. average_smoothing -> filtro_media
 3. filtro_media movido a Separación.py
 4. Solucionado bug de filtro de media
+
+v0.6
+----------
+1. hist_vert ahora utiliza el filtro de mediana
