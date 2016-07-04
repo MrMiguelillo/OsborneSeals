@@ -5,6 +5,7 @@ from src import Separacion
 from scipy import signal
 
 separar = Separacion.Separacion()
+filtros = Filtros.Filtros()
 
 img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
 filas, colum = img.shape
@@ -29,10 +30,11 @@ sub_img = img[0:filas,0:div]
 hist_ver = separar.vert_hist(sub_img)
 
 print("Filtrado")
-filtrado = separar.filtro_mediana(hist_ver, 10)
+filtrado = filtros.mediana(hist_ver, 10)
 filtrado = np.array(filtrado)
 
 res = separar.filas
+
 print("Resultados gráficos")
 plt.figure(1)
 plt.subplot(211)
