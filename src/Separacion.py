@@ -78,7 +78,7 @@ class Separacion:
         tam=len(ini)
         res.append(ini[0]/2)
         for x in range(0, tam - 1):
-            res.append((fin[x] - ini[x + 1]) / 2 + ini[x + 1])
+            res.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
 
-        return int(res)
+        return res
 

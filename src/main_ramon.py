@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from src import Separacion
-from scipy import signal
+from src import Filtros
 
 separar = Separacion.Separacion()
 filtros = Filtros.Filtros()
@@ -33,7 +33,9 @@ print("Filtrado")
 filtrado = filtros.mediana(hist_ver, 10)
 filtrado = np.array(filtrado)
 
-res = separar.filas
+print("Separar filas")
+res = separar.filas(filtrado)
+tam=len(res)
 
 print("Resultados gráficos")
 plt.figure(1)

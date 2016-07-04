@@ -77,7 +77,9 @@ v0.6.3
 ----------
 v0.6.4
 1. Borrar variable rango en la funcion media
-
+----------
+v0.6.5
+1. Mejorar salida int funcion Separacion.filas
 
 
 
