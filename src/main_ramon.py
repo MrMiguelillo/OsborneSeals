@@ -32,37 +32,7 @@ print("Filtrado")
 filtrado = separar.filtro_mediana(hist_ver, 10)
 filtrado = np.array(filtrado)
 
-ini=[]
-fin=[]
-for x in range(0, filas-1):
-
-    if (filtrado[x] == 0.) & (filtrado[x+1] !=0.):
-        ini.append(x+1)
-
-    if (filtrado[x] != 0.) & (filtrado[x+1] == 0.):
-        fin.append(x)
-
-print(ini)
-print(fin)
-tam=len(ini)
-tam2=len(fin)
-print(tam)
-print(tam2)
-
-res=[]
-res.append(ini[0]/2)
-for x in range(0, tam-1):
-
-    res.append((fin[x]-ini[x+1])/2+ini[x+1])
-
-
-
-print(res)
-
-
-
-
-
+res = separar.filas
 print("Resultados gráficos")
 plt.figure(1)
 plt.subplot(211)

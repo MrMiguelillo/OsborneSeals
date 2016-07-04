@@ -67,6 +67,6 @@ v0.6.1
 3. Modificado el archivo hist_vert añadiendo las relaciones de Filtros.py
 ----------
 v0.6.2
-1. Añadida funcion lineas en Separacion.py
+1. Añadida funcion filas en Separacion.py
 
 
