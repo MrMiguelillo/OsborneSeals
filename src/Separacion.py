@@ -63,9 +63,9 @@ class Separacion:
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
 
-    # Entrada:  1. Histograma
-    #           2. Ancho para convolucionar en el cálculo de la mediana
-    # Salida:   Histograma con la mediana calculada comparando cada punto con los n-vecinos, con n = ancho
+    # Entrada:  1. Histograma (ndarray)
+    #           2. Ancho para convolucionar en el cálculo de la mediana (int)
+    # Salida:   Histograma con la mediana calculada comparando cada punto con los n-vecinos, con n = ancho (list)
     def filtro_mediana(self, histograma, ancho):
         long = histograma.size
         filt_hist = []
