@@ -60,3 +60,9 @@ v0.5.6
 v0.6
 ----------
 1. hist_vert ahora utiliza el filtro de mediana
+----------
+v0.6.1
+1. Añadido archivo Filtros.py con funciones de filtros
+2. Borrado los filtros del archivo Separacion.py
+3. Modificado el archivo hist_vert añadiendo las relaciones de Filtros.py
+

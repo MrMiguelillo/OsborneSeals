@@ -2,10 +2,12 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from src import Separacion
+from src import Filtros
+
 
 # Comen
 split = Separacion.Separacion()
-
+filtro = Filtros.Filtros()
 
 def separar_lineas():
     res_y = []
@@ -20,7 +22,9 @@ sub_img = img[0:1791, 0:rows]
 hist = split.vert_hist(sub_img)
 plt.plot(hist, color='r')
 
-smoothed_hist = split.filtro_mediana(hist, 10)
+
+smoothed_hist = filtro.filtro_mediana(hist, 10)
+
 plt.plot(smoothed_hist, color='b')
 
 plt.show()
