@@ -23,7 +23,6 @@ class Separacion:
 
         for y in range(0, colum):
             for x in range(0, filas):
-                max_x_hueco = 0
                 if img[x, y] == 0:
                     suma += 1
             hist[y] = suma
@@ -77,6 +76,7 @@ class Separacion:
             if (histograma[x] != 0.) & (histograma[x + 1] == 0.):
                 fin.append(x)
 
+        tam=len(ini)
         res.append(ini[0]/2)
         for x in range(0, tam - 1):
             res.append((fin[x] - ini[x + 1]) / 2 + ini[x + 1])
