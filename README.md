@@ -74,7 +74,12 @@ v0.6.3
 1. Refactorizadas filtro_media y filtro_mediana
 2. Eliminado max_factor de Filtros.py
 3. Refactorizado datos por histograma en filtro_media(media)
-=======
+----------
+v0.6.4
+1. Borrar variable rango en la funcion media
+----------
+v0.6.5
+1. Mejorar salida int funcion Separacion.filas
 
 
 

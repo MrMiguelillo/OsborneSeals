@@ -31,7 +31,6 @@ class Filtros:
         datos_suavizados = []
         for i in range(0, long):
             suma = 0
-            rango = 0
             if i < ancho:
                 rango = i + ancho
                 for x in range(0, i + ancho):
