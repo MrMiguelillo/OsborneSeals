@@ -65,4 +65,8 @@ v0.6.1
 1. Añadido archivo Filtros.py con funciones de filtros
 2. Borrado los filtros del archivo Separacion.py
 3. Modificado el archivo hist_vert añadiendo las relaciones de Filtros.py
+----------
+v0.6.2
+1. Añadida funcion lineas en Separacion.py
+
 
