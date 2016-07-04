@@ -71,21 +71,15 @@ class Separacion:
         filt_hist = []
 
         for i in range(0, long):
-            valor = 0
-            ordenado = []
-            rango = 0
             if i < ancho:
                 ordenado = sorted(histograma[0:i+ancho])
                 rango = i + ancho
-                #valor = ordenado[int(rango / 2)]
             elif i > (long - ancho):
                 ordenado = sorted(histograma[i-ancho:long])
                 rango = long - (i-ancho)
-                #valor = ordenado[int(rango / 2)]
             else:
                 ordenado = sorted(histograma[i-ancho:i + ancho])
                 rango = 2*ancho
-                #valor = ordenado[int(rango / 2)]
             valor = ordenado[int(rango/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
             filt_hist.append(valor)
 
