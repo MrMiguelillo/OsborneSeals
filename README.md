@@ -45,3 +45,7 @@ v0.5.3
 ----------
 v0.5.4
 1. Se actualiza .gitignore
+
+----------
+v0.5.5
+1. Se cambia Separar.separar_columnas() a Separar.columnas()
