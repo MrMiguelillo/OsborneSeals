@@ -31,12 +31,12 @@ hist_ver = separar.vert_hist(sub_img)
 
 print("Filtrado")
 
-filtrado = separar.mediana(hist_ver, 10)
+filtrado = filtros.mediana(hist_ver, 10)
 # filtrado = np.array(filtrado)
 
 print("Separar filas")
 res = separar.filas(filtrado)
-tam=len(res)
+tam = len(res)
 
 print("Resultados gráficos")
 plt.figure(1)
