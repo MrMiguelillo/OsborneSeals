@@ -23,7 +23,8 @@ class Filtros:
             valor = ordenado[int(rango/2)] # Ordenamos los valores y cogemos el de la mitad, redondeando la mitad hacia arriba
             filt_hist.append(valor)
 
-        return filt_hist
+        np_array_filt_hist = np.array(filt_hist)
+        return np_array_filt_hist
 
     def media(self, histograma, ancho):
         long = histograma.size

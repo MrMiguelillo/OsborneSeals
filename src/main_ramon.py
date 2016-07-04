@@ -30,7 +30,7 @@ hist_ver = separar.vert_hist(sub_img)
 
 print("Filtrado")
 filtrado = separar.filtro_mediana(hist_ver, 10)
-filtrado = np.array(filtrado)
+# filtrado = np.array(filtrado)
 
 res = separar.filas
 print("Resultados gráficos")
