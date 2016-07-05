@@ -85,14 +85,14 @@ v0.6.6
 1. Muestra separación de líneas en main_ramon
 
 ----------
-v0.6.6
+v0.6.7
 1. Cambiado salida de filtros para que sean tipo ndarray
 2. Cambiado main_ramon acorde con el cambio 1.
 3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
 
 
 ----------
-v0.6.6
+v0.6.8
 1. Cambiado salida de filtros para que sean tipo ndarray
 2. Cambiado main_ramon acorde con el cambio 1.
 3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
