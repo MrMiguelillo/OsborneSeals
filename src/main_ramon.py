@@ -24,12 +24,13 @@ sub_img = img[0:filas,0:div]
 hist_ver = separar.vert_hist(sub_img)
 
 print("Filtrado")
+
 filtrado = filtros.mediana(hist_ver, 10)
-filtrado = np.array(filtrado)
+# filtrado = np.array(filtrado)
 
 print("Separar filas")
 res = separar.filas(filtrado)
-tam=len(res)
+tam = len(res)
 
 cv2.line(img, (div,0), (div, filas), 100, 5)
 

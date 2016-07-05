@@ -63,6 +63,7 @@ class Separacion:
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
 
+
     def filas(self, histograma):
         long = histograma.size
         ini = []
@@ -81,4 +82,5 @@ class Separacion:
             res.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
 
         return res
+
 
