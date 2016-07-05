@@ -80,6 +80,9 @@ v0.6.4
 ----------
 v0.6.5
 1. Mejorar salida int funcion Separacion.filas
+----------
+v0.6.6
+1. Muestra separación de líneas en main_ramon
 
 
 
