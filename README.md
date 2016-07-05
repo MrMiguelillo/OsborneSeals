@@ -97,9 +97,11 @@ v0.6.8
 ----------
 v0.6.9
 1. Cambios en Separacion.filas
+2. Subidas fotos nuevas
 ----------
 v0.6.10
 1. Función Separacion.filas correcta. Si no hay pasos por cero, hace la media entre dos puntos.
+
 
 
 
