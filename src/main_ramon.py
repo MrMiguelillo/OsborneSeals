@@ -32,6 +32,7 @@ print("Separar filas")
 res = separar.filas(filtrado)
 tam = len(res)
 
+
 cv2.line(img, (div,0), (div, filas), 100, 5)
 
 for x in range(1,tam):
@@ -39,6 +40,7 @@ for x in range(1,tam):
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
+
 
 print("Resultados gráficos")
 plt.figure(1)

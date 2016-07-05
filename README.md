@@ -91,5 +91,12 @@ v0.6.6
 3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
 
 
+----------
+v0.6.6
+1. Cambiado salida de filtros para que sean tipo ndarray
+2. Cambiado main_ramon acorde con el cambio 1.
+3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
+
+
 
 
