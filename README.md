@@ -89,8 +89,6 @@ v0.6.7
 1. Cambiado salida de filtros para que sean tipo ndarray
 2. Cambiado main_ramon acorde con el cambio 1.
 3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
-
-
 ----------
 v0.6.8
 1. Cambiado salida de filtros para que sean tipo ndarray
@@ -99,6 +97,9 @@ v0.6.8
 ----------
 v0.6.9
 1. Cambios en Separacion.filas
+----------
+v0.6.10
+1. Función Separacion.filas correcta. Si no hay pasos por cero, hace la media entre dos puntos.
 
 
 

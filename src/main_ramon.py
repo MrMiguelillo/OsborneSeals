@@ -30,17 +30,18 @@ filtrado = filtros.mediana(hist_ver, 10)
 # filtrado = np.array(filtrado)
 
 print("Separar filas")
-inicios,finales = separar.filas(filtrado)
+inicios,finales = separar.filas(filtrado, 100)
+
 tam1 = len(inicios)
 tam2 = len(finales)
 
 
 cv2.line(img, (div,0), (div, filas), 100, 5)
 
-for x in range(1,tam1):
+for x in range(0,tam1):
     cv2.line(img, (div,inicios[x]), (colum,inicios[x]), 100, 5)
 
-for x in range(1, tam2):
+for x in range(0, tam2):
     cv2.line(img, (div,finales[x]), (colum,finales[x]), 100, 5)
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
@@ -54,7 +55,7 @@ plt.plot(hist_ver)
 plt.subplot(212)
 plt.plot(filtrado)
 plt.plot(inicios,np.ones(tam1)*100,'ro')
-plt.plot(finales,np.ones(tam2)*200,'bo')
+plt.plot(finales,np.ones(tam2)*101,'bo')
 plt.show()
 
 
