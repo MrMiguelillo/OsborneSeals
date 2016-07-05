@@ -18,12 +18,6 @@ hist_hor = separar.hor_hist(img)
 
 print("Separar columnas")
 div = separar.columnas(hist_hor)
-#print(div)
-
-#cv2.line(img, (div, 0), (div, 10000), 100, 5)
-#cv2.line(img, (div,0), (div, filas), 100, 5)
-#cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-#cv2.imshow('result', img)
 
 print("Histograma vertical")
 sub_img = img[0:filas,0:div]
@@ -37,6 +31,14 @@ print("Separar filas")
 res = separar.filas(filtrado)
 tam=len(res)
 
+cv2.line(img, (div,0), (div, filas), 100, 5)
+
+for x in range(1,tam):
+    cv2.line(img, (0,res[x]), (div,res[x]), 100, 5)
+
+cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
+cv2.imshow('result', img)
+
 print("Resultados gráficos")
 plt.figure(1)
 plt.subplot(211)
@@ -45,6 +47,8 @@ plt.subplot(212)
 plt.plot(filtrado)
 plt.plot(res,np.zeros(tam),'ro')
 plt.show()
+
+
 
 #cv2.waitKey()
 #cv2.destroyAllWindows()
