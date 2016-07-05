@@ -99,6 +99,8 @@ v0.6.8
 ----------
 v0.6.9
 1. Cambios en Separacion.filas
+2. ¿Subidas fotos nuevas?
+
 
 
 
