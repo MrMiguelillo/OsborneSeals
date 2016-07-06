@@ -12,37 +12,47 @@ filas, colum = img.shape
 
 print("Histograma horizontal")
 hist_hor = separar.hor_hist(img)
-#plt.figure(1)
-#plt.plot(hist)
-#plt.show()
 
 print("Separar columnas")
 div = separar.columnas(hist_hor)
-
-print("Histograma vertical")
-#sub_img = img[0:filas,0:div]
-sub_img = img[0:filas,div:colum]
-hist_ver = separar.vert_hist(sub_img)
-
-print("Filtrado")
-
-filtrado = filtros.mediana(hist_ver, 10)
-# filtrado = np.array(filtrado)
-
-print("Separar filas")
-inicios,finales = separar.filas(filtrado, 100)
-
-tam1 = len(inicios)
-tam2 = len(finales)
-
-
 cv2.line(img, (div,0), (div, filas), 100, 5)
 
-for x in range(0,tam1):
-    cv2.line(img, (div,inicios[x]), (colum,inicios[x]), 100, 5)
+print("Histograma vertical")
+sub_img1 = img[0:filas,0:div]
+sub_img2 = img[0:filas,div:colum]
+hist_ver1 = separar.vert_hist(sub_img1)
+hist_ver2 = separar.vert_hist(sub_img2)
 
+print("Filtrado")
+filtrado1 = filtros.mediana(hist_ver1, 10)
+filtrado2 = filtros.mediana(hist_ver2, 10)
+
+print("Separar filas")
+inicios1,finales1 = separar.filas(filtrado1, 20)
+inicios2,finales2 = separar.filas(filtrado2, 100)
+tam1 = len(inicios1)
+tam2 = len(inicios2)
+
+for x in range(0,tam1):
+    cv2.line(img, (0, inicios1[x]), (div, inicios1[x]), 100, 5)
+    cv2.line(img, (0, finales1[x]), (div, finales1[x]), 100, 5)
 for x in range(0, tam2):
-    cv2.line(img, (div,finales[x]), (colum,finales[x]), 100, 5)
+    cv2.line(img, (div, inicios2[x]), (colum, inicios2[x]), 100, 5)
+    cv2.line(img, (div, finales2[x]), (colum, finales2[x]), 100, 5)
+
+
+print("Separar palabras")
+for x in range(0,tam2):
+    fila = img[inicios2[x]:finales2[x],div:colum]
+    hist_fila = separar.hor_hist(fila)
+
+    ini_palabra,fin_palabra = separar.palabras(hist_fila, 0)
+    tam_palabra = len(ini_palabra)
+
+    for y in range(0,tam_palabra):
+        cv2.line(img, (ini_palabra[y],inicios2[x]), (ini_palabra[y],finales2[x]), 100, 5)
+        cv2.line(img, (fin_palabra[y],inicios2[x]), (fin_palabra[y],finales2[x]), 100, 5)
+
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
@@ -51,11 +61,13 @@ cv2.imshow('result', img)
 print("Resultados gráficos")
 plt.figure(1)
 plt.subplot(211)
-plt.plot(hist_ver)
+plt.plot(filtrado1)
+plt.plot(inicios1,np.ones(tam1)*100,'ro')
+plt.plot(finales1,np.ones(tam1)*101,'bo')
 plt.subplot(212)
-plt.plot(filtrado)
-plt.plot(inicios,np.ones(tam1)*100,'ro')
-plt.plot(finales,np.ones(tam2)*101,'bo')
+plt.plot(filtrado2)
+plt.plot(inicios2,np.ones(tam2)*100,'ro')
+plt.plot(finales2,np.ones(tam2)*101,'bo')
 plt.show()
 
 

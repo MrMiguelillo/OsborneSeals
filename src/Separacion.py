@@ -114,7 +114,7 @@ class Separacion:
 
         return (inicio, final)
 
-# Entrada: Histograma horizontal de la fila
+    # Entrada: Histograma horizontal de la fila
     # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación
     # Salidas: Vectores de coordenadas 'x' de inicio y final de palabra
     def palabras(self, histograma, minimo):

@@ -101,7 +101,9 @@ v0.6.9
 ----------
 v0.6.10
 1. Función Separacion.filas correcta. Si no hay pasos por cero, hace la media entre dos puntos.
-
+----------
+v0.6.11
+1. Separación de palabras hecha pero da mal resultado. main_ramon modificado. 
 
 
 
