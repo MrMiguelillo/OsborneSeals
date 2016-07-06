@@ -121,46 +121,21 @@ class Separacion:
         long = histograma.size
         ini = []
         fin = []
-        inicio =[]
-        final = []
+        inicios = []
+        finales = []
 
         for x in range(0, long-1):
             if (histograma[x] == 0) & (histograma[x + 1] > 0):
-                inicio.append(x+1)
-                break
-
-        for x in range(0, long-1):
-            if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
                 ini.append(x + 1)
 
-            if (histograma[x] >= minimo) & (histograma[x + 1] < minimo):
+            if (histograma[x] > 0) & (histograma[x + 1] == 0):
                 fin.append(x)
 
-        tam=len(ini)
-        zeros_ini=np.zeros(tam)
-        zeros_fin=np.zeros(tam)
+        for x in range(0,len(ini)-1):
+            if (fin[x]-ini[x+1]) > minimo:
 
-        for x in range(0, tam-1):
-            zeros_fin[x]=fin[x]
-            zeros_ini[x]=ini[x+1]
+                finales.append(fin[x])
+                inicios.append(ini[x+1])
 
-            for y in range(fin[x],ini[x+1]):
-                if (histograma[y] == 0) & (histograma[y+1] > 0):
-                    zeros_ini[x] = y + 1
+        return (inicios,finales)
 
-                if (histograma[y] > 0) & (histograma[y+1] == 0):
-                    zeros_fin[x] = y
-
-            if (zeros_ini[x]==ini[x+1]) & (zeros_fin[x]==fin[x]):
-                final.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
-                inicio.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
-            else:
-                final.append(int(zeros_fin[x]))
-                inicio.append(int(zeros_ini[x]))
-
-        for x in range(long - 1,0,-1):
-            if (histograma[x] == 0) & (histograma[x - 1] > 0):
-                final.append(x-1)
-                break
-
-        return (inicio, final)

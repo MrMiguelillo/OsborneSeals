@@ -40,37 +40,34 @@ for x in range(0, tam2):
     cv2.line(img, (div, inicios2[x]), (colum, inicios2[x]), 100, 5)
     cv2.line(img, (div, finales2[x]), (colum, finales2[x]), 100, 5)
 
-
 print("Separar palabras")
+
+img2 = cv2.imread('../met_0_vec_2_sig_-1_thr_0_binImg.png', 0)
+
 for x in range(0,tam2):
-    fila = img[inicios2[x]:finales2[x],div:colum]
+    fila = img2[inicios2[x]:finales2[x],div:colum]
     hist_fila = separar.hor_hist(fila)
 
-    ini_palabra,fin_palabra = separar.palabras(hist_fila, 0)
+    ini_palabra,fin_palabra = separar.palabras(hist_fila,10)
     tam_palabra = len(ini_palabra)
 
     for y in range(0,tam_palabra):
-        cv2.line(img, (ini_palabra[y],inicios2[x]), (ini_palabra[y],finales2[x]), 100, 5)
-        cv2.line(img, (fin_palabra[y],inicios2[x]), (fin_palabra[y],finales2[x]), 100, 5)
+        cv2.line(img, (div+ini_palabra[y],inicios2[x]), (div+ini_palabra[y],finales2[x]), 100, 5)
+        cv2.line(img, (div+fin_palabra[y],inicios2[x]), (div+fin_palabra[y],finales2[x]), 100, 5)
 
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
 
-
 print("Resultados gráficos")
 plt.figure(1)
 plt.subplot(211)
-plt.plot(filtrado1)
-plt.plot(inicios1,np.ones(tam1)*100,'ro')
-plt.plot(finales1,np.ones(tam1)*101,'bo')
+plt.plot(hist_fila)
 plt.subplot(212)
 plt.plot(filtrado2)
 plt.plot(inicios2,np.ones(tam2)*100,'ro')
 plt.plot(finales2,np.ones(tam2)*101,'bo')
 plt.show()
-
-
 
 #cv2.waitKey()
 #cv2.destroyAllWindows()
