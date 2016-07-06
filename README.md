@@ -107,6 +107,9 @@ v0.6.11
 ----------
 v0.6.12
 1. Separacion.palabras añade tamaño mínimo de palabras
+----------
+v0.6.13
+1. Mejora de la salida de datos en main_ramon
 
 
 
