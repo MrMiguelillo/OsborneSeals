@@ -1,117 +1,130 @@
-v0.1
-----------
-1. Creado gui_test para saber cómo se usan la funcionalidad gui de opencv
-2. Creado bin_test para obtener parámetros de umbralización óptimos
-3. Creado opening_test para ver si un opening soluciona el ruido de la 
-umbralización adaptativa -> no lo hace
-4. Creado hist_vert para test separación en líneas
-5. Creado hist_horiz para test de separación de columnas
-6. main es el futuro programa final, de momento no es útil
+Readme Lab Osborne JMC, MRL, RRG, JSM
+================== 
 
-----------
-v0.2
-1. README ya es funcional
+v0.6.14 (JMC)
+-------------
+1. Cambiado el orden del Readme y añadidos los autores. 
 
-----------
-v0.3
-1. Movidas las funciones de histogramas proyectados al archivo Splitting.py
-2. Actualizados hist_vert.py y hist_horiz.py para usar las nuevas funciones
+v0.6.13 (RRG)
+-------------
+1. Mejora de la salida de datos en main_ramon.
 
-----------
-v0.3.1
-1. Añadido .gitignore
+v0.6.12 (RRG)
+-------------
+1. Separacion.palabras añade tamaño mínimo de palabras.
 
-----------
-v0.4
-1. Creacion de la clase umbralizado y la funcion de umbralizar
-2. Tocada el archivo bin_test en relacion funcion umbralizar
+v0.6.11 (RRG)
+-------------
+1. Separación de palabras hecha pero da mal resultado. main_ramon modificado.
 
-----------
-v0.4.1
-1. Cambio de las direcciones donde se encuentran las imagenes
+v0.6.10  (RRG)
+--------------
+1. Función Separacion.filas correcta. Si no hay pasos por cero, hace la media entre dos puntos.
 
-----------
-v0.5.1
-1. Se elimina Splitting y se traducen funciones relacionadas
+v0.6.9  (JMC)
+-------------
+1. Cambios en Separacion.filas.
+2. Subidas fotos nuevas.
 
-----------
-v0.5.2
-1. Se corrige la función separar_columnas para incluir el argumento self
+v0.6.8 
+------
+1. Cambiado salida de filtros para que sean tipo ndarray.
+2. Cambiado main_ramon acorde con el cambio 1.
+3. Corregido main ramon para usar el nuevo nombre de filtro.mediana.
 
+v0.6.7
 ----------
-v0.5.3
-1. Se cambian los nombres de la clase Umbralizacion y la clase bin_test a español
+1. Cambiado salida de filtros para que sean tipo ndarray.
+2. Cambiado main_ramon acorde con el cambio 1.
+3. Corregido main ramon para usar el nuevo nombre de filtro.mediana.
 
+v0.6.6
 ----------
-v0.5.4
-1. Se actualiza .gitignore
+1. Muestra separación de líneas en main_ramon.
 
+v0.6.5
 ----------
-v0.5.5
-1. Se cambia Separar.separar_columnas() a Separar.columnas()
+1. Mejorar salida int funcion Separacion.filas
 
+v0.6.4
 ----------
-v0.5.6
-1. Comentadas funciones de columnas y filtro mediana
-2. average_smoothing -> filtro_media
-3. filtro_media movido a Separación.py
-4. Solucionado bug de filtro de media
+1. Borrar variable rango en la funcion media.
+
+v0.6.3
+----------
+1. Refactorizadas filtro_media y filtro_mediana.
+2. Eliminado max_factor de Filtros.py.
+3. Refactorizado datos por histograma en filtro_media(media).
+
+v0.6.2
+----------
+1. Añadida funcion filas en Separacion.py.
+
+v0.6.1
+----------
+1. Añadido archivo Filtros.py con funciones de filtros.
+2. Borrado los filtros del archivo Separacion.py.
+3. Modificado el archivo hist_vert añadiendo las relaciones de Filtros.py.
 
 v0.6
 ----------
-1. hist_vert ahora utiliza el filtro de mediana
-----------
-v0.6.1
-1. Añadido archivo Filtros.py con funciones de filtros
-2. Borrado los filtros del archivo Separacion.py
-3. Modificado el archivo hist_vert añadiendo las relaciones de Filtros.py
-----------
-v0.6.2
-1. Añadida funcion filas en Separacion.py
+1. hist_vert ahora utiliza el filtro de mediana.
 
+v0.5.6
 ----------
-v0.6.3
-1. Refactorizadas filtro_media y filtro_mediana
-2. Eliminado max_factor de Filtros.py
-3. Refactorizado datos por histograma en filtro_media(media)
-----------
-v0.6.4
-1. Borrar variable rango en la funcion media
-----------
-v0.6.5
-1. Mejorar salida int funcion Separacion.filas
-----------
-v0.6.6
-1. Muestra separación de líneas en main_ramon
+1. Comentadas funciones de columnas y filtro mediana.
+2. average_smoothing -> filtro_media.
+3. filtro_media movido a Separación.py.
+4. Solucionado bug de filtro de media.
 
+v0.5.5
 ----------
-v0.6.7
-1. Cambiado salida de filtros para que sean tipo ndarray
-2. Cambiado main_ramon acorde con el cambio 1.
-3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
-----------
-v0.6.8
-1. Cambiado salida de filtros para que sean tipo ndarray
-2. Cambiado main_ramon acorde con el cambio 1.
-3. Corregido main ramon para usar el nuevo nombre de filtro.mediana
-----------
-v0.6.9
-1. Cambios en Separacion.filas
-2. Subidas fotos nuevas
-----------
-v0.6.10
-1. Función Separacion.filas correcta. Si no hay pasos por cero, hace la media entre dos puntos.
-----------
-v0.6.11
-1. Separación de palabras hecha pero da mal resultado. main_ramon modificado.
-----------
-v0.6.12
-1. Separacion.palabras añade tamaño mínimo de palabras
-----------
-v0.6.13
-1. Mejora de la salida de datos en main_ramon
+1. Se cambia Separar.separar_columnas() a Separar.columnas().
 
+v0.5.4
+----------
+1. Se actualiza .gitignore.
 
+v0.5.3
+----------
+1. Se cambian los nombres de la clase Umbralizacion y la clase bin_test a español.
 
+v0.5.2
+----------
+1. Se corrige la función separar_columnas para incluir el argumento self.
 
+v0.5.1
+----------
+1. Se elimina Splitting y se traducen funciones relacionadas.
 
+v0.4.1
+----------
+1. Cambio de las direcciones donde se encuentran las imagenes.
+
+v0.4
+----------
+1. Creacion de la clase umbralizado y la funcion de umbralizar.
+2. Tocada el archivo bin_test en relacion funcion umbralizar.
+
+v0.3.1
+----------
+1. Añadido .gitignore.
+
+v0.3
+----------
+1. Movidas las funciones de histogramas proyectados al archivo Splitting.py.
+2. Actualizados hist_vert.py y hist_horiz.py para usar las nuevas funciones.
+
+v0.2
+----------
+1. README ya es funcional.
+
+v0.1
+----------
+1. Creado gui_test para saber cómo se usan la funcionalidad gui de opencv.
+2. Creado bin_test para obtener parámetros de umbralización óptimos.
+3. Creado opening_test para ver si un opening soluciona el ruido de la.
+umbralización adaptativa -> no lo hace.
+4. Creado hist_vert para test separación en líneas.
+5. Creado hist_horiz para test de separación de columnas.
+6. main es el futuro programa final, de momento no es útil.
