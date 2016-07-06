@@ -5,7 +5,7 @@ from src import Separacion
 from src import Filtros
 
 separar = Separacion.Separacion()
-filtros = Filtros.Filtros()
+filtro = Filtros.Filtros()
 
 img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
 filas, colum = img.shape
@@ -13,9 +13,11 @@ filas, colum = img.shape
 print("Histograma horizontal")
 hist_hor = separar.hor_hist(img)
 
+
 print("Separar columnas")
 div = separar.columnas(hist_hor)
 cv2.line(img, (div,0), (div, filas), 100, 5)
+
 
 print("Histograma vertical")
 sub_img1 = img[0:filas,0:div]
@@ -23,9 +25,11 @@ sub_img2 = img[0:filas,div:colum]
 hist_ver1 = separar.vert_hist(sub_img1)
 hist_ver2 = separar.vert_hist(sub_img2)
 
+
 print("Filtrado")
-filtrado1 = filtros.mediana(hist_ver1, 10)
-filtrado2 = filtros.mediana(hist_ver2, 10)
+filtrado1 = filtro.mediana(hist_ver1, 10)
+filtrado2 = filtro.mediana(hist_ver2, 10)
+
 
 print("Separar filas")
 ini_filas1, fin_filas1 = separar.filas(filtrado1, 20)
@@ -39,6 +43,7 @@ for x in range(0,tam1):
 for x in range(0, tam2):
     cv2.line(img, (div, ini_filas2[x]), (colum, ini_filas2[x]), 100, 5)
     cv2.line(img, (div, fin_filas2[x]), (colum, fin_filas2[x]), 100, 5)
+
 
 print("Separar palabras")
 for x in range(0,tam2):
@@ -54,14 +59,13 @@ for x in range(0,tam2):
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
 
+
 print("Resultados gráficos")
 plt.figure(1)
-plt.subplot(211)
+#plt.subplot(211)
 plt.plot(hist_fila)
-plt.subplot(212)
-plt.plot(filtrado2)
-plt.plot(ini_filas2, np.ones(tam2) * 100, 'ro')
-plt.plot(fin_filas2, np.ones(tam2) * 101, 'bo')
+plt.plot(ini_palabra, np.zeros(tam_palabra), 'ro')
+plt.plot(fin_palabra, np.zeros(tam_palabra), 'bo')
 plt.show()
 
 #cv2.waitKey()
