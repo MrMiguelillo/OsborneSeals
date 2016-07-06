@@ -63,7 +63,9 @@ class Separacion:
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
         return int(res_x)
 
-
+    # Entrada: Histograma horizontal
+    # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación
+    # Salidas: Vectores de coordenadas 'y' de inicio y final de línea
     def filas(self, histograma, minimo):
         long = histograma.size
         ini = []
@@ -77,7 +79,6 @@ class Separacion:
                 break
 
         for x in range(0, long-1):
-
             if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
                 ini.append(x + 1)
 
@@ -85,37 +86,26 @@ class Separacion:
                 fin.append(x)
 
         tam=len(ini)
-
-
-
         zeros_ini=np.zeros(tam)
         zeros_fin=np.zeros(tam)
 
         for x in range(0, tam-1):
-
             zeros_fin[x]=fin[x]
             zeros_ini[x]=ini[x+1]
 
             for y in range(fin[x],ini[x+1]):
-
                 if (histograma[y] == 0) & (histograma[y+1] > 0):
-
                     zeros_ini[x] = y + 1
 
                 if (histograma[y] > 0) & (histograma[y+1] == 0):
-
                     zeros_fin[x] = y
 
             if (zeros_ini[x]==ini[x+1]) & (zeros_fin[x]==fin[x]):
-
                 final.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
                 inicio.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
-
             else:
-
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))
-
 
         for x in range(long - 1,0,-1):
             if (histograma[x] == 0) & (histograma[x - 1] > 0):
