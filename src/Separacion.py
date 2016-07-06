@@ -117,12 +117,14 @@ class Separacion:
     # Entrada: Histograma horizontal de la fila
     # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación
     # Salidas: Vectores de coordenadas 'x' de inicio y final de palabra
-    def palabras(self, histograma, minimo):
+    def palabras(self, histograma, minimo_hueco, minimo_palabra):
         long = histograma.size
         ini = []
         fin = []
         inicios = []
         finales = []
+        inicios_ok = []
+        finales_ok = []
 
         for x in range(0, long-1):
             if (histograma[x] == 0) & (histograma[x + 1] > 0):
@@ -131,11 +133,19 @@ class Separacion:
             if (histograma[x] > 0) & (histograma[x + 1] == 0):
                 fin.append(x)
 
-        for x in range(0,len(ini)-1):
-            if (fin[x]-ini[x+1]) > minimo:
+        inicios.append(ini[0])
 
+        for x in range(0,len(ini)-1):
+            if (ini[x+1]-fin[x]) > minimo_hueco:
                 finales.append(fin[x])
                 inicios.append(ini[x+1])
 
-        return (inicios,finales)
+        finales.append(fin[len(fin)-1])
+
+        for x in range(0,len(inicios)):
+            if finales[x]-inicios[x] > minimo_palabra:
+                inicios_ok.append(inicios[x])
+                finales_ok.append(finales[x])
+
+        return (inicios_ok,finales_ok)
 

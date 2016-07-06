@@ -104,6 +104,10 @@ v0.6.10
 ----------
 v0.6.11
 1. Separación de palabras hecha pero da mal resultado. main_ramon modificado.
+----------
+v0.6.12
+1. Separacion.palabras añade tamaño mínimo de palabras
+
 
 
 

@@ -28,33 +28,28 @@ filtrado1 = filtros.mediana(hist_ver1, 10)
 filtrado2 = filtros.mediana(hist_ver2, 10)
 
 print("Separar filas")
-inicios1,finales1 = separar.filas(filtrado1, 20)
-inicios2,finales2 = separar.filas(filtrado2, 100)
-tam1 = len(inicios1)
-tam2 = len(inicios2)
+ini_filas1, fin_filas1 = separar.filas(filtrado1, 20)
+ini_filas2, fin_filas2 = separar.filas(filtrado2, 100)
+tam1 = len(ini_filas1)
+tam2 = len(ini_filas2)
 
 for x in range(0,tam1):
-    cv2.line(img, (0, inicios1[x]), (div, inicios1[x]), 100, 5)
-    cv2.line(img, (0, finales1[x]), (div, finales1[x]), 100, 5)
+    cv2.line(img, (0, ini_filas1[x]), (div, ini_filas1[x]), 100, 5)
+    cv2.line(img, (0, fin_filas1[x]), (div, fin_filas1[x]), 100, 5)
 for x in range(0, tam2):
-    cv2.line(img, (div, inicios2[x]), (colum, inicios2[x]), 100, 5)
-    cv2.line(img, (div, finales2[x]), (colum, finales2[x]), 100, 5)
+    cv2.line(img, (div, ini_filas2[x]), (colum, ini_filas2[x]), 100, 5)
+    cv2.line(img, (div, fin_filas2[x]), (colum, fin_filas2[x]), 100, 5)
 
 print("Separar palabras")
-
-img2 = cv2.imread('../met_0_vec_2_sig_-1_thr_0_binImg.png', 0)
-
 for x in range(0,tam2):
-    fila = img2[inicios2[x]:finales2[x],div:colum]
+    fila = img[ini_filas2[x]:fin_filas2[x], div:colum]
     hist_fila = separar.hor_hist(fila)
+    ini_palabra,fin_palabra = separar.palabras(hist_fila,20,80)
 
-    ini_palabra,fin_palabra = separar.palabras(hist_fila,10)
     tam_palabra = len(ini_palabra)
-
     for y in range(0,tam_palabra):
-        cv2.line(img, (div+ini_palabra[y],inicios2[x]), (div+ini_palabra[y],finales2[x]), 100, 5)
-        cv2.line(img, (div+fin_palabra[y],inicios2[x]), (div+fin_palabra[y],finales2[x]), 100, 5)
-
+        cv2.line(img, (div + ini_palabra[y], ini_filas2[x]), (div + ini_palabra[y], fin_filas2[x]), 100, 5)
+        cv2.line(img, (div + fin_palabra[y], ini_filas2[x]), (div + fin_palabra[y], fin_filas2[x]), 100, 5)
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
@@ -65,8 +60,8 @@ plt.subplot(211)
 plt.plot(hist_fila)
 plt.subplot(212)
 plt.plot(filtrado2)
-plt.plot(inicios2,np.ones(tam2)*100,'ro')
-plt.plot(finales2,np.ones(tam2)*101,'bo')
+plt.plot(ini_filas2, np.ones(tam2) * 100, 'ro')
+plt.plot(fin_filas2, np.ones(tam2) * 101, 'bo')
 plt.show()
 
 #cv2.waitKey()
