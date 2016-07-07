@@ -4,6 +4,7 @@ v0.6.16 (JMC)
 -------------
 1. Añadida imagen Narciso1 y umbralizada met1,vec0,sig0,thr143
 2. Modificado archivo main_ramon y bin_test
+3. Añadido main_simple para imagenes en una sola columna
 
 v0.6.15 (RRG)
 -------------
