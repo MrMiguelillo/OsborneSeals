@@ -1,5 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
+
+v0.7.0 (JMC)
+-------------
+1. Main_simple funciona de forma correcta, la imagen resultada es salida2
+
 v0.6.17 (JMC)
 -------------
 1. Modificada main_simple sin exito
