@@ -42,12 +42,12 @@ for x in range(0,tam):
 
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', img)
-cv2.imwrite('../salida1_umbralizada.png', img)
+#cv2.imwrite('../salida1_umbralizada.png', img)
 
 print("Resultados gráficos")
 plt.figure(1)
 #plt.subplot(211)
 plt.plot(filtrado, range(0, filas))
-plt.plot(np.ones(tam)*101, ini_filas, 'ro')
+plt.plot(np.ones(tam)*100, ini_filas, 'ro')
 plt.plot(np.ones(tam)*100, fin_filas, 'bo')
 plt.show()
