@@ -1,5 +1,9 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
+v0.6.17 (JMC)
+-------------
+1. Modificada main_simple sin exito
+
 v0.6.16 (JMC)
 -------------
 1. Añadida imagen Narciso1 y umbralizada met1,vec0,sig0,thr143
