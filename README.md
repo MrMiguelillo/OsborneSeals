@@ -1,5 +1,8 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
+v0.6.15 (RRG)
+-------------
+1. main_ramon ahora separa ambas partes de la imagen.
 
 v0.6.14 (JMC)
 -------------
