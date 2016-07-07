@@ -7,14 +7,11 @@ from src import Filtros
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
-#img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
-img = cv2.imread('../met_1_vec_0_sig_0_thr_134_binImg.png', 0)
+#img = cv2.imread('../IMG_00003_met_1_vec_0_sig_-1_thr_180.png', 0)
+img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
 img2 = cv2.imread('../imgs/Narciso2.png', -1)
 
 filas, colum = img.shape
-
-print("Histograma horizontal")
-#ist_hor = separar.hor_hist(img)
 
 print("Histograma vertical")
 hist_ver = separar.vert_hist(img)

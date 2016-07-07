@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v0.7.1 (RRG)
+-------------
+1. Modificado el nombre de salida de las imagenes en bin_test
+2. Modificado el nombre de las imágenes binarizadas
+
 v0.7.0 (JMC)
 -------------
 1. Main_simple funciona de forma correcta, la imagen resultada es salida2
