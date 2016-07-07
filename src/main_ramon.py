@@ -8,8 +8,11 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 #img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
-img = cv2.imread('../met_0_vec_2_sig_-1_thr_0_binImg.png', 0)
-img2 = cv2.imread('../imgs/IMG_0003.png', -1)
+#img = cv2.imread('../met_0_vec_2_sig_-1_thr_0_binImg.png', 0)
+#img2 = cv2.imread('../imgs/IMG_0003.png', -1)
+img = cv2.imread('../met_1_vec_0_sig_0_thr_143_binImg.png', 0)
+img2 = cv2.imread('../imgs/Narciso1.png', -1)
+
 filas, colum = img.shape
 
 print("Histograma horizontal")

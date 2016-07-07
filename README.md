@@ -1,5 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
+v0.6.16 (JMC)
+-------------
+1. Añadida imagen Narciso1 y umbralizada met1,vec0,sig0,thr143
+2. Modificado archivo main_ramon y bin_test
+
 v0.6.15 (RRG)
 -------------
 1. main_ramon ahora separa ambas partes de la imagen.
