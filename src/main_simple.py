@@ -9,7 +9,7 @@ filtro = Filtros.Filtros()
 
 #img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
 img = cv2.imread('../met_1_vec_0_sig_0_thr_143_binImg.png', 0)
-img2 = cv2.imread('../imgs/Narciso1.png', -1)
+img2 = cv2.imread('../imgs/Narciso2.png', -1)
 
 filas, colum = img.shape
 
@@ -49,7 +49,7 @@ cv2.imwrite('../salida1.png', img2)
 print("Resultados gráficos")
 plt.figure(1)
 #plt.subplot(211)
-plt.plot(hist_hor)
+plt.plot(hist_ver)
 #plt.plot(ini_palabra, np.zeros(tam_palabra), 'ro')
 #plt.plot(fin_palabra, np.zeros(tam_palabra), 'bo')
 plt.show()
