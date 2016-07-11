@@ -2,10 +2,8 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-from matplotlib import pyplot as plt
-
-img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/tomas_osborne1_train.png', 0)    # trainImage
-img2 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/tomas_osborne3.png', 0)          # queryImage
+img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/3.png', 0)    # trainImage
+img2 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/1.png', 0)          # queryImage
 
 # Initiate SURF detector
 sift = xf.SURF_create()
@@ -21,7 +19,7 @@ search_params = dict(checks=50)   # or pass empty dictionary
 
 flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-matches = flann.knnMatch(des1,des2,k=2)
+matches = flann.knnMatch(des1, des2, k=2)
 
 # Need to draw only good matches, so create a mask
 matchesMask = [[0, 0] for i in range(len(matches))]
@@ -38,7 +36,19 @@ draw_params = dict(matchColor=(0, 255, 0),
 
 img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
+kp_x = []
+kp_y = []
+for i in range(len(kp1)):
+    kp_x.append(kp1[i].pt[0])
+    kp_y.append(kp1[i].pt[1])
+max_x = np.amax(kp_x)
+min_x = np.amin(kp_x)
+max_y = np.amax(kp_y)
+min_y = np.amin(kp_y)
+
 cv2.namedWindow('win', cv2.WINDOW_NORMAL)
 cv2.imshow('win', img3)
 cv2.waitKey()
 cv2.destroyAllWindows()
+
+
