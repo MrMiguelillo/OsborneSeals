@@ -149,3 +149,21 @@ class Separacion:
 
         return (inicios_ok,finales_ok)
 
+
+    def ajustar(self, histograma):
+        long = histograma.size
+        inicio = []
+        final = []
+
+        for x in range(0, long - 1):
+            if (histograma[x] == 0) & (histograma[x + 1] > 0):
+                inicio.append(x + 1)
+                break
+
+
+        for x in range(long - 1, 0, -1):
+            if (histograma[x] == 0) & (histograma[x - 1] > 0):
+                final.append(x - 1)
+                break
+
+        return (inicio, final)

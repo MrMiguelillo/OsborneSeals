@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v0.7.3 (JMC)
+------------
+1. Creada función ajustar para las palabras, no furrula
+
 v0.7.2 (RRG)
 -------------
 1. Creada funcion main_palabras. Ahora guardamos las coordenadas de los dos puntos que limitan cada palabra

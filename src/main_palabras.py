@@ -44,7 +44,7 @@ for x in range(0, num_filas):
         palabra = img[ini_filas[x]:fin_filas[x], ini_palabras[y]:fin_palabras[y]]
         hist_palabra = separar.vert_hist(palabra)
 
-        #res[z][1], res[z][3] = ajustar.palabras(hist_palabra)
+        res[z][1], res[z][3] = separar.ajustar(hist_palabra)
 
         cv2.line(img, (res[z][0], res[z][1]), (res[z][0], res[z][3]), 100, 1)
         cv2.line(img, (res[z][2], res[z][1]), (res[z][2], res[z][3]), 100, 1)
