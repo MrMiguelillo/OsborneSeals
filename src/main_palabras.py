@@ -44,25 +44,26 @@ for x in range(0, num_filas):
         palabra = img[ini_filas[x]:fin_filas[x], ini_palabras[y]:fin_palabras[y]]
         hist_palabra = separar.vert_hist(palabra)
 
-        res[z][1], res[z][3] = separar.ajustar(hist_palabra)
+        ini, fin = separar.ajustar(hist_palabra)
+
+        res[z][1] = res[z][1] + ini
+        res[z][3] = res[z][3] - fin
 
         cv2.line(img, (res[z][0], res[z][1]), (res[z][0], res[z][3]), 100, 1)
         cv2.line(img, (res[z][2], res[z][1]), (res[z][2], res[z][3]), 100, 1)
         cv2.line(img, (res[z][0], res[z][1]), (res[z][2], res[z][1]), 100, 1)
         cv2.line(img, (res[z][0], res[z][3]), (res[z][2], res[z][3]), 100, 1)
 
-        z = z + 1
+        z += 1
 
-
-print(res)
 print("Resultados gráficos")
-cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-cv2.imshow('result', img)
-#cv2.imwrite('../salida_separadas.png', img)
+#cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
+#cv2.imshow('result', img)
+#cv2.imwrite('../salida_ajustada.png', img)
 
 plt.figure(1)
 #plt.subplot(211)
 plt.plot(hist_palabra)
-#plt.plot(np.ones(tam)*100, ini_filas, 'ro')
-#plt.plot(np.ones(tam)*100, fin_filas, 'bo')
+plt.plot(ini, hist_palabra[ini], 'ro')
+plt.plot(len(hist_palabra)-fin, hist_palabra[len(hist_palabra)-fin], 'bo')
 plt.show()

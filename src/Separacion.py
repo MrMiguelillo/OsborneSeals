@@ -152,18 +152,20 @@ class Separacion:
 
     def ajustar(self, histograma):
         long = histograma.size
-        inicio = []
-        final = []
 
-        for x in range(0, long - 1):
-            if (histograma[x] == 0) & (histograma[x + 1] > 0):
-                inicio.append(x + 1)
-                break
+        inicio = 0
+        final = 0
 
+        if histograma[0] == 0:
+            for x in range(0, long - 1):
+                if (histograma[x] == 0) & (histograma[x + 1] > 0):
+                    inicio = x + 1
+                    break
 
-        for x in range(long - 1, 0, -1):
-            if (histograma[x] == 0) & (histograma[x - 1] > 0):
-                final.append(x - 1)
-                break
+        if histograma[long-1] == 0:
+            for x in range(long - 1, 0, -1):
+                if (histograma[x] == 0) & (histograma[x - 1] > 0):
+                    final = long - (x - 1)
+                    break
 
         return (inicio, final)

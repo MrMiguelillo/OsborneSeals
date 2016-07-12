@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v0.7.4 (RRG)
+------------
+1. La función main_palabras funciona correctamente
+2. Modificada la función Separación.ajustar para funcionar con palabras que se solapan 
+
 v0.7.3 (JMC)
 ------------
 1. Creada función ajustar para las palabras, no furrula
