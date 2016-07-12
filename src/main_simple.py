@@ -33,12 +33,12 @@ print("Separar palabras")
 for x in range(0,tam):
     fila = img[ini_filas[x]:fin_filas[x], 0:colum]
     hist_fila = separar.hor_hist(fila)
-    ini_palabra,fin_palabra = separar.palabras(hist_fila,20,80)
+    ini_palabras, fin_palabras = separar.palabras(hist_fila, 20, 80)
 
-    tam_palabra = len(ini_palabra)
+    tam_palabra = len(ini_palabras)
     for y in range(0,tam_palabra):
-        cv2.line(img, (ini_palabra[y], ini_filas[x]), (ini_palabra[y], fin_filas[x]), 100, 3)
-        cv2.line(img, (fin_palabra[y], ini_filas[x]), (fin_palabra[y], fin_filas[x]), 100, 3)
+        cv2.line(img, (ini_palabras[y], ini_filas[x]), (ini_palabras[y], fin_filas[x]), 100, 3)
+        cv2.line(img, (fin_palabras[y], ini_filas[x]), (fin_palabras[y], fin_filas[x]), 100, 3)
 
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', img)
