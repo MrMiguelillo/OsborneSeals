@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v0.7.2 (RRG)
+-------------
+1. Creada funcion main_palabras. Ahora guardamos las coordenadas de los dos puntos que limitan cada palabra
+
 v0.7.1 (RRG)
 -------------
 1. Modificado el nombre de salida de las imagenes en bin_test
