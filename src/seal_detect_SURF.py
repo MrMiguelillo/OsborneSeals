@@ -24,31 +24,34 @@ matches = flann.knnMatch(des1, des2, k=2)
 # Need to draw only good matches, so create a mask
 matchesMask = [[0, 0] for i in range(len(matches))]
 
+kp_matched = []
 # ratio test as per Lowe's paper
 for i, (m, n) in enumerate(matches):
     if m.distance < 0.7*n.distance:
         matchesMask[i] = [1, 0]
+        kp_matched.append(kp2[m.queryIdx])
 
 draw_params = dict(matchColor=(0, 255, 0),
                    singlePointColor=(255, 0, 0),
                    matchesMask=matchesMask,
                    flags=0)
 
-img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
-
 kp_x = []
 kp_y = []
-for i in range(len(kp1)):
-    kp_x.append(kp1[i].pt[0])
-    kp_y.append(kp1[i].pt[1])
+for i in range(len(kp_matched)):
+    kp_x.append(kp_matched[i].pt[0])
+    kp_y.append(kp_matched[i].pt[1])
 max_x = np.amax(kp_x)
 min_x = np.amin(kp_x)
 max_y = np.amax(kp_y)
 min_y = np.amin(kp_y)
 
+cv2.rectangle(img2, (int(min_x),int(min_y)), (int(max_x),int(max_y)), 150, 5)
+
+img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+
+
 cv2.namedWindow('win', cv2.WINDOW_NORMAL)
 cv2.imshow('win', img3)
 cv2.waitKey()
 cv2.destroyAllWindows()
-
-
