@@ -26,10 +26,12 @@ Fl = img
 for i in range(0, fil):
     for j in range(0, col):
         if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
-            Fl[i, j] = 255
+            Fl[i, j] = (255, 0, 255)
 
 Fl = cv2.medianBlur(Fl, 5)
 Fl = cv2.GaussianBlur(Fl, (5,5), 6)
+
+
 cv2.namedWindow('img', cv2.WINDOW_NORMAL)
 cv2.imshow('img', Fl)
 cv2.waitKey()
