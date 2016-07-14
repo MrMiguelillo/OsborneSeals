@@ -169,3 +169,21 @@ class Separacion:
                     break
 
         return (inicio, final)
+
+    def ampliar(self, histograma, margen):
+        long = histograma.size
+
+        inicio = 0
+        final = 0
+
+        if histograma[margen] > 0:
+            for x in range(margen, 0, -1):
+                if histograma[x] == 0:
+                    inicio = x
+
+        if histograma[long - margen] > 0:
+            for x in range(long - margen, long - 1):
+                if histograma[x] == 0:
+                    final = x
+
+        return (inicio, final)
