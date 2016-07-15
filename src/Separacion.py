@@ -177,13 +177,13 @@ class Separacion:
         final = 0
 
         if histograma[margen] > 0:
-            for x in range(margen, 0, -1):
+            for x in range(margen - 1, 0, -1):
                 if histograma[x] == 0:
-                    inicio = x
+                    inicio = margen - x
 
-        if histograma[long - margen] > 0:
+        if histograma[long - 1 - margen] > 0:
             for x in range(long - margen, long - 1):
                 if histograma[x] == 0:
-                    final = x
+                    final = x - (long - 1 - margen)
 
         return (inicio, final)
