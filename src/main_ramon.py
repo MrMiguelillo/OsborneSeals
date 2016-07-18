@@ -67,9 +67,9 @@ for x in range(0,tam2):
         cv2.line(img2, (div + ini_palabra[y], ini_filas2[x]), (div + ini_palabra[y], fin_filas2[x]), 100, 1)
         cv2.line(img2, (div + fin_palabra[y], ini_filas2[x]), (div + fin_palabra[y], fin_filas2[x]), 100, 1)
 
-#cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-#cv2.imshow('result', img)
-cv2.imwrite('../salida.png', img2)
+cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
+cv2.imshow('result', img)
+#cv2.imwrite('../salida.png', img2)
 
 print("Resultados gráficos")
 plt.figure(1)
