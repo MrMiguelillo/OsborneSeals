@@ -4,29 +4,11 @@ import numpy as np
 
 class Separacion:
     def vert_hist(self, img):
-        filas, colum = img.shape
-        hist = np.zeros(filas)
-        suma = 0
-
-        for x in range(0, filas):
-            for y in range(0, colum):
-                if img[x, y] == 0:
-                    suma += 1
-            hist[x] = suma
-            suma = 0
+        hist = np.sum(img, 1)
         return hist
 
     def hor_hist(self, img):
-        filas, colum = img.shape
-        hist = np.zeros(colum)
-        suma = 0
-
-        for y in range(0, colum):
-            for x in range(0, filas):
-                if img[x, y] == 0:
-                    suma += 1
-            hist[y] = suma
-            suma = 0
+        hist = np.sum(img, 0)
         return hist
 
     # Entrada: Histograma horizontal

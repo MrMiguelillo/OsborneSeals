@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.0.1 (RRG)
+------------
+1. Nuevo main_componentes_conexas
+2. Modificadas las funciones que realizan los histogramas con numpy
+
 v0.7.5 (RRG)
 ------------
 1. Pruebas con la función separar.ajustar para ajustar las palabras
