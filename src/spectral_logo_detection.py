@@ -19,14 +19,14 @@ m, n = R.shape
 Fl = img
 for i in range(0, m):
     for j in range(0, n):
-        #R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
-        if Y[i, j] >= spectral_thresh : #and R[i, j] <= chrom_thresh:
+        R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
+        if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
             Fl[i, j] = (255, 255, 255)
 
 
 # umbralizar = Umbralizacion.Umbralizacion()
-gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
-#gray_Fl = cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY)
+#gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
+gray_Fl = cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY)
 #se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
 #se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (7,7))
 # mask = cv2.morphologyEx(gray_Fl, cv2.MORPH_CLOSE, se1)
@@ -34,12 +34,12 @@ gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
 #mask = np.dstack([mask, mask, mask]) / 255
 #out = img * mask
 
-#for i in range(0, m):
-#    for j in range(0, n):
-#        if gray_Fl[i,j] < 180:
-#            gray_Fl[i,j] = 0
-#        else:
-#            gray_Fl[i, j] = 255
+for i in range(0, m):
+    for j in range(0, n):
+        if gray_Fl[i,j] < 180:
+            gray_Fl[i,j] = 0
+        else:
+            gray_Fl[i, j] = 255
 
 #filt_gray_Fl = cv2.medianBlur(gray_Fl, 3)
 #filt_gray_Fl = cv2.GaussianBlur(filt_gray_Fl, (5, 5), 5)
@@ -68,7 +68,7 @@ gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
 
 #cv2.imwrite('sello1_Test.png', Fl)
 cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-cv2.imshow('img', Fl)
+cv2.imshow('img', gray_Fl)
 cv2.waitKey()
 
 
