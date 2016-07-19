@@ -9,7 +9,7 @@ separar = Umbralizacion.Umbralizacion()
 def do_nothing(x):
     pass
 
-img = cv2.imread('../imgs/Narciso2.png')
+img = cv2.imread('sello1_Test.png')
 cv2.namedWindow('image_window', cv2.WINDOW_NORMAL)
 cv2.namedWindow('control_window')
 
