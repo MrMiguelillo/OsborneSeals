@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.0.2 (RRG)
+------------
+1. Cambios en main_componentes_conexas para hacer pruebas con el erosionado
+
 v1.0.1 (RRG)
 ------------
 1. Nuevo main_componentes_conexas
