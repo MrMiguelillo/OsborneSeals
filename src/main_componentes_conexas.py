@@ -60,6 +60,8 @@ for y in range(0, num_filas):
         palabra = ero[res[z][1]:res[z][3], res[z][0]:res[z][2]]
         # Histograma vertical
         hist_palabra = separar.vert_hist(palabra)
+
+        
         # Filtrado
         # hist_palabra_filtrada = filtro.mediana(hist_palabra, 5)
         # Ajustar palabras
