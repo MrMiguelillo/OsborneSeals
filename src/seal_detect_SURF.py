@@ -2,7 +2,7 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/3.png', 0)    # trainImage
+img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/1.png', 0)    # trainImage
 img2 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/1.png', 0)          # queryImage
 
 # Initiate SURF detector
@@ -46,7 +46,7 @@ min_x = np.amin(kp_x)
 max_y = np.amax(kp_y)
 min_y = np.amin(kp_y)
 
-cv2.rectangle(img2, (int(min_x),int(min_y)), (int(max_x),int(max_y)), 150, 5)
+# cv2.rectangle(img2, (int(min_x),int(min_y)), (int(max_x),int(max_y)), 150, 5)
 
 img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
