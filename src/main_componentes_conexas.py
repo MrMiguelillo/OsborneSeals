@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 from PIL import Image
 from skimage import measure
 from src import Separacion
@@ -10,8 +11,9 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-original = Image.open('../imgs/Narciso2.png')
-ppi = original.info['dpi']
+orig = Image.open('../imgs/Narciso2.png')
+ppi = orig.info['dpi']
+original = cv2.imread('../imgs/Narciso2.png')
 
 # Importar imagen binarizada
 img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
@@ -33,60 +35,34 @@ hist_ver_filtrado = filtro.mediana(hist_ver, 10)
 ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
 num_filas = len(ini_filas)
 
-print("Separar palabras")
+print("Encontrar palabras")
 kernel = np.ones((5,5),np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=1)
-img_ero_plant = img_ero < 255
-num_palabras = []
-res=[]
-z=0
-for y in range(0, num_filas):
-    # Seleccionar fila
-    fila = img_ero_plant[ini_filas[y]:fin_filas[y], 0:col_px]
-    # Histograma horizontal
-    hist_fila = separar.hor_hist(fila)
-    # Separar palabras
-    minimo_hueco = 7
-    minimo_palabra = 20
-    ini_palabras, fin_palabras = separar.palabras(hist_fila, minimo_hueco, minimo_palabra)
-    num_palabras.append(len(ini_palabras))
-
-    print("Fila %d de %d - Encontradas %d palabras " % (y + 1, num_filas, num_palabras[y]))
-
-    for x in range(0, num_palabras[y]):
-
-        res.append([ini_palabras[x], ini_filas[y], fin_palabras[x], fin_filas[y]])
-        # Seleccionar palabra
-        palabra = img_ero_plant[res[z][1]:res[z][3], res[z][0]:res[z][2]]
-        # Histograma vertical
-        hist_palabra = separar.vert_hist(palabra)
-        # Filtrado
-        # hist_palabra_filtrada = filtro.mediana(hist_palabra, 5)
-        # Ajustar palabras
-        ini, fin = separar.ajustar(hist_palabra)
-        res[z][1] = res[z][1] + ini
-        res[z][3] = res[z][3] - fin
-
-        L = measure.label(palabra)
-        print("   Palabra %d - Componentes conexas: %d" % (z, np.max(L)))
-
-        z += 1
-
-total_palabras = len(res)
-for z in range(0, total_palabras):
-        cv2.line(img_ero, (res[z][0], res[z][1]), (res[z][2], res[z][1]), 100, 1)
-        cv2.line(img_ero, (res[z][2], res[z][1]), (res[z][2], res[z][3]), 100, 1)
-        cv2.line(img_ero, (res[z][2], res[z][3]), (res[z][0], res[z][3]), 100, 1)
-        cv2.line(img_ero, (res[z][0], res[z][3]), (res[z][0], res[z][1]), 100, 1)
+img_ero = cv2.erode(img, kernel, iterations=3)
+img_ero_bw = (img_ero<1).astype('uint8')
 
 
 print("Resultados gráficos")
-#cv2.imwrite('../prueba_compconex.png', img)
-plt.figure(1)
+fig, ax = plt.subplots(1,1)
+ax.imshow(orig)
+#plt.set_cmap("gray")
 plt.subplots_adjust(.01,.01,.99,.99)
-plt.set_cmap("gray")
-plt.imshow(img_ero)
+
+
+for y in range(0, num_filas):
+
+    fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], 0:col_px]
+    label_image = measure.label(fila_ero_bw)
+
+    for region in measure.regionprops(label_image):
+
+        # skip small images
+        if region.area < 1000:
+            continue
+
+        # draw rectangle around segmented coins
+        minr, minc, maxr, maxc = region.bbox
+        rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
+
+        ax.add_patch(rect)
+
 plt.show()
-#plt.figure(2)
-#plt.plot(filtrado)
-#plt.show()

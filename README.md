@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.0 (RRG)
+------------
+1. Se detectan correctamente las palabras por el método de las componenetes conexas
+
 v1.0.2 (RRG)
 ------------
 1. Cambios en main_componentes_conexas para hacer pruebas con el erosionado
