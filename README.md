@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.1 (RRG)
+------------
+1. Pruebas para unir componentes conexas en distintas lineas
+
 v1.1.0 (RRG)
 ------------
 1. Se detectan correctamente las palabras por el método de las componenetes conexas
