@@ -91,7 +91,7 @@ for y in range(0, num_filas):
         cv2.line(original, (maxc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
 
         texto = str(z)
-        cv2.putText(original, texto, (maxc, maxr + ini_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1, cv2.LINE_AA)
+        cv2.putText(original, texto, (minc, maxr + ini_filas[y] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1, cv2.LINE_AA)
 
     #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
 
