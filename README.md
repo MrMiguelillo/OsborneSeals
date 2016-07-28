@@ -3,6 +3,12 @@ Readme Lab Osborne JMC, MRL, RRG, JSM
 
 v1.1.2 (RRG)
 ------------
+1. Añadidos txt de ground truth
+2. Añadidas imágenes de ground truth
+3. importar_txt.py como pruebas para json
+
+v1.1.2 (RRG)
+------------
 1. Añadidos archivos para el ground truth
 
 v1.1.1 (RRG)
