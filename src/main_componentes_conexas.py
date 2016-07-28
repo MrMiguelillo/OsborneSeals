@@ -51,12 +51,13 @@ plt.subplots_adjust(.01,.01,.99,.99)
 
 res = []
 palabras = np.zeros(num_filas)
+z = 0
 
 for y in range(0, num_filas):
 
     # Dibujar líneas de separación de filas
-    cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
-    cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
+    #cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
+    #cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
 
     # Seleccionar fila
     fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], 0:col_px]
@@ -77,6 +78,10 @@ for y in range(0, num_filas):
 
         res.append([minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]])
 
+        z = z + 1
+
+        #print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
+
         rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
         ax.add_patch(rect)
 
@@ -85,8 +90,12 @@ for y in range(0, num_filas):
         cv2.line(original, (minc, maxr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
         cv2.line(original, (maxc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
 
-    print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
+        texto = str(z)
+        cv2.putText(original, texto, (maxc, maxr + ini_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1, cv2.LINE_AA)
 
+    #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
+
+'''
 integ = cv2.integral(palabras)
 
 # Línea inferior
@@ -111,6 +120,8 @@ for y in range(1, num_filas):
 
                 cv2.line(original, (res[x][0], res[x][1]), (res[x][2], res[x][1]), 255, 1)
 
+
+'''
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', original)
 cv2.imwrite('../comp_conx.png', original)

@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.2 (RRG)
+------------
+1. Añadidos archivos para el ground truth
+
 v1.1.1 (RRG)
 ------------
 1. Pruebas para unir componentes conexas en distintas lineas
