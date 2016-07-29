@@ -1,7 +1,7 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
-v1.1.2 (RRG)
+v1.1.3 (RRG)
 ------------
 1. Añadidos txt de ground truth
 2. Añadidas imágenes de ground truth
