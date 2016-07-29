@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.4 (RRG)
+------------
+1. Añadido test para comprobar el groundtruth
+2. Añadido main_componentes_conexas_pag 
+
 v1.1.3 (RRG)
 ------------
 1. Añadidos txt de ground truth

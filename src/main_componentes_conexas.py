@@ -14,12 +14,15 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-orig = Image.open('../imgs/Narciso2.png')
+#orig = Image.open('../imgs/Narciso2.png')
+orig = Image.open('../imgs/IMG_0003.png')
 ppi = orig.info['dpi']
-original = cv2.imread('../imgs/Narciso2.png')
+#original = cv2.imread('../imgs/Narciso2.png')
+original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
-img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+img = cv2.imread('../IMG_0003_met_0_vec_3_sig_-1_thr_0.png', 0)
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -119,8 +122,54 @@ for y in range(1, num_filas):
 
 
 '''
+groundtruth = []
+
+with open('../T_1892.01.25_erosion_3.txt') as inputfile:
+    for line in inputfile:
+        groundtruth.append(line.strip().split('\t'))
+
+tam_groundtruth = len(groundtruth)
+
+SI = np.zeros(tam_groundtruth)
+SA = np.zeros(tam_groundtruth)
+SB = np.zeros(tam_groundtruth)
+ST = np.zeros(tam_groundtruth)
+ratio = np.zeros(tam_groundtruth)
+aciertos = 0
+
+for x in range(0, tam_groundtruth):
+    for z in range(0, len(res)):
+
+        XA1 = res[z][0]
+        YA1 = res[z][1]
+        XA2 = res[z][2]
+        YA2 = res[z][3]
+        XG1 = int(groundtruth[x][3])
+        YG1 = int(groundtruth[x][4])
+        XG2 = int(groundtruth[x][5])
+        YG2 = int(groundtruth[x][6])
+
+        SI = np.max([0, (np.min([XA2, XG2]) - np.max([XA1, XG1]))]) * np.max([0, (np.min([YA2, YG2]) - np.max([YA1, YG1]))])
+
+        if SI > 0:
+
+            SA = (XA2 - XA1) * (YA2 - YA1)
+            SB = (XG2 - XG1) * (YG2 - YG1)
+
+            ratio[x] = np.max([ratio[x], SI/(SA+SB-SI)])
+
+    if ratio[x] > 0.8:
+
+        aciertos = aciertos + 1
+
+print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam_groundtruth, aciertos/tam_groundtruth*100))
+
+
+
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', original)
 #cv2.imwrite('../comp_conx.png', original)
+
+
 
 plt.show()
