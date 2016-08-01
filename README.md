@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.5 (RRG)
+------------
+1. Cambios varios para imprimir el texto en la imagen
+
 v1.1.4 (RRG)
 ------------
 1. Añadido test para comprobar el groundtruth

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import scipy
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from skimage import measure
 from scipy import ndimage
 from src import Separacion
@@ -14,15 +14,17 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-#orig = Image.open('../imgs/Narciso2.png')
-orig = Image.open('../imgs/IMG_0003.png')
+orig = Image.open('../imgs/Narciso2.png')
+font = ImageFont.truetype("Arial.ttf",40)
+d = ImageDraw.Draw(orig)
+#orig = Image.open('../imgs/IMG_0003.png')
 ppi = orig.info['dpi']
-#original = cv2.imread('../imgs/Narciso2.png')
-original = cv2.imread('../imgs/IMG_0003.png')
+original = cv2.imread('../imgs/Narciso2.png')
+#original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
-#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-img = cv2.imread('../IMG_0003_met_0_vec_3_sig_-1_thr_0.png', 0)
+img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+#img = cv2.imread('../IMG_0003_met_0_vec_3_sig_-1_thr_0.png', 0)
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -31,6 +33,15 @@ col_cm = col_px/(ppi[0]*0.39370)
 
 # Plantilla de pertenencia
 img_plant = img < 255
+
+# Importar transcripción
+texto = []
+with open('../T_1892.01.25.txt') as inputfile:
+    for line in inputfile:
+        texto.append(line.strip())
+
+#for x in range(0, len(txt)):
+#    print(txt[x])
 
 print("Separar filas")
 # Histograma vertical
@@ -42,18 +53,19 @@ ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
 num_filas = len(ini_filas)
 
 print("Encontrar palabras")
-kernel = np.ones((5,5),np.uint8)
-img_ero = cv2.erode(img, kernel, iterations = 3)
+kernel = np.ones((5, 5), np.uint8)
+img_ero = cv2.erode(img, kernel, iterations=3)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
 print("Resultados gráficos")
-fig, ax = plt.subplots(1,1)
+fig, ax = plt.subplots(1, 1)
 ax.imshow(orig)
 #plt.set_cmap("gray")
-plt.subplots_adjust(.01,.01,.99,.99)
+plt.subplots_adjust(.01, .01, .99, .99)
 
 res = []
 palabras = np.zeros(num_filas)
+coordenadas  = np.zeros(num_filas)
 z = 0
 
 for y in range(0, num_filas):
@@ -61,6 +73,7 @@ for y in range(0, num_filas):
     # Dibujar líneas de separación de filas
     #cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
     #cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
+    #cv2.putText(original, str(y), (200, fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
 
     # Seleccionar fila
     fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], 0:col_px]
@@ -83,17 +96,23 @@ for y in range(0, num_filas):
 
         z = z + 1
 
-        #print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
-
         rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
         ax.add_patch(rect)
 
-        cv2.rectangle(original, (minc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
+        # Dibujar rectángulos de palabras
+        #cv2.rectangle(original, (minc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
 
-        texto = str(z)
-        cv2.putText(original, texto, (minc, maxr + ini_filas[y] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1, cv2.LINE_AA)
+        # Dibujar número de palabras
+        #cv2.putText(original, str(z), (minc, maxr + ini_filas[y] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+
+        # Imprimir coordenadas de cada palabra
+        # print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
+
 
     #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
+
+
+        d.text((minc + 20, minr + ini_filas[y] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
 
 '''
 integ = cv2.integral(palabras)
@@ -120,6 +139,8 @@ for y in range(1, num_filas):
 
                 cv2.line(original, (res[x][0], res[x][1]), (res[x][2], res[x][1]), 255, 1)
 
+
+'''
 
 '''
 groundtruth = []
@@ -163,13 +184,13 @@ for x in range(0, tam_groundtruth):
         aciertos = aciertos + 1
 
 print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam_groundtruth, aciertos/tam_groundtruth*100))
+'''
 
-
-
-cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-cv2.imshow('result', original)
+#cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
+#cv2.imshow('result', original)
 #cv2.imwrite('../comp_conx.png', original)
 
-
-
+orig.save("../texto.png")
 plt.show()
+print('Fin del código')
+

@@ -158,6 +158,4 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 #cv2.imshow('result', original)
 cv2.imwrite('../comp_conx_pag.png', original)
 
-
-
 plt.show()
