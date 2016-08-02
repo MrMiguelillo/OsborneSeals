@@ -9,7 +9,6 @@ from scipy import ndimage
 from src import Separacion
 from src import Filtros
 
-
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
