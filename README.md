@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+1.1.7 (RRG)
+-----------
+1. Modificado main_componentes_conexas para reordenar las palabras encontradas en orden
+
 v1.1.6 (JMC)
 ------------
 1. Añadido 1882-L123.M17.T_2.txt
