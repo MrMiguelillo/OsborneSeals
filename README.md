@@ -1,6 +1,12 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ================== 
 
+v1.1.6 (JMC)
+------------
+1. Añadido 1882-L123.M17.T_2.txt
+2. Realizada la umbralización de la pagina 2-3 del met_0_vec_0_sig_0_thr_0.png
+3. La imagen umbralizada es met_0_vec_0_sig_0_thr_0.png
+
 v1.1.5 (RRG)
 ------------
 1. Cambios varios para imprimir el texto en la imagen

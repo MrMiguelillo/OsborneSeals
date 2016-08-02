@@ -34,15 +34,6 @@ col_cm = col_px/(ppi[0]*0.39370)
 # Plantilla de pertenencia
 img_plant = img < 255
 
-# Importar transcripción
-texto = []
-with open('../T_1892.01.25.txt') as inputfile:
-    for line in inputfile:
-        texto.append(line.strip())
-
-#for x in range(0, len(txt)):
-#    print(txt[x])
-
 print("Separar filas")
 # Histograma vertical
 hist_ver = separar.vert_hist(img_plant)
@@ -63,6 +54,15 @@ ax.imshow(orig)
 #plt.set_cmap("gray")
 plt.subplots_adjust(.01, .01, .99, .99)
 
+# Importar transcripción
+texto = []
+with open('../T_1892.01.25.txt') as inputfile:
+    for line in inputfile:
+        texto.append(line.strip())
+
+#for x in range(0, len(txt)):
+#    print(texto[x])
+
 res = []
 palabras = np.zeros(num_filas)
 pagina = []
@@ -73,6 +73,7 @@ for y in range(0, num_filas):
     # Dibujar líneas de separación de filas
     #cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
     #cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
+    # Dibujar número de línea
     #cv2.putText(original, str(y), (200, fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
 
     # Seleccionar fila
@@ -107,17 +108,18 @@ for y in range(0, num_filas):
         # Imprimir coordenadas de cada palabra
         # print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
 
+    # Ordenar palabras de una línea
+    linea = sorted(linea, key=lambda coord: coord[0])
+    # Añadir palabras de una línea
     pagina.append(linea)
-    #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
+    # Imprimir texto
+    d.text((linea[0][0] + 20, linea[0][1] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
 
-print(pagina[1])
-
-
-        #d.text((minc + 20, minr + ini_filas[y] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
-
+    print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
 
 
 '''
+# Detectar lados de palabras que se unen con otras líneas
 integ = cv2.integral(palabras)
 
 # Línea inferior
@@ -146,6 +148,7 @@ for y in range(1, num_filas):
 '''
 
 '''
+# Pruebas para comparar la efectividad del código
 groundtruth = []
 
 with open('../T_1892.01.25_erosion_3.txt') as inputfile:
@@ -196,4 +199,3 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 orig.save("../texto.png")
 plt.show()
 print('Fin del código')
-
