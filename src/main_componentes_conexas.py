@@ -65,7 +65,7 @@ plt.subplots_adjust(.01, .01, .99, .99)
 
 res = []
 palabras = np.zeros(num_filas)
-coordenadas  = np.zeros(num_filas)
+pagina = []
 z = 0
 
 for y in range(0, num_filas):
@@ -81,6 +81,7 @@ for y in range(0, num_filas):
     label_image = measure.label(fila_ero_bw)
 
     palabras[y] = 0
+    linea = []
 
     for region in measure.regionprops(label_image):
 
@@ -92,9 +93,7 @@ for y in range(0, num_filas):
 
         minr, minc, maxr, maxc = region.bbox
 
-        res.append([minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]])
-
-        z = z + 1
+        linea.append([minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]])
 
         rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
         ax.add_patch(rect)
@@ -103,16 +102,20 @@ for y in range(0, num_filas):
         #cv2.rectangle(original, (minc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
 
         # Dibujar número de palabras
+        #z = z + 1
         #cv2.putText(original, str(z), (minc, maxr + ini_filas[y] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
-
         # Imprimir coordenadas de cada palabra
         # print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
 
-
+    pagina.append(linea)
     #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
 
+print(pagina[1])
 
-        d.text((minc + 20, minr + ini_filas[y] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
+
+        #d.text((minc + 20, minr + ini_filas[y] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
+
+
 
 '''
 integ = cv2.integral(palabras)
