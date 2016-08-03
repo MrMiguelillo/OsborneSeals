@@ -9,22 +9,25 @@ from scipy import ndimage
 from src import Separacion
 from src import Filtros
 
-
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-#orig = Image.open('../imgs/Narciso2.png')
+
+orig = Image.open('../imgs/Narciso2.png')
+#orig = Image.open('../imgs/IMG_0003.png')
+
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
-orig = Image.open('../imgs/IMG_0003.png')
 ppi = orig.info['dpi']
-#original = cv2.imread('../imgs/Narciso2.png')
-original = cv2.imread('../imgs/IMG_0003.png')
+
+original = cv2.imread('../imgs/Narciso2.png')
+#original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
-#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
+img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+#img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
+
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -33,6 +36,10 @@ col_cm = col_px/(ppi[0]*0.39370)
 
 # Plantilla de pertenencia
 img_plant = img < 255
+
+#print("Separar columnas")
+#hist_hor = separar.hor_hist(img_plant)
+#div = separar.columnas(hist_hor)
 
 print("Separar filas")
 # Histograma vertical
@@ -49,10 +56,10 @@ img_ero = cv2.erode(img, kernel, iterations=3)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
 print("Resultados gráficos")
-fig, ax = plt.subplots(1, 1)
-ax.imshow(orig)
-#plt.set_cmap("gray")
-plt.subplots_adjust(.01, .01, .99, .99)
+#fig, ax = plt.subplots(1, 1)
+#ax.imshow(orig)
+##plt.set_cmap("gray")
+#plt.subplots_adjust(.01, .01, .99, .99)
 
 # Importar transcripción
 texto = []
@@ -69,12 +76,6 @@ pagina = []
 z = 0
 
 for y in range(0, num_filas):
-
-    # Dibujar líneas de separación de filas
-    #cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
-    #cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
-    # Dibujar número de línea
-    #cv2.putText(original, str(y), (200, fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
 
     # Seleccionar fila
     fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], 0:col_px]
@@ -96,27 +97,35 @@ for y in range(0, num_filas):
 
         linea.append([minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]])
 
-        rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
-        ax.add_patch(rect)
-
-        # Dibujar rectángulos de palabras
-        #cv2.rectangle(original, (minc, minr + ini_filas[y]), (maxc, maxr + ini_filas[y]), 0, 1)
-
-        # Dibujar número de palabras
-        #z = z + 1
-        #cv2.putText(original, str(z), (minc, maxr + ini_filas[y] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
-        # Imprimir coordenadas de cada palabra
-        # print("T_1892.01.25 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]))
+        #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
+        #ax.add_patch(rect)
 
     # Ordenar palabras de una línea
     linea = sorted(linea, key=lambda coord: coord[0])
     # Añadir palabras de una línea
     pagina.append(linea)
-    # Imprimir texto
-    d.text((linea[0][0] + 20, linea[0][1] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
 
+
+
+print("Resultados gráficos")
+p = 1
+for y in range(0, len(pagina)):
     print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
-
+    # Dibujar líneas de separación de filas
+    cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
+    cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
+    # Dibujar número de línea
+    cv2.putText(original, str(y), (200, fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+    # Imprimir texto
+    d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
+    for z in range(0, int(palabras[y])):
+        # Imprimir coordenadas de cada palabra
+        #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
+        # Dibujar rectángulos de palabras
+        cv2.rectangle(original, (pagina[y][z][0], pagina[y][z][1]), (pagina[y][z][2], pagina[y][z][3]), 0, 1)
+        # Dibujar número de palabra
+        cv2.putText(original, str(p), (pagina[y][z][0], pagina[y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+        p += 1
 
 '''
 # Detectar lados de palabras que se unen con otras líneas
@@ -191,11 +200,9 @@ for x in range(0, tam_groundtruth):
 
 print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam_groundtruth, aciertos/tam_groundtruth*100))
 '''
-
+print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', original)
-#cv2.imwrite('../comp_conx.png', original)
-
-orig.save("../texto.png")
-plt.show()
-print('Fin del código')
+cv2.imwrite('../comp_conx.png', original)
+orig.save("../comp_conx_texto.png")
+#plt.show()

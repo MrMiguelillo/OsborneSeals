@@ -1,5 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
-================== 
+==================
+
+v1.2.0 (JSM)
+------------
+1. Subidos los archivos para la realizacion de transformacion a grises de la imagen original
+2. Umbralizacion a global y algoritmos locales
 
 v1.1.7 (RRG)
 ------------
