@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v1.2.1 (RRG)
+------------
+1. main_componentes_conexas funciona correctamente par una imagen con 2 paginas
+
 v1.2.0 (JSM)
 ------------
 1. Subidos los archivos para la realizacion de transformacion a grises de la imagen original

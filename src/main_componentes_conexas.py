@@ -13,21 +13,19 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-
-orig = Image.open('../imgs/Narciso2.png')
-#orig = Image.open('../imgs/IMG_0003.png')
+#orig = Image.open('../imgs/Narciso2.png')
+orig = Image.open('../imgs/IMG_0003.png')
 
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
 ppi = orig.info['dpi']
 
-original = cv2.imread('../imgs/Narciso2.png')
-#original = cv2.imread('../imgs/IMG_0003.png')
+#original = cv2.imread('../imgs/Narciso2.png')
+original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
-img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-#img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
-
+#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -37,25 +35,46 @@ col_cm = col_px/(ppi[0]*0.39370)
 # Plantilla de pertenencia
 img_plant = img < 255
 
-#print("Separar columnas")
-#hist_hor = separar.hor_hist(img_plant)
-#div = separar.columnas(hist_hor)
+print("Separar columnas")
+hist_hor = separar.hor_hist(img_plant)
+div = separar.columnas(hist_hor)
 
 print("Separar filas")
 # Histograma vertical
-hist_ver = separar.vert_hist(img_plant)
+hist_ver1 = separar.vert_hist(img_plant[0:fil_px, 0:div])
+hist_ver2 = separar.vert_hist(img_plant[0:fil_px, div:col_px])
 # Filtrado
-hist_ver_filtrado = filtro.mediana(hist_ver, 10)
+hist_ver_filtrado1 = filtro.mediana(hist_ver1, 10)
+hist_ver_filtrado2 = filtro.mediana(hist_ver2, 10)
+
 # Separar filas
-ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
-num_filas = len(ini_filas)
+ini_filas1, fin_filas1 = separar.filas(hist_ver_filtrado1, 100)
+ini_filas2, fin_filas2 = separar.filas(hist_ver_filtrado2, 100)
+num_filas = len(ini_filas1) + len(ini_filas2)
+
+ini_filas = ini_filas1.copy()
+ini_filas.extend(ini_filas2)
+fin_filas = fin_filas1.copy()
+fin_filas.extend(fin_filas2)
+
+izq_filas = np.zeros(num_filas)
+der_filas = np.zeros(num_filas)
+
+izq_filas[0:len(ini_filas1)] = 0
+der_filas[0:len(ini_filas1)] = div
+izq_filas[len(ini_filas1):num_filas] = div
+der_filas[len(ini_filas1):num_filas] = col_px
+izq_filas = izq_filas.astype('int')
+der_filas = der_filas.astype('int')
+
+print(izq_filas)
 
 print("Encontrar palabras")
 kernel = np.ones((5, 5), np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=3)
+img_ero = cv2.erode(img, kernel, iterations=5)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
-print("Resultados gráficos")
+#print("Resultados gráficos")
 #fig, ax = plt.subplots(1, 1)
 #ax.imshow(orig)
 ##plt.set_cmap("gray")
@@ -63,12 +82,27 @@ print("Resultados gráficos")
 
 # Importar transcripción
 texto = []
-with open('../T_1892.01.25.txt') as inputfile:
+pag = []
+documento = []
+with open('../1882-L123.M17.T_2.txt') as inputfile:
     for line in inputfile:
+        #texto.append(line.strip().split('\t'))
         texto.append(line.strip())
 
-#for x in range(0, len(txt)):
-#    print(texto[x])
+for z in range (1, len(texto)):
+    if texto[z] == "..........":
+        documento.append(pag)
+        pag = []
+    else:
+        pag.append(texto[z])
+
+txt = documento[1].copy()
+txt.extend(documento[2])
+
+#texto = []
+#with open('../T_1892.01.25.txt') as inputfile:
+#    for line in inputfile:
+#        texto.append(line.strip())
 
 res = []
 palabras = np.zeros(num_filas)
@@ -78,7 +112,7 @@ z = 0
 for y in range(0, num_filas):
 
     # Seleccionar fila
-    fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], 0:col_px]
+    fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], izq_filas[y]:der_filas[y]]
     # Componentes conexas
     label_image = measure.label(fila_ero_bw)
 
@@ -92,10 +126,8 @@ for y in range(0, num_filas):
             continue
 
         palabras[y] = palabras[y] + 1
-
         minr, minc, maxr, maxc = region.bbox
-
-        linea.append([minc, minr + ini_filas[y], maxc, maxr + ini_filas[y]])
+        linea.append([minc + izq_filas[y], minr + ini_filas[y], maxc + izq_filas[y], maxr + ini_filas[y]])
 
         #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
         #ax.add_patch(rect)
@@ -105,19 +137,17 @@ for y in range(0, num_filas):
     # Añadir palabras de una línea
     pagina.append(linea)
 
-
-
 print("Resultados gráficos")
 p = 1
 for y in range(0, len(pagina)):
     print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
     # Dibujar líneas de separación de filas
-    cv2.line(original, (0, ini_filas[y]), (col_px, ini_filas[y]), 0, 1)
-    cv2.line(original, (0, fin_filas[y]), (col_px, fin_filas[y]), 0, 1)
+    #cv2.line(original, (izq_filas[y], ini_filas[y]), (der_filas[y], ini_filas[y]), 0, 1)
+    #cv2.line(original, (izq_filas[y], fin_filas[y]), (der_filas[y], fin_filas[y]), 0, 1)
     # Dibujar número de línea
-    cv2.putText(original, str(y), (200, fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+    #cv2.putText(original, str(y), (pagina[y][0][0], fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
     # Imprimir texto
-    d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), texto[y], font=font, fill=(0, 0, 255, 255))
+    d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), txt[y], font=font, fill=(0, 0, 255, 255))
     for z in range(0, int(palabras[y])):
         # Imprimir coordenadas de cada palabra
         #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
