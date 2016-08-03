@@ -14,17 +14,17 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-orig = Image.open('../imgs/Narciso2.png')
+#orig = Image.open('../imgs/Narciso2.png')
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
-#orig = Image.open('../imgs/IMG_0003.png')
+orig = Image.open('../imgs/IMG_0003.png')
 ppi = orig.info['dpi']
-original = cv2.imread('../imgs/Narciso2.png')
-#original = cv2.imread('../imgs/IMG_0003.png')
+#original = cv2.imread('../imgs/Narciso2.png')
+original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
-img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-#img = cv2.imread('../IMG_0003_met_0_vec_3_sig_-1_thr_0.png', 0)
+#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
