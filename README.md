@@ -1,6 +1,12 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v1.3.0 (RRG)
+------------
+1. main_componentes_conexas_pag funciona correctamente par una o dos imágenes
+2. Movidas imágenes de resultados al servidor
+3. Movidos varios txt al servidor
+
 v1.2.1 (RRG)
 ------------
 1. main_componentes_conexas funciona correctamente par una imagen con 2 paginas
