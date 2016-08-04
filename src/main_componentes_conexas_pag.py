@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import scipy
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from skimage import measure
 from scipy import ndimage
 from src import Separacion
@@ -15,13 +15,17 @@ filtro = Filtros.Filtros()
 # Importar imagen original
 #orig = Image.open('../imgs/Narciso2.png')
 orig = Image.open('../imgs/IMG_0003.png')
+
+font = ImageFont.truetype("Arial.ttf",40)
+d = ImageDraw.Draw(orig)
 ppi = orig.info['dpi']
+
 #original = cv2.imread('../imgs/Narciso2.png')
 original = cv2.imread('../imgs/IMG_0003.png')
 
 # Importar imagen binarizada
 #img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-img = cv2.imread('../IMG_0003_met_0_vec_3_sig_-1_thr_0.png', 0)
+img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -31,57 +35,120 @@ col_cm = col_px/(ppi[0]*0.39370)
 # Plantilla de pertenencia
 img_plant = img < 255
 
+print("Separar columnas")
+num_paginas = 2
+if num_paginas == 2:
+    hist_hor = separar.hor_hist(img_plant)
+    div = separar.columnas(hist_hor)
+    tab = [0, div, col_px]
+else:
+    tab = [0, col_px]
+
 print("Separar filas")
-# Histograma vertical
-hist_ver = separar.vert_hist(img_plant)
-# Filtrado
-hist_ver_filtrado = filtro.mediana(hist_ver, 10)
-# Separar filas
-ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
-num_filas = len(ini_filas)
+filas = []
+num_filas = []
+for x in range(0, num_paginas):
+    # Histograma vertical
+    hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
+    # Filtrado
+    hist_ver_filtrado = filtro.mediana(hist_ver, 10)
+    # Separar filas
+    ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
+    # Toma de datos
+    num_filas.append(len(ini_filas))
+    filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
 
 print("Encontrar palabras")
-kernel = np.ones((5,5),np.uint8)
-img_ero = cv2.erode(img, kernel, iterations = 3)
+kernel = np.ones((5, 5), np.uint8)
+img_ero = cv2.erode(img, kernel, iterations=5)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
-print("Resultados gráficos")
-fig, ax = plt.subplots(1,1)
-ax.imshow(orig)
-#plt.set_cmap("gray")
-plt.subplots_adjust(.01,.01,.99,.99)
+#print("Resultados gráficos")
+#fig, ax = plt.subplots(1, 1)
+#ax.imshow(orig)
+##plt.set_cmap("gray")
+#plt.subplots_adjust(.01, .01, .99, .99)
 
-res = []
-z = 0
+# Importar transcripción
+texto = []
+txt_pag = []
+txt_documento = []
+with open('../1882-L123.M17.T_2.txt') as inputfile:
+    for line in inputfile:
+        #texto.append(line.strip().split('\t'))
+        texto.append(line.strip())
 
-# Componentes conexas
-label_image = measure.label(img_ero_bw)
+for z in range (1, len(texto)):
+    if texto[z] == "..........":
+        txt_documento.append(txt_pag)
+        txt_pag = []
+    else:
+        txt_pag.append(texto[z])
 
-for region in measure.regionprops(label_image):
+txt = [txt_documento[1], txt_documento[2]]
 
-    # skip small images
-    if region.area < 1000:
-        continue
+num_palabras = []
+palabras = []
+for x in range(0, num_paginas):
+    num_palabras_pagina = []
+    palabras_pagina = []
+    for y in range(0, num_filas[x]):
+        # Seleccionar fila
+        fila_ero_bw = img_ero_bw[filas[x][0][y]:filas[x][1][y], filas[x][2]:filas[x][3]]
+        # Componentes conexas
+        label_image = measure.label(fila_ero_bw)
 
-    minr, minc, maxr, maxc = region.bbox
+        num_palabras_fila = 0
+        palabras_fila = []
 
-    res.append([minc, minr, maxc, maxr])
+        for region in measure.regionprops(label_image):
+            # skip small images
+            if region.area < 1000:
+                continue
 
-    z = z + 1
+            num_palabras_fila += 1
+            minr, minc, maxr, maxc = region.bbox
+            palabras_fila.append([minc + filas[x][2], minr + filas[x][0][y], maxc + filas[x][2], maxr + filas[x][0][y]])
 
-    print("T_2 \t %2d \t %7d \t %7d \t %7d \t %7d" % (z, minc, minr, maxc, maxr))
+            #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
+            #ax.add_patch(rect)
 
-    rect = mpatches.Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
-    ax.add_patch(rect)
+        # Añadir número de palabras de una fila
+        num_palabras_pagina.append(num_palabras_fila)
 
-    cv2.rectangle(original, (minc, minr), (maxc, maxr), 0, 1)
+        # Ordenar palabras de una fila
+        palabras_fila = sorted(palabras_fila, key=lambda coord: coord[0])
+        # Añadir palabras de una fila
+        palabras_pagina.append(palabras_fila)
 
-    texto = str(z)
-    cv2.putText(original, texto, (minc, maxr + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1, cv2.LINE_AA)
+    num_palabras.append(num_palabras_pagina)
+    palabras.append(palabras_pagina)
 
-    #print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
+l = 1
+p = 1
+for x in range(0, num_paginas):
+    for y in range(0, num_filas[x]):
+        print("Página %d de %d - Fila %d de %d:   %d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
+        # Dibujar líneas de separación de filas
+        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), 0, 1)
+        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), 0, 1)
+        # Dibujar número de línea
+        cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+        l += 1
+        # Imprimir texto
+        d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
+
+        for z in range(0, num_palabras[x][y]):
+            # Imprimir coordenadas de cada palabra
+            #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
+            # Dibujar rectángulos de palabras
+            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            # Dibujar número de palabra
+            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            p += 1
 
 '''
+# Detectar lados de palabras que se unen con otras líneas
 integ = cv2.integral(palabras)
 
 # Línea inferior
@@ -107,9 +174,7 @@ for y in range(1, num_filas):
                 cv2.line(original, (res[x][0], res[x][1]), (res[x][2], res[x][1]), 255, 1)
 
 
-'''
-
-'''
+# Pruebas para comparar la efectividad del código
 groundtruth = []
 
 with open('../T_1892.01.25_erosion_3.txt') as inputfile:
@@ -152,9 +217,9 @@ for x in range(0, tam_groundtruth):
 
 print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam_groundtruth, aciertos/tam_groundtruth*100))
 '''
-
+print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', original)
-cv2.imwrite('../comp_conx_pag.png', original)
-
-plt.show()
+cv2.imwrite('../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx.png', original)
+orig.save("../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx_texto.png")
+#plt.show()

@@ -37,42 +37,31 @@ col_cm = col_px/(ppi[0]*0.39370)
 img_plant = img < 255
 
 print("Separar columnas")
-hist_hor = separar.hor_hist(img_plant)
-div = separar.columnas(hist_hor)
+num_paginas = 2
+if num_paginas == 2:
+    hist_hor = separar.hor_hist(img_plant)
+    div = separar.columnas(hist_hor)
+    tab = [0, div, col_px]
+else:
+    tab = [0, col_px]
 
 print("Separar filas")
-# Histograma vertical
-hist_ver1 = separar.vert_hist(img_plant[0:fil_px, 0:div])
-hist_ver2 = separar.vert_hist(img_plant[0:fil_px, div:col_px])
-# Filtrado
-hist_ver_filtrado1 = filtro.mediana(hist_ver1, 10)
-hist_ver_filtrado2 = filtro.mediana(hist_ver2, 10)
-
-# Separar filas
-ini_filas1, fin_filas1 = separar.filas(hist_ver_filtrado1, 100)
-ini_filas2, fin_filas2 = separar.filas(hist_ver_filtrado2, 100)
-num_filas = len(ini_filas1) + len(ini_filas2)
-
-ini_filas = ini_filas1.copy()
-ini_filas.extend(ini_filas2)
-fin_filas = fin_filas1.copy()
-fin_filas.extend(fin_filas2)
-
-izq_filas = np.zeros(num_filas)
-der_filas = np.zeros(num_filas)
-
-izq_filas[0:len(ini_filas1)] = 0
-der_filas[0:len(ini_filas1)] = div
-izq_filas[len(ini_filas1):num_filas] = div
-der_filas[len(ini_filas1):num_filas] = col_px
-izq_filas = izq_filas.astype('int')
-der_filas = der_filas.astype('int')
-
-print(izq_filas)
+filas = []
+num_filas = []
+for x in range(0, num_paginas):
+    # Histograma vertical
+    hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
+    # Filtrado
+    hist_ver_filtrado = filtro.mediana(hist_ver, 10)
+    # Separar filas
+    ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
+    # Toma de datos
+    num_filas.append(len(ini_filas))
+    filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
 
 print("Encontrar palabras")
 kernel = np.ones((5, 5), np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=3)
+img_ero = cv2.erode(img, kernel, iterations=5)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
 #print("Resultados gráficos")
@@ -83,8 +72,8 @@ img_ero_bw = (img_ero < 1).astype('uint8')
 
 # Importar transcripción
 texto = []
-pag = []
-documento = []
+txt_pag = []
+txt_documento = []
 with open('../1882-L123.M17.T_2.txt') as inputfile:
     for line in inputfile:
         #texto.append(line.strip().split('\t'))
@@ -92,71 +81,72 @@ with open('../1882-L123.M17.T_2.txt') as inputfile:
 
 for z in range (1, len(texto)):
     if texto[z] == "..........":
-        documento.append(pag)
-        pag = []
+        txt_documento.append(txt_pag)
+        txt_pag = []
     else:
-        pag.append(texto[z])
+        txt_pag.append(texto[z])
 
-txt = documento[1].copy()
-txt.extend(documento[2])
+txt = [txt_documento[1], txt_documento[2]]
 
-#texto = []
-#with open('../T_1892.01.25.txt') as inputfile:
-#    for line in inputfile:
-#        texto.append(line.strip())
+num_palabras = []
+palabras = []
+for x in range(0, num_paginas):
+    num_palabras_pagina = []
+    palabras_pagina = []
+    for y in range(0, num_filas[x]):
+        # Seleccionar fila
+        fila_ero_bw = img_ero_bw[filas[x][0][y]:filas[x][1][y], filas[x][2]:filas[x][3]]
+        # Componentes conexas
+        label_image = measure.label(fila_ero_bw)
 
-res = []
-palabras = np.zeros(num_filas)
-pagina = []
-z = 0
+        num_palabras_fila = 0
+        palabras_fila = []
 
-for y in range(0, num_filas):
+        for region in measure.regionprops(label_image):
+            # skip small images
+            if region.area < 1000:
+                continue
 
-    # Seleccionar fila
-    fila_ero_bw = img_ero_bw[ini_filas[y]:fin_filas[y], izq_filas[y]:der_filas[y]]
-    # Componentes conexas
-    label_image = measure.label(fila_ero_bw)
+            num_palabras_fila += 1
+            minr, minc, maxr, maxc = region.bbox
+            palabras_fila.append([minc + filas[x][2], minr + filas[x][0][y], maxc + filas[x][2], maxr + filas[x][0][y]])
 
-    palabras[y] = 0
-    linea = []
+            #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
+            #ax.add_patch(rect)
 
-    for region in measure.regionprops(label_image):
+        # Añadir número de palabras de una fila
+        num_palabras_pagina.append(num_palabras_fila)
 
-        # skip small images
-        if region.area < 1000:
-            continue
+        # Ordenar palabras de una fila
+        palabras_fila = sorted(palabras_fila, key=lambda coord: coord[0])
+        # Añadir palabras de una fila
+        palabras_pagina.append(palabras_fila)
 
-        palabras[y] = palabras[y] + 1
-        minr, minc, maxr, maxc = region.bbox
-        linea.append([minc + izq_filas[y], minr + ini_filas[y], maxc + izq_filas[y], maxr + ini_filas[y]])
+    num_palabras.append(num_palabras_pagina)
+    palabras.append(palabras_pagina)
 
-        #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
-        #ax.add_patch(rect)
-
-    # Ordenar palabras de una línea
-    linea = sorted(linea, key=lambda coord: coord[0])
-    # Añadir palabras de una línea
-    pagina.append(linea)
-
-print("Resultados gráficos")
+l = 1
 p = 1
-for y in range(0, len(pagina)):
-    print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
-    # Dibujar líneas de separación de filas
-    cv2.line(original, (izq_filas[y], ini_filas[y]), (der_filas[y], ini_filas[y]), 0, 1)
-    cv2.line(original, (izq_filas[y], fin_filas[y]), (der_filas[y], fin_filas[y]), 0, 1)
-    # Dibujar número de línea
-    #cv2.putText(original, str(y), (pagina[y][0][0], fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
-    # Imprimir texto
-    #d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), txt[y], font=font, fill=(0, 0, 255, 255))
-    for z in range(0, int(palabras[y])):
-        # Imprimir coordenadas de cada palabra
-        #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
-        # Dibujar rectángulos de palabras
-        cv2.rectangle(original, (pagina[y][z][0], pagina[y][z][1]), (pagina[y][z][2], pagina[y][z][3]), 0, 1)
-        # Dibujar número de palabra
-        cv2.putText(original, str(p), (pagina[y][z][0], pagina[y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
-        p += 1
+for x in range(0, num_paginas):
+    for y in range(0, num_filas[x]):
+        print("Página %d de %d - Fila %d de %d:   %d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
+        # Dibujar líneas de separación de filas
+        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), 0, 1)
+        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), 0, 1)
+        # Dibujar número de línea
+        cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+        l += 1
+        # Imprimir texto
+        d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
+
+        for z in range(0, num_palabras[x][y]):
+            # Imprimir coordenadas de cada palabra
+            #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
+            # Dibujar rectángulos de palabras
+            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            # Dibujar número de palabra
+            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            p += 1
 
 '''
 # Detectar lados de palabras que se unen con otras líneas
@@ -185,9 +175,6 @@ for y in range(1, num_filas):
                 cv2.line(original, (res[x][0], res[x][1]), (res[x][2], res[x][1]), 255, 1)
 
 
-'''
-
-'''
 # Pruebas para comparar la efectividad del código
 groundtruth = []
 
@@ -234,8 +221,6 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', original)
-cv2.imwrite('../comp_conx.png', original)
-cv2.imwrite('../img.png', img)
-
-orig.save("../comp_conx_texto.png")
+cv2.imwrite('../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx.png', original)
+orig.save("../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx_texto.png")
 #plt.show()
