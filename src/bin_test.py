@@ -1,5 +1,6 @@
 import cv2
 # import numpy as np
+import os
 
 from src import Umbralizacion
 
@@ -9,7 +10,10 @@ separar = Umbralizacion.Umbralizacion()
 def do_nothing(x):
     pass
 
-img = cv2.imread('../imgs/IMG_001.png')
+file = '../imgs/0003_sin_escudo.png'
+img = cv2.imread(file)
+nombre = os.path.splitext(os.path.basename(file))[0]
+
 cv2.namedWindow('image_window', cv2.WINDOW_NORMAL)
 cv2.namedWindow('control_window')
 
@@ -49,7 +53,7 @@ while 1:
     if k == 27:
         break
     elif k == 9:  # TAB key
-        filestring = '../met_%d_vec_%d_sig_%d_thr_%d.png' % (method, vec_w, sigX, threshold)
+        filestring = '../%s_met_%d_vec_%d_sig_%d_thr_%d.png' % (nombre, method, vec_w, sigX, threshold)
         cv2.imwrite(filestring, bin_img)
 
 cv2.destroyAllWindows()

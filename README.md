@@ -1,11 +1,16 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v1.3.2 (RRG)
+------------
+1. Eliminamos main_componentes_conexas_pag
+2. main_componentes_conexas funciona correctamente y la salida es guardada directamente en el servidor
+3. Las salidas ahora también contienen el nombre del archivo de entrada
+
 v1.3.1 (JMC)
 ------------
 1. main_componentes_conexas  funciona correctamente par una o dos imágenes
 2. Usamos el umbralizado de JSM en main_componentes_conexas
-
 
 v1.3.0 (RRG)
 ------------

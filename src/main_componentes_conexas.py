@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import scipy
@@ -10,28 +11,37 @@ from src import Separacion
 from src import Filtros
 from src import Umbralizaciones
 
-
 umbralizar = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-orig = Image.open('../imgs/IMG_001.png')
+#file = '../img/Narciso2.png'
+file = '../imgs/IMG_0003.png'
+
+orig = Image.open(file)
 
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
 ppi = orig.info['dpi']
 
-
-original = cv2.imread('../imgs/IMG_001.png')
+original = cv2.imread(file)
 
 # Importar imagen binarizada
-img = umbralizar.umbralizar_imagen('../imgs/IMG_001.png')
+# Umbralizado de JSM
+#img = umbralizar.umbralizar_imagen(file)
+# Umbralizado nuestro
+#file_umbralizada = '../Narciso2_met_1_vec_0_sig_0_thr_134.png'
+file_umbralizada = '../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png'
+img = cv2.imread(file_umbralizada, 0)
+
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
 fil_cm = fil_px/(ppi[0]*0.39370)
 col_cm = col_px/(ppi[0]*0.39370)
+
+nombre = os.path.splitext(os.path.basename(file))[0]
 
 # Plantilla de pertenencia
 img_plant = img < 255
@@ -220,7 +230,8 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 '''
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-#cv2.imshow('result', original)
-cv2.imwrite('../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx.png', original)
-orig.save("../../../Osborne/RepoOsborne/ResultadosOCR/comp_conx_texto.png")
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx.png' % (nombre)
+cv2.imwrite(filestring, original)
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_texto.png' % (nombre)
+orig.save(filestring)
 #plt.show()
