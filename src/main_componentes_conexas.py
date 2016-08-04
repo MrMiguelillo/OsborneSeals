@@ -15,45 +15,67 @@ umbralizar = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
+# Parámetros modificables
+num_paginas = 2
+pag_izq = 2
+pag_der = 3
+
+# Importar transcripción
+#transcripcion = '../T_1892.01.25.txt'
+transcripcion = '../1882-L123.M17.T_2.txt'
+
 # Importar imagen original
-#file = '../img/Narciso2.png'
+#file = '../imgs/Narciso2.png'
 file = '../imgs/IMG_0003.png'
-
-orig = Image.open(file)
-
-font = ImageFont.truetype("Arial.ttf",40)
-d = ImageDraw.Draw(orig)
-ppi = orig.info['dpi']
-
-original = cv2.imread(file)
 
 # Importar imagen binarizada
 # Umbralizado de JSM
 #img = umbralizar.umbralizar_imagen(file)
 # Umbralizado nuestro
-#file_umbralizada = '../Narciso2_met_1_vec_0_sig_0_thr_134.png'
-file_umbralizada = '../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png'
-img = cv2.imread(file_umbralizada, 0)
-
-fil_px, col_px = img.shape
-
-# Calcular tamaño de imagen en centímetros
-fil_cm = fil_px/(ppi[0]*0.39370)
-col_cm = col_px/(ppi[0]*0.39370)
+#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
 
 nombre = os.path.splitext(os.path.basename(file))[0]
+orig = Image.open(file)
+original = cv2.imread(file)
+font = ImageFont.truetype("Arial.ttf",40)
+d = ImageDraw.Draw(orig)
+
+# Calcular tamaño de imagen en centímetros
+ppi = orig.info['dpi']
+fil_px, col_px = img.shape
+fil_cm = fil_px/(ppi[0]*0.39370)
+col_cm = col_px/(ppi[0]*0.39370)
 
 # Plantilla de pertenencia
 img_plant = img < 255
 
+print('Generar transcripción')
+texto = []
+txt_pag = []
+txt_documento = []
+with open(transcripcion) as inputfile:
+    for line in inputfile:
+        #texto.append(line.strip().split('\t'))
+        texto.append(line.strip())
+
+for z in range (1, len(texto)):
+    if texto[z] == "..........":
+        txt_documento.append(txt_pag)
+        txt_pag = []
+    else:
+        txt_pag.append(texto[z])
+txt_documento.append(txt_pag)
+
 print("Separar columnas")
-num_paginas = 2
 if num_paginas == 2:
     hist_hor = separar.hor_hist(img_plant)
     div = separar.columnas(hist_hor)
     tab = [0, div, col_px]
+    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
 else:
     tab = [0, col_px]
+    txt = [txt_documento[pag_izq - 1]]
 
 print("Separar filas")
 filas = []
@@ -79,24 +101,6 @@ img_ero_bw = (img_ero < 1).astype('uint8')
 #ax.imshow(orig)
 ##plt.set_cmap("gray")
 #plt.subplots_adjust(.01, .01, .99, .99)
-
-# Importar transcripción
-texto = []
-txt_pag = []
-txt_documento = []
-with open('../1882-L123.M17.T_2.txt') as inputfile:
-    for line in inputfile:
-        #texto.append(line.strip().split('\t'))
-        texto.append(line.strip())
-
-for z in range (1, len(texto)):
-    if texto[z] == "..........":
-        txt_documento.append(txt_pag)
-        txt_pag = []
-    else:
-        txt_pag.append(texto[z])
-
-txt = [txt_documento[1], txt_documento[2]]
 
 num_palabras = []
 palabras = []

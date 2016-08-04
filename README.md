@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v1.3.3 (RRG)
+------------
+1. Optimizada main_componentes_conexas
+
 v1.3.2 (RRG)
 ------------
 1. Eliminamos main_componentes_conexas_pag
