@@ -8,24 +8,25 @@ from skimage import measure
 from scipy import ndimage
 from src import Separacion
 from src import Filtros
+from src import Umbralizaciones
 
+
+umbralizar = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-#orig = Image.open('../imgs/Narciso2.png')
-orig = Image.open('../imgs/IMG_0003.png')
+orig = Image.open('../imgs/IMG_001.png')
 
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
 ppi = orig.info['dpi']
 
-#original = cv2.imread('../imgs/Narciso2.png')
-original = cv2.imread('../imgs/IMG_0003.png')
+
+original = cv2.imread('../imgs/IMG_001.png')
 
 # Importar imagen binarizada
-#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-img = cv2.imread('../met_0_vec_0_sig_0_thr_0.png', 0)
+img = umbralizar.umbralizar_imagen('../imgs/IMG_001.png')
 fil_px, col_px = img.shape
 
 # Calcular tamaño de imagen en centímetros
@@ -71,7 +72,7 @@ print(izq_filas)
 
 print("Encontrar palabras")
 kernel = np.ones((5, 5), np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=5)
+img_ero = cv2.erode(img, kernel, iterations=3)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
 #print("Resultados gráficos")
@@ -142,12 +143,12 @@ p = 1
 for y in range(0, len(pagina)):
     print("Fila %d de %d:   %d palabras" % (y, num_filas - 1, palabras[y]))
     # Dibujar líneas de separación de filas
-    #cv2.line(original, (izq_filas[y], ini_filas[y]), (der_filas[y], ini_filas[y]), 0, 1)
-    #cv2.line(original, (izq_filas[y], fin_filas[y]), (der_filas[y], fin_filas[y]), 0, 1)
+    cv2.line(original, (izq_filas[y], ini_filas[y]), (der_filas[y], ini_filas[y]), 0, 1)
+    cv2.line(original, (izq_filas[y], fin_filas[y]), (der_filas[y], fin_filas[y]), 0, 1)
     # Dibujar número de línea
     #cv2.putText(original, str(y), (pagina[y][0][0], fin_filas[y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
     # Imprimir texto
-    d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), txt[y], font=font, fill=(0, 0, 255, 255))
+    #d.text((pagina[y][0][0] + 20, pagina[y][0][1] + 50), txt[y], font=font, fill=(0, 0, 255, 255))
     for z in range(0, int(palabras[y])):
         # Imprimir coordenadas de cada palabra
         #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
@@ -234,5 +235,7 @@ print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 #cv2.imshow('result', original)
 cv2.imwrite('../comp_conx.png', original)
+cv2.imwrite('../img.png', img)
+
 orig.save("../comp_conx_texto.png")
 #plt.show()
