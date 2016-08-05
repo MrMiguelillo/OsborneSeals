@@ -3,7 +3,11 @@ import numpy as np
 
 
 class Sellos:
-    def test_simetria(self, bin_img_region):
+    @staticmethod
+    def test_simetria(bin_img_region):
+        if len(bin_img_region) < 1:
+            return float('inf')
+
         fil, col = bin_img_region.shape
         if col % 2 != 0:
             img_right = bin_img_region[0:fil, int(col / 2) + 1:col]
@@ -21,7 +25,8 @@ class Sellos:
 
         return ratio
 
-    def colision(self, bbox1, bbox2, min_separacion):
+    @staticmethod
+    def colision(bbox1, bbox2, min_separacion):
         a_minr, a_minc, a_maxr, a_maxc = bbox1
         b_minr, b_minc, b_maxr, b_maxc = bbox2
 
@@ -40,7 +45,23 @@ class Sellos:
                 a_y <= b_y + b_height and
                 b_y <= a_y + a_height)
 
-    def detectar_bbox(self, img_region, coords):
+    @staticmethod
+    def reetiquetado(regions, label_image):
+        for region in regions:
+            all_other_regions = regions
+            for i in range(1, len(all_other_regions)):
+                if Sellos.colision(region.bbox, all_other_regions[i].bbox, 4) and region.label != all_other_regions[i].label:
+                    for points in all_other_regions[i].coords:
+                        label_image[points[0], points[1]] = min(region.label, all_other_regions[i].label)
+                    region.label = min(region.label, all_other_regions[i].label)
+                    regions[i].label = min(region.label, all_other_regions[i].label)
+
+        return label_image
+# TODO: Comprobar qué ordenación tienen los bboxes para ahorrar comprobaciones
+# TODO: la búsqueda de colisiones se puede acelerar con matriz de dónde hay rectángulo
+
+    @staticmethod
+    def detectar_bbox(img_region, coords):
         fil, col = img_region.shape
         min_col = 0
         limit_detect = False
@@ -91,3 +112,6 @@ class Sellos:
         return img_region[min_fil:max_fil, min_col:max_col], new_coords
 
     # def unificar_con(self, ):
+
+
+# TODO: Detection is buggy when seals have text on top or very close
