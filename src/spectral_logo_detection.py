@@ -13,36 +13,38 @@ Y = abs(gray - g_img)
 spectral_thresh = 30
 chrom_thresh = 190
 
-YCC_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-R = np.array(Y, dtype=float)
-m, n = R.shape
-Fl = img
-for i in range(0, m):
-    for j in range(0, n):
-        R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
-        if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
-            Fl[i, j] = (255, 255, 255)
+# YCC_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+# R = np.array(Y, dtype=float)
+# m, n = R.shape
+# Fl = img
+# for i in range(0, m):
+#     for j in range(0, n):
+#         R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
+#         if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
+#             Fl[i, j] = (255, 255, 255)
 
 
 # umbralizar = Umbralizacion.Umbralizacion()
-#gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
-gray_Fl = cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY)
-#se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
-#se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (7,7))
+# gray_Fl = 255*(cv2.cvtColor(Fl, cv2.COLOR_BGR2GRAY) < 230).astype('uint8')
+gray_Fl = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
+# se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (7,7))
 # mask = cv2.morphologyEx(gray_Fl, cv2.MORPH_CLOSE, se1)
-#mask = cv2.morphologyEx(gray_Fl, cv2.MORPH_OPEN, se2)
-#mask = np.dstack([mask, mask, mask]) / 255
-#out = img * mask
+# mask = cv2.morphologyEx(gray_Fl, cv2.MORPH_OPEN, se2)
+# mask = np.dstack([mask, mask, mask]) / 255
+# out = img * mask
 
-for i in range(0, m):
-    for j in range(0, n):
-        if gray_Fl[i,j] < 180:
-            gray_Fl[i,j] = 0
-        else:
-            gray_Fl[i, j] = 255
 
-#filt_gray_Fl = cv2.medianBlur(gray_Fl, 3)
-#filt_gray_Fl = cv2.GaussianBlur(filt_gray_Fl, (5, 5), 5)
+gray_Fl = (gray_Fl > 180).astype(np.uint8)*255
+# for i in range(0, m):
+#     for j in range(0, n):
+#         if gray_Fl[i,j] < 180:
+#             gray_Fl[i,j] = 0
+#         else:
+#             gray_Fl[i, j] = 255
+
+# filt_gray_Fl = cv2.medianBlur(gray_Fl, 3)
+# filt_gray_Fl = cv2.GaussianBlur(filt_gray_Fl, (5, 5), 5)
 # Fl = cv2.medianBlur(Fl, 5)
 # Fl = cv2.GaussianBlur(Fl, (5,5), 6)
 # bin_img = umbralizar.umbralizar_imagen(gray_Fl, 1, 180)
@@ -66,9 +68,9 @@ for i in range(0, m):
 # x,y,w,h = track_window
 # img2 = cv2.rectangle(Fl, (x,y), (x+w,y+h), (255, 0, 255),20)
 
-#cv2.imwrite('sello1_Test.png', Fl)
+# cv2.imwrite('sello1_Test.png', Fl)
 cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-cv2.imshow('img', gray_Fl)
+cv2.imshow('img', Y)
 cv2.waitKey()
 
 
