@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.0.0 (RRG)
+------------
+1. main_componentes_conexas ahora genera correctamente el archivo html
+
 v1.3.3 (RRG)
 ------------
 1. Optimizada main_componentes_conexas

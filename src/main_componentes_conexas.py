@@ -145,10 +145,10 @@ for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
         print("Página %d de %d - Fila %d de %d:   %d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
         # Dibujar líneas de separación de filas
-        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), 0, 1)
-        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), 0, 1)
+        #cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), 0, 1)
+        #cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), 0, 1)
         # Dibujar número de línea
-        cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+        #cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
         # Imprimir texto
         d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
@@ -157,11 +157,87 @@ for x in range(0, num_paginas):
             # Imprimir coordenadas de cada palabra
             #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
             # Dibujar rectángulos de palabras
-            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            #cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
             # Dibujar número de palabra
-            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            #cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
             p += 1
 
+# Generar XML
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_xml.txt' % (nombre)
+xml = open(filestring, 'w')
+
+cabecera = """"<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>ToolTips Example</title>
+    <style type="text/css">
+    .tooltip {
+        border-bottom: 1px dotted #000000; color: #000000; outline: none;
+        cursor: help; text-decoration: none;
+        position: relative;
+    }
+    .tooltip span {
+        margin-left: -999em;
+        position: absolute;
+    }
+    .tooltip:hover span {
+        border-radius: 1px 1px; -moz-border-radius: 1px; -webkit-border-radius: 1px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 1vw; color:blue; text-align: center;
+        position: absolute; left: 0em; top: 0em; z-index: 99; opacity: 0.5;
+        margin-left: 0; width: 90%;
+    }
+    .tooltip:hover img {
+        border: 0; margin: -10px 0 0 -55px;
+        float: left; position: absolute;
+    }
+    .tooltip:hover em {
+        font-family: Candara, Tahoma, Geneva, sans-serif; font-size: 1.2em; font-weight: bold;
+        display: block; padding: 0.2em 0 0.6em 0;
+    }
+    .classic { padding: 0.8em 1em; }
+    .custom { padding: 0.5em 0.8em 0.8em 2em; }
+    * html a:hover { background: transparent; }
+    .classic {background: #FFFFAA; border: 1px solid #FFAD33; }
+    .critical { background: #FFCCAA; border: 1px solid #FF3334;	}
+    .help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .info { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .warning { background: #FFFFAA; border: 1px solid #FFAD33; }
+    </style>
+</head>
+ <body>
+ """
+
+xml.write(cabecera)
+xml.write('<img src="%s.png" alt="Documento Osborne" style="position: absolute; width:90%%"></img>\n' % (nombre))
+
+for x in range(0, num_paginas):
+    for y in range(0, num_filas[x]):
+
+        B1 = -1
+        for z in range(0, num_palabras[x][y]):
+
+            if palabras[x][y][z][2] > B1:
+                B1 = palabras[x][y][z][2]
+
+        cv2.rectangle(original, (palabras[x][y][0][0], filas[x][0][y]), (B1, filas[x][1][y]), 0, 1)
+        #cv2.rectangle(original, (palabras[x][y][0][0], filas[x][0][y]), (palabras[x][y][len(palabras[x][y])-1][2], filas[x][1][y]), 0, 1)
+
+        left = (palabras[x][y][0][0]/col_px)*0.9*100
+        top = (filas[x][0][y] / col_px) * 0.9 * 100
+
+        width = ((B1 - palabras[x][y][0][0])/col_px)*0.9*100
+        height = ((filas[x][1][y] - filas[x][0][y])/col_px)*0.9*100
+
+        xml.write('<div class="tooltip" style="position: absolute;  width:%.2fvw; height:%.2fvw; top:%.2fvw;'
+                  'left: %.2fvw; border:0px solid #0000FF;"> <span class = "classic"> %s'
+                  '<span> </div>\n' % (width, height, top, left, txt[x][y]))
+
+xml.write('</body>\n'
+          '</html>\n')
+xml.close()
 '''
 # Detectar lados de palabras que se unen con otras líneas
 integ = cv2.integral(palabras)
@@ -234,8 +310,8 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 '''
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx.png' % (nombre)
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png' % (nombre)
 cv2.imwrite(filestring, original)
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_texto.png' % (nombre)
-orig.save(filestring)
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_texto_pruebas.png' % (nombre)
+#orig.save(filestring)
 #plt.show()
