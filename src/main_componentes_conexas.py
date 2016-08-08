@@ -166,7 +166,7 @@ for x in range(0, num_paginas):
 filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_xml.txt' % (nombre)
 xml = open(filestring, 'w')
 
-cabecera = """"<!DOCTYPE html>
+cabecera = """<!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
