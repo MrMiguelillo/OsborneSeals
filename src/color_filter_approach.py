@@ -5,7 +5,7 @@ import numpy as np
 def do_nothing(x):
     pass
 
-img = cv2.imread('../imgs/Narciso2.png', cv2.IMREAD_COLOR)
+img = cv2.imread('../imgs/IMG_0003.png', cv2.IMREAD_COLOR)
 hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 cv2.namedWindow('H Filter', cv2.WINDOW_NORMAL)
@@ -30,6 +30,12 @@ while 1:
     S_inf = cv2.getTrackbarPos('S inf', 'control_window')
     V = cv2.getTrackbarPos('V', 'control_window')
 
-    h_filtered = ((hsv_img[:][:][0] < H_sup) and (hsv_img[:][:][0] > H_inf)).astype(np.uint8) * 255
-    s_filtered = ((hsv_img[:][:][1] < S_sup) and (hsv_img[:][:][1] > S_inf)).astype(np.uint8) * 255
-    v_filtered = (hsv_img[:][:][2] < V).astype(np.uint8) * 255
+    # h_filtered = np.logical_and((hsv_img[:, :, 0] < H_sup), (hsv_img[:, :, 0] > H_inf)).astype(np.uint8) * 255
+    # s_filtered = np.logical_and((hsv_img[:, :, 1] < S_sup), (hsv_img[:, :, 1] > S_inf)).astype(np.uint8) * 255
+    # v_filtered = (hsv_img[:, :, 2] < V).astype(np.uint8) * 255
+    #
+    # cv2.imshow('H Filter', h_filtered)
+    # cv2.imshow('S Filter', s_filtered)
+    # cv2.imshow('V Filter', v_filtered)
+
+    filt = np.logical_and(hsv_img[:, :, 0] < H_sup, hsv_img[:, :, 0] > H_inf).astype(np.uint8) * 255
