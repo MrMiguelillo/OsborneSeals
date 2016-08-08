@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.0 (MRL)
+------------
+1. Añadidos archivos de reconocimiento de sellos. Unificación de algoritmos, pendiente.
+
 v2.0.0 (RRG)
 ------------
 1. main_componentes_conexas ahora genera correctamente el archivo html
