@@ -185,7 +185,7 @@ cabecera = """<!DOCTYPE html>
     .tooltip:hover span {
         border-radius: 1px 1px; -moz-border-radius: 1px; -webkit-border-radius: 1px;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-        font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 1vw; color:blue; text-align: center;
+        font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 2vw; color:blue; text-align: center;
         position: absolute; left: 0em; top: 0em; z-index: 99; opacity: 0.5;
         margin-left: 0; width: 90%;
     }
@@ -197,7 +197,7 @@ cabecera = """<!DOCTYPE html>
         font-family: Candara, Tahoma, Geneva, sans-serif; font-size: 1.2em; font-weight: bold;
         display: block; padding: 0.2em 0 0.6em 0;
     }
-    .classic { padding: 0.8em 1em; }
+    .classic { padding: 0.1em 1em; }
     .custom { padding: 0.5em 0.8em 0.8em 2em; }
     * html a:hover { background: transparent; }
     .classic {background: #FFFFAA; border: 1px solid #FFAD33; }
