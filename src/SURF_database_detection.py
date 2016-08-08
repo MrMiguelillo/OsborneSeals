@@ -2,33 +2,18 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 import pickle
-
-
-def unpickle_keypoints(array):
-    keypoints = []
-    descriptors = []
-    for point in array:
-        temp_feature = cv2.KeyPoint(x=point[0][0], y=point[0][1], _size=point[1], _angle=point[2], _response=point[3],
-                                    _octave=point[4], _class_id=point[5])
-        temp_descriptor = point[6]
-        keypoints.append(temp_feature)
-        descriptors.append(temp_descriptor)
-    return keypoints, np.array(descriptors)
-
-
-SEAL_NO_MATCH = 0
-SEAL_TOMAS = 1
-SEAL_AG = 2
-SEAL_DOBLE_T = 3
+from src.Keypoints_Pickle import KeypointsPickle
 
 NUM_SELLOS = 3
+
+seal_string = ['No Match', 'Tomas', 'AG', 'Doble T']
 
 keypoints_database = pickle.load(open("keypoints_database.p", "rb"))
 kp = []
 desc = []
 
 for i in range(0, len(keypoints_database)):
-    kp_temp, desc_temp = unpickle_keypoints(keypoints_database[i])
+    kp_temp, desc_temp = KeypointsPickle.unpickle(keypoints_database[i])
     kp.append(kp_temp)
     desc.append(desc_temp)
 
@@ -52,23 +37,22 @@ for i in range(0, len(keypoints_database)):
         if m.distance < 0.7*n.distance:
             good_matches.append(m)
 
-    print(len(good_matches))
     if len(good_matches) > max_matches:
         max_matches = len(good_matches)
         matched_seal = i+1
 
-    mask = np.ones(1, len(good_matches))
+    mask = np.ones((1, len(good_matches)))
     draw_params = dict(matchColor=(0, 255, 0),
                        singlePointColor=(255, 0, 0),
                        matchesMask=mask,
                        flags=0)
 
-    #img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+    # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
 if max_matches < 150:
-    matched_seal = SEAL_NO_MATCH
+    matched_seal = KeypointsPickle.SEAL_NO_MATCH
 
-print(matched_seal)
+print(seal_string[matched_seal])
 
 # TODO: Dibujar matches por si se quieren visualizar resultados.
 # TODO en otro archivo: Usar keypoints para delimitar zona de sello ----> Hay que eliminar outliers primero
