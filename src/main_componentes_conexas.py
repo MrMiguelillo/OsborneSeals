@@ -163,7 +163,7 @@ for x in range(0, num_paginas):
             p += 1
 
 # Generar XML
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_xml.txt' % (nombre)
+filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_xml.html' % (nombre)
 xml = open(filestring, 'w')
 
 cabecera = """<!DOCTYPE html>
