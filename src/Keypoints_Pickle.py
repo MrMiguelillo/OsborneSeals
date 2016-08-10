@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import pickle
+
 
 class KeypointsPickle:
     @staticmethod
@@ -30,3 +30,7 @@ class KeypointsPickle:
     SEAL_TOMAS = 1
     SEAL_AG = 2
     SEAL_DOBLE_T = 3
+
+    seal_string = ['No Match', 'Tomas', 'AG', 'Doble T']
+
+    NUM_SELLOS = 3

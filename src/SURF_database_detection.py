@@ -4,9 +4,8 @@ import cv2
 import pickle
 from src.Keypoints_Pickle import KeypointsPickle
 
-NUM_SELLOS = 3
 
-seal_string = ['No Match', 'Tomas', 'AG', 'Doble T']
+seal_string = KeypointsPickle.seal_string
 
 keypoints_database = pickle.load(open("keypoints_database.p", "rb"))
 kp = []
@@ -52,7 +51,7 @@ for i in range(0, len(keypoints_database)):
 if max_matches < 150:
     matched_seal = KeypointsPickle.SEAL_NO_MATCH
 
-print(seal_string[matched_seal])
+
 
 # TODO: Dibujar matches por si se quieren visualizar resultados.
 # TODO en otro archivo: Usar keypoints para delimitar zona de sello ----> Hay que eliminar outliers primero
