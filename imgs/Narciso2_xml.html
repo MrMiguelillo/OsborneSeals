@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>ToolTips Example</title>
+    <style type="text/css">
+    .tooltip {
+        border-bottom: 1px dotted #000000; color: #000000; outline: none;
+        cursor: help; text-decoration: none;
+        position: relative;
+    }
+    .tooltip span {
+        margin-left: -999em;
+        position: absolute;
+    }
+    .tooltip:hover span {
+        border-radius: 1px 1px; -moz-border-radius: 1px; -webkit-border-radius: 1px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 2vw; color:blue; text-align: center;
+        position: absolute; left: 0em; top: 0em; z-index: 99; opacity: 0.5;
+        margin-left: 0; width: 90%;
+    }
+    .tooltip:hover img {
+        border: 0; margin: -10px 0 0 -55px;
+        float: left; position: absolute;
+    }
+    .tooltip:hover em {
+        font-family: Candara, Tahoma, Geneva, sans-serif; font-size: 1.2em; font-weight: bold;
+        display: block; padding: 0.2em 0 0.6em 0;
+    }
+    .classic { padding: 0.1em 1em; }
+    .custom { padding: 0.5em 0.8em 0.8em 2em; }
+    * html a:hover { background: transparent; }
+    .classic {background: #FFFFAA; border: 1px solid #FFAD33; }
+    .critical { background: #FFCCAA; border: 1px solid #FF3334;	}
+    .help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .info { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .warning { background: #FFFFAA; border: 1px solid #FFAD33; }
+    </style>
+</head>
+ <body>
+ <img src="Narciso2.png" alt="Documento Osborne" style="position: absolute; width:90%"></img>
+<div class="tooltip" style="position: absolute;  width:72.71vw; height:9.19vw; top:0.16vw;left: 6.33vw; border:0px solid #0000FF;"> <span class = "classic"> 1892<span> </div>
+<div class="tooltip" style="position: absolute;  width:26.36vw; height:1.53vw; top:10.52vw;left: 3.22vw; border:0px solid #0000FF;"> <span class = "classic"> Narciso Darnaude<span> </div>
+<div class="tooltip" style="position: absolute;  width:82.95vw; height:7.74vw; top:13.70vw;left: 3.26vw; border:0px solid #0000FF;"> <span class = "classic"> Sevilla 25 de Enero de 1892<span> </div>
+<div class="tooltip" style="position: absolute;  width:79.84vw; height:3.55vw; top:21.44vw;left: 3.22vw; border:0px solid #0000FF;"> <span class = "classic"> Recibida.. 26 Enero<span> </div>
+<div class="tooltip" style="position: absolute;  width:69.57vw; height:3.83vw; top:24.99vw;left: 3.10vw; border:0px solid #0000FF;"> <span class = "classic"> Sres Duff Gordon y Cia<span> </div>
+<div class="tooltip" style="position: absolute;  width:78.31vw; height:3.95vw; top:28.82vw;left: 3.10vw; border:0px solid #0000FF;"> <span class = "classic"> Puerto Sta Maria<span> </div>
+<div class="tooltip" style="position: absolute;  width:83.59vw; height:3.63vw; top:32.77vw;left: 3.06vw; border:0px solid #0000FF;"> <span class = "classic"> Contestada 27 id<span> </div>
+<div class="tooltip" style="position: absolute;  width:86.17vw; height:3.51vw; top:36.39vw;left: 3.06vw; border:0px solid #0000FF;"> <span class = "classic"> Muy Sres mios: Le confirmo mi an-<span> </div>
+<div class="tooltip" style="position: absolute;  width:84.80vw; height:3.71vw; top:39.90vw;left: 3.35vw; border:0px solid #0000FF;"> <span class = "classic"> terior 18 del conte y en vista de no haber<span> </div>
+<div class="tooltip" style="position: absolute;  width:79.64vw; height:3.43vw; top:43.61vw;left: 8.42vw; border:0px solid #0000FF;"> <span class = "classic"> tenido contestacion le detallo el contenido<span> </div>
+<div class="tooltip" style="position: absolute;  width:79.04vw; height:4.31vw; top:47.12vw;left: 9.35vw; border:0px solid #0000FF;"> <span class = "classic"> de dicha carta por si hubiese sufrido es-<span> </div>
+<div class="tooltip" style="position: absolute;  width:25.43vw; height:2.46vw; top:51.43vw;left: 7.78vw; border:0px solid #0000FF;"> <span class = "classic"> travio. Dice.<span> </div>
+<div class="tooltip" style="position: absolute;  width:67.51vw; height:4.39vw; top:54.49vw;left: 19.99vw; border:0px solid #0000FF;"> <span class = "classic"> Muy Srs mios: Conforme al pedido<span> </div>
+<div class="tooltip" style="position: absolute;  width:80.49vw; height:3.55vw; top:58.88vw;left: 9.51vw; border:0px solid #0000FF;"> <span class = "classic"> que tuvieron á bien hacerme personalmen-<span> </div>
+<div class="tooltip" style="position: absolute;  width:81.21vw; height:3.79vw; top:62.43vw;left: 8.54vw; border:0px solid #0000FF;"> <span class = "classic"> te en esta su casa es adjunto talon contra<span> </div>
+<div class="tooltip" style="position: absolute;  width:77.79vw; height:3.83vw; top:66.22vw;left: 10.16vw; border:0px solid #0000FF;"> <span class = "classic"> el Ferro - Carril a vuestro favor expedición N. 1407<span> </div>
+<div class="tooltip" style="position: absolute;  width:78.03vw; height:3.67vw; top:70.05vw;left: 8.42vw; border:0px solid #0000FF;"> <span class = "classic"> pequeña velocidad porte a pagar de mi envio<span> </div>
+<div class="tooltip" style="position: absolute;  width:79.56vw; height:3.99vw; top:73.72vw;left: 10.44vw; border:0px solid #0000FF;"> <span class = "classic"> de un saco de tapones conforme factura tam-<span> </div>
+<div class="tooltip" style="position: absolute;  width:57.43vw; height:3.55vw; top:77.71vw;left: 10.28vw; border:0px solid #0000FF;"> <span class = "classic"> bien adjunta.<span> </div>
+<div class="tooltip" style="position: absolute;  width:58.97vw; height:3.26vw; top:81.25vw;left: 20.92vw; border:0px solid #0000FF;"> <span class = "classic"> El importe de la misma por<span> </div>
+<div class="tooltip" style="position: absolute;  width:71.90vw; height:4.15vw; top:84.52vw;left: 0.24vw; border:0px solid #0000FF;"> <span class = "classic"> Pts 122.50 lo dejo a Udes cargado en Aa.<span> </div>
+<div class="tooltip" style="position: absolute;  width:73.80vw; height:3.91vw; top:88.67vw;left: 14.87vw; border:0px solid #0000FF;"> <span class = "classic"> En espera de la muestra que Udes me<span> </div>
+<div class="tooltip" style="position: absolute;  width:74.68vw; height:3.59vw; top:92.58vw;left: 12.25vw; border:0px solid #0000FF;"> <span class = "classic"> dijeron remitirian he demorado el envio de los<span> </div>
+<div class="tooltip" style="position: absolute;  width:77.10vw; height:3.95vw; top:96.17vw;left: 12.09vw; border:0px solid #0000FF;"> <span class = "classic"> espresados tapones a fin de hacerlo de todos<span> </div>
+<div class="tooltip" style="position: absolute;  width:77.14vw; height:3.67vw; top:100.12vw;left: 12.86vw; border:0px solid #0000FF;"> <span class = "classic"> al mismo tiempo, decidiendome hoy a ha<span> </div>
+<div class="tooltip" style="position: absolute;  width:75.25vw; height:3.79vw; top:103.78vw;left: 12.58vw; border:0px solid #0000FF;"> <span class = "classic"> cer el envio por no demorar mas tiempo.<span> </div>
+<div class="tooltip" style="position: absolute;  width:72.39vw; height:3.67vw; top:107.57vw;left: 14.91vw; border:0px solid #0000FF;"> <span class = "classic"> En espera de sus ordenes tiene el gusto<span> </div>
+<div class="tooltip" style="position: absolute;  width:76.50vw; height:3.55vw; top:111.24vw;left: 12.09vw; border:0px solid #0000FF;"> <span class = "classic"> de ofrecerse a Udes Ac<span> </div>
+</body>
+</html>

@@ -10,34 +10,45 @@ from scipy import ndimage
 from src import Separacion
 from src import Filtros
 from src import Umbralizaciones
+from src import Umbralizacion
 
-umbralizar = Umbralizaciones.Umbralizaciones()
+umbralizaciones = Umbralizaciones.Umbralizaciones()
+umbralizacion = Umbralizacion.Umbralizacion()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Parámetros modificables
-num_paginas = 2
-pag_izq = 2
+num_paginas = 1
+pag_izq = 1
 pag_der = 3
 
 # Importar transcripción
-#transcripcion = '../T_1892.01.25.txt'
-transcripcion = '../1882-L123.M17.T_2.txt'
+transcripcion = '../T_1892.01.25.txt'
+#transcripcion = '../1882-L123.M17.T_2.txt'
+#transcripcion
 
 # Importar imagen original
 #file = '../imgs/Narciso2.png'
-file = '../imgs/IMG_0003.png'
+
+#file = '../imgs/IMG_0003.png'
+#file = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png'
+nombre = os.path.splitext(os.path.basename(file))[0]
+path = os.path.dirname(file)
+original = cv2.imread(file)
+orig = Image.open(file)
 
 # Importar imagen binarizada
 # Umbralizado de JSM
 #img = umbralizar.umbralizar_imagen(file)
 # Umbralizado nuestro
-#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
+#gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+#img = umbralizacion.umbralizar_imagen(gray_img, 0, 180)
+img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+#img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
+#img = cv2.imread('../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png', 0)
 
-nombre = os.path.splitext(os.path.basename(file))[0]
-orig = Image.open(file)
-original = cv2.imread(file)
+
+
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
 
@@ -163,8 +174,8 @@ for x in range(0, num_paginas):
             p += 1
 
 # Generar XML
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_xml.html' % (nombre)
-xml = open(filestring, 'w')
+filestring_xml = '%s/%s_xml.html' % (path, nombre)
+xml = open(filestring_xml, 'w')
 
 cabecera = """<!DOCTYPE html>
 <html>
@@ -235,8 +246,7 @@ for x in range(0, num_paginas):
                   'left: %.2fvw; border:0px solid #0000FF;"> <span class = "classic"> %s'
                   '<span> </div>\n' % (width, height, top, left, txt[x][y]))
 
-xml.write('</body>\n'
-          '</html>\n')
+xml.write('</body>\n</html>\n')
 xml.close()
 '''
 # Detectar lados de palabras que se unen con otras líneas
@@ -310,8 +320,8 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 '''
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png' % (nombre)
-cv2.imwrite(filestring, original)
-filestring = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_texto_pruebas.png' % (nombre)
+filestring = '%s/%s_comp_conx_pruebas.png' % (path, nombre)
+#cv2.imwrite(filestring, original)
+filestring = '%s/%s_comp_conx_texto.png' % (path, nombre)
 #orig.save(filestring)
 #plt.show()

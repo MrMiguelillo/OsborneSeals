@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.0.1 (RRG)
+------------
+1. Cambios en main_componentes_conexas para realizar la umbralización OTSU y trabajar desde el servidor
+
 v2.0.0 (RRG)
 ------------
 1. main_componentes_conexas ahora genera correctamente el archivo html
