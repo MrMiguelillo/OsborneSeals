@@ -5,17 +5,23 @@ from src import Separacion
 from src import Filtros
 
 separar = Separacion.Separacion()
-filtros = Filtros.Filtros()
+filtro = Filtros.Filtros()
 
-img = cv2.imread('../met_1_vec_0_sig_-1_thr_180_binImg.png', 0)
+print("Importar imagen umbralizada")
+#img = cv2.imread('../IMG_0003_met_1_vec_0_sig_-1_thr_180.png', 0)
+img = cv2.imread('../IMG_0003_met_0_vec_2_sig_-1_thr_0.png', 0)
+
 filas, colum = img.shape
+
+print("Importar imagen original")
+img2 = cv2.imread('../imgs/IMG_0003.png', -1)
 
 print("Histograma horizontal")
 hist_hor = separar.hor_hist(img)
 
 print("Separar columnas")
 div = separar.columnas(hist_hor)
-cv2.line(img, (div,0), (div, filas), 100, 5)
+cv2.line(img2, (div,0), (div, filas), 100, 5)
 
 print("Histograma vertical")
 sub_img1 = img[0:filas,0:div]
@@ -24,49 +30,53 @@ hist_ver1 = separar.vert_hist(sub_img1)
 hist_ver2 = separar.vert_hist(sub_img2)
 
 print("Filtrado")
-filtrado1 = filtros.mediana(hist_ver1, 10)
-filtrado2 = filtros.mediana(hist_ver2, 10)
+filtrado1 = filtro.mediana(hist_ver1, 10)
+filtrado2 = filtro.mediana(hist_ver2, 10)
 
 print("Separar filas")
-inicios1,finales1 = separar.filas(filtrado1, 20)
-inicios2,finales2 = separar.filas(filtrado2, 100)
-tam1 = len(inicios1)
-tam2 = len(inicios2)
+ini_filas1, fin_filas1 = separar.filas(filtrado1, 20)
+ini_filas2, fin_filas2 = separar.filas(filtrado2, 100)
+tam1 = len(ini_filas1)
+tam2 = len(ini_filas2)
 
 for x in range(0,tam1):
-    cv2.line(img, (0, inicios1[x]), (div, inicios1[x]), 100, 5)
-    cv2.line(img, (0, finales1[x]), (div, finales1[x]), 100, 5)
+    cv2.line(img2, (0, ini_filas1[x]), (div, ini_filas1[x]), 100, 1)
+    cv2.line(img2, (0, fin_filas1[x]), (div, fin_filas1[x]), 100, 1)
 for x in range(0, tam2):
-    cv2.line(img, (div, inicios2[x]), (colum, inicios2[x]), 100, 5)
-    cv2.line(img, (div, finales2[x]), (colum, finales2[x]), 100, 5)
+    cv2.line(img2, (div, ini_filas2[x]), (colum, ini_filas2[x]), 100, 1)
+    cv2.line(img2, (div, fin_filas2[x]), (colum, fin_filas2[x]), 100, 1)
 
 print("Separar palabras")
+for x in range(0,tam1):
+    fila = img[ini_filas1[x]:fin_filas1[x], 0:div]
+    hist_fila = separar.hor_hist(fila)
+    ini_palabra,fin_palabra = separar.palabras(hist_fila,20,80)
 
-img2 = cv2.imread('../met_0_vec_2_sig_-1_thr_0_binImg.png', 0)
+    tam_palabra = len(ini_palabra)
+    for y in range(0,tam_palabra):
+        cv2.line(img2, (ini_palabra[y], ini_filas1[x]), (ini_palabra[y], fin_filas1[x]), 100, 1)
+        cv2.line(img2, (fin_palabra[y], ini_filas1[x]), (fin_palabra[y], fin_filas1[x]), 100, 1)
 
 for x in range(0,tam2):
-    fila = img2[inicios2[x]:finales2[x],div:colum]
+    fila = img[ini_filas2[x]:fin_filas2[x], div:colum]
     hist_fila = separar.hor_hist(fila)
+    ini_palabra,fin_palabra = separar.palabras(hist_fila,20,80)
 
-    ini_palabra,fin_palabra = separar.palabras(hist_fila,10)
     tam_palabra = len(ini_palabra)
-
     for y in range(0,tam_palabra):
-        cv2.line(img, (div+ini_palabra[y],inicios2[x]), (div+ini_palabra[y],finales2[x]), 100, 5)
-        cv2.line(img, (div+fin_palabra[y],inicios2[x]), (div+fin_palabra[y],finales2[x]), 100, 5)
-
+        cv2.line(img2, (div + ini_palabra[y], ini_filas2[x]), (div + ini_palabra[y], fin_filas2[x]), 100, 1)
+        cv2.line(img2, (div + fin_palabra[y], ini_filas2[x]), (div + fin_palabra[y], fin_filas2[x]), 100, 1)
 
 cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 cv2.imshow('result', img)
+#cv2.imwrite('../salida.png', img2)
 
 print("Resultados gráficos")
 plt.figure(1)
-plt.subplot(211)
+#plt.subplot(211)
 plt.plot(hist_fila)
-plt.subplot(212)
-plt.plot(filtrado2)
-plt.plot(inicios2,np.ones(tam2)*100,'ro')
-plt.plot(finales2,np.ones(tam2)*101,'bo')
+plt.plot(ini_palabra, np.zeros(tam_palabra), 'ro')
+plt.plot(fin_palabra, np.zeros(tam_palabra), 'bo')
 plt.show()
 
 #cv2.waitKey()

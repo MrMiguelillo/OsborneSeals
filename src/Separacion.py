@@ -4,29 +4,11 @@ import numpy as np
 
 class Separacion:
     def vert_hist(self, img):
-        filas, colum = img.shape
-        hist = np.zeros(filas)
-        suma = 0
-
-        for x in range(0, filas):
-            for y in range(0, colum):
-                if img[x, y] == 0:
-                    suma += 1
-            hist[x] = suma
-            suma = 0
+        hist = np.sum(img, 1)
         return hist
 
     def hor_hist(self, img):
-        filas, colum = img.shape
-        hist = np.zeros(colum)
-        suma = 0
-
-        for y in range(0, colum):
-            for x in range(0, filas):
-                if img[x, y] == 0:
-                    suma += 1
-            hist[y] = suma
-            suma = 0
+        hist = np.sum(img, 0)
         return hist
 
     # Entrada: Histograma horizontal
@@ -117,12 +99,14 @@ class Separacion:
     # Entrada: Histograma horizontal de la fila
     # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación
     # Salidas: Vectores de coordenadas 'x' de inicio y final de palabra
-    def palabras(self, histograma, minimo):
+    def palabras(self, histograma, minimo_hueco, minimo_palabra):
         long = histograma.size
         ini = []
         fin = []
         inicios = []
         finales = []
+        inicios_ok = []
+        finales_ok = []
 
         for x in range(0, long-1):
             if (histograma[x] == 0) & (histograma[x + 1] > 0):
@@ -131,11 +115,57 @@ class Separacion:
             if (histograma[x] > 0) & (histograma[x + 1] == 0):
                 fin.append(x)
 
-        for x in range(0,len(ini)-1):
-            if (fin[x]-ini[x+1]) > minimo:
+        inicios.append(ini[0])
 
+        for x in range(0,len(ini)-1):
+            if (ini[x+1]-fin[x]) > minimo_hueco:
                 finales.append(fin[x])
                 inicios.append(ini[x+1])
 
-        return (inicios,finales)
+        finales.append(fin[len(fin)-1])
 
+        for x in range(0,len(inicios)):
+            if finales[x]-inicios[x] > minimo_palabra:
+                inicios_ok.append(inicios[x])
+                finales_ok.append(finales[x])
+
+        return (inicios_ok,finales_ok)
+
+
+    def ajustar(self, histograma):
+        long = histograma.size
+
+        inicio = 0
+        final = 0
+
+        if histograma[0] == 0:
+            for x in range(0, long - 1):
+                if (histograma[x] == 0) & (histograma[x + 1] > 0):
+                    inicio = x + 1
+                    break
+
+        if histograma[long-1] == 0:
+            for x in range(long - 1, 0, -1):
+                if (histograma[x] == 0) & (histograma[x - 1] > 0):
+                    final = long - (x - 1)
+                    break
+
+        return (inicio, final)
+
+    def ampliar(self, histograma, margen):
+        long = histograma.size
+
+        inicio = 0
+        final = 0
+
+        if histograma[margen] > 0:
+            for x in range(margen - 1, 0, -1):
+                if histograma[x] == 0:
+                    inicio = margen - x
+
+        if histograma[long - 1 - margen] > 0:
+            for x in range(long - margen, long - 1):
+                if histograma[x] == 0:
+                    final = x - (long - 1 - margen)
+
+        return (inicio, final)

@@ -25,7 +25,7 @@ transport.connect(username=username, password=password)
 
 sftp = paramiko.SFTPClient.from_transport(transport)
 
-path = './home/repo/Fotos/DSC_0021.JPG'
+path = '/home/repo/Fotos/DSC_0021.JPG'
 localpath = 'C:/Users/usuario/Desktop/DSC_0021.jpg'
 # sftp.put(localpath, path)
 sftp.get(path, localpath)
