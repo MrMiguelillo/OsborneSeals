@@ -1,9 +1,13 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
-v2.0.1 (RRG)
+v2.1.1 (RRG)
 ------------
 1. Cambios en main_componentes_conexas para realizar la umbralización OTSU y trabajar desde el servidor
+
+v2.1.0 (MRL)
+------------
+1. Añadidos archivos de reconocimiento de sellos. Unificación de algoritmos, pendiente.
 
 v2.0.0 (RRG)
 ------------
