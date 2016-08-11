@@ -20,7 +20,7 @@ filtro = Filtros.Filtros()
 # Parámetros modificables
 num_paginas = 1
 pag_izq = 1
-pag_der = 3
+pag_der = 1
 
 # Importar transcripción
 transcripcion = '../T_1892.01.25.txt'
@@ -28,10 +28,9 @@ transcripcion = '../T_1892.01.25.txt'
 #transcripcion
 
 # Importar imagen original
-#file = '../imgs/Narciso2.png'
-
+file = '../imgs/Narciso2.png'
 #file = '../imgs/IMG_0003.png'
-#file = '../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png'
+#file = '../../../Osborne/RepoOsborne/documentos'
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
@@ -41,13 +40,11 @@ orig = Image.open(file)
 # Umbralizado de JSM
 #img = umbralizar.umbralizar_imagen(file)
 # Umbralizado nuestro
-#gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-#img = umbralizacion.umbralizar_imagen(gray_img, 0, 180)
-img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+img = umbralizacion.umbralizar_imagen(gray_img, 0, 180)
+#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
 #img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
 #img = cv2.imread('../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png', 0)
-
-
 
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
