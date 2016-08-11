@@ -41,7 +41,7 @@ orig = Image.open(file)
 #img = umbralizar.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-img = umbralizacion.umbralizar_imagen(gray_img, 0, 180)
+ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 #img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
 #img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
 #img = cv2.imread('../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png', 0)

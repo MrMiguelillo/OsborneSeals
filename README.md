@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.2 (JMC)
+------------
+1. Cambios en main_componentes_conexas para realizar la umbralización OT y esta arreglado.
+2. Guarda el trabajo en local no en el servidor 
+
 v2.1.1 (RRG)
 ------------
 1. Cambios en main_componentes_conexas para realizar la umbralización OTSU y trabajar desde el servidor
