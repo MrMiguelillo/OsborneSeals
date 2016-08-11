@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.3 (RRG)
+------------
+1. Creada clase Deteciones.py y detecciones_main.py para probarlo
+
 v2.1.2 (JMC)
 ------------
 1. Cambios en main_componentes_conexas para realizar la umbralización OT y esta arreglado.
