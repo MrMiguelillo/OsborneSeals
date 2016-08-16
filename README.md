@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.4 (RRG)
+------------
+1. Añadido main_recortes para realizar la base de datos
+
 v2.1.3 (RRG)
 ------------
 1. Creada clase Deteciones.py y detecciones_main.py para probarlo

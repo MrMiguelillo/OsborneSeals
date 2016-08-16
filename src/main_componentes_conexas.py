@@ -28,6 +28,7 @@ transcripcion = '../T_1892.01.25.txt'
 #transcripcion
 
 # Importar imagen original
+#file = '../imgs/0003_sin_escudo.png'
 file = '../imgs/Narciso2.png'
 #file = '../imgs/IMG_0003.png'
 #file = '../../../Osborne/RepoOsborne/documentos'
@@ -58,6 +59,7 @@ col_cm = col_px/(ppi[0]*0.39370)
 # Plantilla de pertenencia
 img_plant = img < 255
 
+'''
 print('Generar transcripción')
 texto = []
 txt_pag = []
@@ -74,16 +76,17 @@ for z in range (1, len(texto)):
     else:
         txt_pag.append(texto[z])
 txt_documento.append(txt_pag)
+'''
 
 print("Separar columnas")
 if num_paginas == 2:
     hist_hor = separar.hor_hist(img_plant)
     div = separar.columnas(hist_hor)
     tab = [0, div, col_px]
-    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
+    #txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
 else:
     tab = [0, col_px]
-    txt = [txt_documento[pag_izq - 1]]
+    #txt = [txt_documento[pag_izq - 1]]
 
 print("Separar filas")
 filas = []
@@ -159,17 +162,18 @@ for x in range(0, num_paginas):
         #cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
         # Imprimir texto
-        d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
+        #d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
 
         for z in range(0, num_palabras[x][y]):
             # Imprimir coordenadas de cada palabra
             #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
             # Dibujar rectángulos de palabras
-            #cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
             # Dibujar número de palabra
-            #cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
             p += 1
 
+'''
 # Generar XML
 filestring_xml = '%s/%s_xml.html' % (path, nombre)
 xml = open(filestring_xml, 'w')
@@ -246,6 +250,7 @@ for x in range(0, num_paginas):
 xml.write('</body>\n</html>\n')
 xml.close()
 '''
+'''
 # Detectar lados de palabras que se unen con otras líneas
 integ = cv2.integral(palabras)
 
@@ -318,7 +323,7 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
 filestring = '%s/%s_comp_conx_pruebas.png' % (path, nombre)
-#cv2.imwrite(filestring, original)
+cv2.imwrite(filestring, original)
 filestring = '%s/%s_comp_conx_texto.png' % (path, nombre)
 #orig.save(filestring)
 #plt.show()
