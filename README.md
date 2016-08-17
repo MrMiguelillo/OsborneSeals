@@ -47,6 +47,10 @@ v1.3.0 (RRG)
 2. Movidas imágenes de resultados al servidor
 3. Movidos varios txt al servidor
 
+v1.2.2 (RRG)
+------------
+1. Modificado main_recortes para generar la base de datos según Ángel
+
 v1.2.1 (RRG)
 ------------
 1. main_componentes_conexas funciona correctamente par una imagen con 2 paginas

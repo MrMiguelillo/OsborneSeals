@@ -11,7 +11,7 @@ datos;
 me
 refiero
 a
-x14
+xxx
 aquella
 clase
 de
@@ -38,7 +38,7 @@ mismo
 has
 creido
 útil
-x41
+xxx
 pedirlos
 á
 O
@@ -48,7 +48,7 @@ Donnell.
 Si
 una
 opinion
-x51
+xxx
 no
 puedo
 pues
@@ -59,7 +59,7 @@ es
 en
 cuanto
 a
-x62
+xxx
 simpatia
 -
 ¿
@@ -71,7 +71,7 @@ ese
 punto
 de
 vista
-x74
+xxx
 confieso
 que
 la
@@ -115,7 +115,7 @@ por
 todo
 lo
 que
-x118
+xxx
 no
 es
 novedad;
@@ -136,7 +136,7 @@ que
 personas
 competentes
 juzguen
-x139
+xxx
 mejor
 será
 por
@@ -169,7 +169,7 @@ no
 en
 las
 mias
-x172
+xxx
 están
 todos
 mis
