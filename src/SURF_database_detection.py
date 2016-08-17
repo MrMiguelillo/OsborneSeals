@@ -52,6 +52,5 @@ if max_matches < 150:
     matched_seal = KeypointsPickle.SEAL_NO_MATCH
 
 
-
 # TODO: Dibujar matches por si se quieren visualizar resultados.
 # TODO en otro archivo: Usar keypoints para delimitar zona de sello ----> Hay que eliminar outliers primero
