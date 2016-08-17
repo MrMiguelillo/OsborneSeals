@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.5 (RRG)
+------------
+1. Modificado main_recortes para generar la base de datos según Ángel
+
 v2.1.4 (RRG)
 ------------
 1. Añadido main_recortes para realizar la base de datos
@@ -46,10 +50,6 @@ v1.3.0 (RRG)
 1. main_componentes_conexas_pag funciona correctamente par una o dos imágenes
 2. Movidas imágenes de resultados al servidor
 3. Movidos varios txt al servidor
-
-v1.2.2 (RRG)
-------------
-1. Modificado main_recortes para generar la base de datos según Ángel
 
 v1.2.1 (RRG)
 ------------
