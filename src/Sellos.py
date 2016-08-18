@@ -50,7 +50,7 @@ class Sellos:
         for region in regions:
             all_other_regions = regions
             for i in range(1, len(all_other_regions)):
-                if Sellos.colision(region.bbox, all_other_regions[i].bbox, 6) and region.label != all_other_regions[i].label:
+                if Sellos.colision(region.bbox, all_other_regions[i].bbox, 9) and region.label != all_other_regions[i].label:
                     for points in all_other_regions[i].coords:
                         label_image[points[0], points[1]] = min(region.label, all_other_regions[i].label)
                     region.label = min(region.label, all_other_regions[i].label)
@@ -115,3 +115,4 @@ class Sellos:
 
 
 # TODO: Detection is buggy when seals have text on top or very close
+# TODO: Hacer varias pasadas en las colisiones   <--------- CLAVE
