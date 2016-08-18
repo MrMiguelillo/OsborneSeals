@@ -51,7 +51,7 @@ for root, dirs, files in walk:
 
             # eliminar bboxes demasiado vacías de píxeles blancos
             fill_area_ratio = float(region.area) / ((maxr - minr)*(maxc - minc))
-            if fill_area_ratio < 0.3 or fill_area_ratio > 0.9:  # 0.9 condition just to avoid black margins false positives
+            if fill_area_ratio < 0.2 or fill_area_ratio > 0.9:  # 0.9 condition just to avoid black margins false positives
                 continue
 
             # eliminar bboxes con contenido demasiado poco simétrico
