@@ -17,35 +17,31 @@ umbralizacion = Umbralizacion.Umbralizacion()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
-# Parámetros modificables
-num_paginas = 1
-pag_izq = 1
-pag_der = 1
-
 # Importar transcripción
 transcripcion = '../T_1892.01.25.txt'
 #transcripcion = '../1882-L123.M17.T_2.txt'
-#transcripcion
 
 # Importar imagen original
 #file = '../imgs/0003_sin_escudo.png'
-file = '../imgs/Narciso2.png'
-#file = '../imgs/IMG_0003.png'
-#file = '../../../Osborne/RepoOsborne/documentos'
+#file = '../imgs/Narciso2.png'
+file = '../../../Osborne/RepoOsborne/documentos/1877-L119.M23/2/1877-L119.M23.I_2/IMG_0002.png'
+
+# Parámetros modificables
+erosion = 5
+num_paginas = 2
+pag_izq = 1
+pag_der = 1
+
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
 orig = Image.open(file)
 
-# Importar imagen binarizada
 # Umbralizado de JSM
 #img = umbralizar.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-#img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-#img = cv2.imread('../0003_sin_escudo_met_0_vec_0_sig_0_thr_0.png', 0)
-#img = cv2.imread('../../../Osborne/RepoOsborne/ResultadosOCR/%s_comp_conx_pruebas.png', 0)
 
 font = ImageFont.truetype("Arial.ttf",40)
 d = ImageDraw.Draw(orig)
@@ -104,7 +100,7 @@ for x in range(0, num_paginas):
 
 print("Encontrar palabras")
 kernel = np.ones((5, 5), np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=5)
+img_ero = cv2.erode(img, kernel, iterations=erosion)
 img_ero_bw = (img_ero < 1).astype('uint8')
 
 #print("Resultados gráficos")
@@ -141,7 +137,6 @@ for x in range(0, num_paginas):
 
         # Añadir número de palabras de una fila
         num_palabras_pagina.append(num_palabras_fila)
-
         # Ordenar palabras de una fila
         palabras_fila = sorted(palabras_fila, key=lambda coord: coord[0])
         # Añadir palabras de una fila
@@ -165,8 +160,6 @@ for x in range(0, num_paginas):
         #d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
 
         for z in range(0, num_palabras[x][y]):
-            # Imprimir coordenadas de cada palabra
-            #print("T_1892.01.25 \t %4d \t %7d \t %7d \t %7d \t %7d" % (p, pagina[y][z][0], pagina[y][z][1], pagina[y][z][2], pagina[y][z][3]))
             # Dibujar rectángulos de palabras
             cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
             # Dibujar número de palabra
@@ -322,8 +315,8 @@ print("149: %d aciertos de %d. %f %% por ciento de efectividad" % (aciertos, tam
 '''
 print("Generando imágenes")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-filestring = '%s/%s_comp_conx_pruebas.png' % (path, nombre)
+filestring = '../../../Osborne/%s_comp_conx.png' % (nombre)
 cv2.imwrite(filestring, original)
-filestring = '%s/%s_comp_conx_texto.png' % (path, nombre)
+filestring = '../../../Osborne/%s_comp_conx_texto.png' % (nombre)
 #orig.save(filestring)
 #plt.show()
