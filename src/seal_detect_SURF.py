@@ -2,8 +2,8 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/1.png', 0)    # trainImage
-img2 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/1.png', 0)          # queryImage
+img1 = cv2.imread('C:/Users/usuario/Desktop/Base_sellos/sello6.png', 0)    # trainImage
+img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/3/1882-L123.M17.I_3/IMG_0003.png', 0)          # queryImage
 
 # Initiate SURF detector
 sift = xf.SURF_create()
