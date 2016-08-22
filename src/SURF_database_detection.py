@@ -7,7 +7,8 @@ from src.Keypoints_Pickle import KeypointsPickle
 
 seal_string = KeypointsPickle.seal_string
 
-keypoints_database = pickle.load(open("keypoints_database.p", "rb"))
+path = 'C:/Users/usuario/Desktop/Base_sellos/'
+keypoints_database = pickle.load(open(path + "keypoints_database.p", "rb"))
 kp = []
 desc = []
 
@@ -16,7 +17,7 @@ for i in range(0, len(keypoints_database)):
     kp.append(kp_temp)
     desc.append(desc_temp)
 
-img = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/2.png', 0)
+img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/3/1882-L123.M17.I_3/IMG_0002.png', 0)
 surf = xf.SURF_create()
 kp_img, des_img = surf.detectAndCompute(img, None)
 
@@ -50,6 +51,8 @@ for i in range(0, len(keypoints_database)):
 
 if max_matches < 150:
     matched_seal = KeypointsPickle.SEAL_NO_MATCH
+
+print(KeypointsPickle.seal_string[matched_seal])
 
 
 # TODO: Dibujar matches por si se quieren visualizar resultados.

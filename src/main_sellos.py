@@ -29,6 +29,11 @@ for root, dirs, files in walk:
         label_image = measure.label(bin_img)
         regions = measure.regionprops(label_image)
 
+        # eliminar borde si hubiese
+        new_label_image = Sellos.eliminar_borde(regions, label_image)
+        regions = measure.regionprops(new_label_image)
+        # TODO: eliminar región de borde de la lista de regiones para acelerar. También hacerlo sólo si se encuentra borde (devolviendo un bool ademas de new_label)
+
         # unificar regiones que deberían ser conexas reetiquetando convenientemente
         new_label_image = Sellos.reetiquetado(regions, label_image)
 
@@ -42,7 +47,7 @@ for root, dirs, files in walk:
             cent_row, cent_col = region.centroid
 
             # eliminar bboxes pequeñas
-            if bbox_height * bbox_width < 40000:
+            if bbox_height * bbox_width <= 40000:
                 continue
 
             # eliminar bboxes demasiado alargadas
@@ -87,5 +92,13 @@ for root, dirs, files in walk:
                     minc = new_coords[2]
                     maxc = new_coords[3]
 
-            cv2.imwrite('C:/Users/usuario/Desktop/Registro_sellos/sello%d.png' % i, img[minr:maxr, minc:maxc])
-            i += 1
+            # print(root + curr_file)
+            # cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
+            # cv2.imshow('Imagen', img[minr:maxr, minc:maxc])
+            # cv2.waitKey()
+            # cv2.destroyWindow('Imagen')
+            # cv2.imwrite('C:/Users/usuario/Desktop/Registro_sellos/sello%d.png' % i, img[minr:maxr, minc:maxc])
+            # i += 1
+
+
+# TODO: Algunos sellos no se detectan, no sé si se abren todas las ubicaciones.

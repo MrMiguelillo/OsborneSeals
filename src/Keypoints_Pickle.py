@@ -27,10 +27,12 @@ class KeypointsPickle:
         return keypoints, np.array(descriptors)
 
     SEAL_NO_MATCH = 0
-    SEAL_TOMAS = 1
+    SEAL_IO = 1
     SEAL_AG = 2
-    SEAL_DOBLE_T = 3
+    SEAL_TO_RARO = 3
+    SEAL_TOMAS = 4
+    SEAL_DOBLE_C = 5
 
-    seal_string = ['No Match', 'Tomas', 'AG', 'Doble T']
+    seal_string = ['No Match', 'IO', 'AG', 'TO Raro', 'Tomas', 'Doble C']
 
-    NUM_SELLOS = 3
+    NUM_SELLOS = 5

@@ -3,7 +3,8 @@ import numpy as np
 from src.Sellos import Sellos
 from skimage import measure
 
-img = cv2.imread('C:/Users/usuario/Desktop/test_colisiones.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('C:/Users/usuario/Desktop/documentos/1883-L119.M29_Tomas_Osborne_Born/'
+                 '1/1883-L119.M29_Tomas_Osborne_Born/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
 ret, bin_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 kernel = np.ones((11, 11), np.uint8)
 # bin_img = cv2.dilate(bin_img, kernel)
@@ -11,8 +12,13 @@ kernel = np.ones((11, 11), np.uint8)
 label_image = measure.label(bin_img)
 regions = measure.regionprops(label_image)
 
+# eliminar borde si hubiese
+new_label_image = Sellos.eliminar_borde(regions, label_image)
+regions = measure.regionprops(new_label_image)
+# TODO: eliminar región de borde de la lista de regiones para acelerar. También hacerlo sólo si se encuentra borde (devolviendo un bool ademas de new_label)
+
 # unificar regiones que deberían ser conexas reetiquetando convenientemente
-new_label_image = Sellos.reetiquetado(regions, label_image)
+new_label_image = Sellos.reetiquetado(regions, new_label_image)
 
 # reextraer propiedades de regiones reetiquetadas
 regions = measure.regionprops(new_label_image)
@@ -24,7 +30,7 @@ for region in regions:
     cent_row, cent_col = region.centroid
 
     # eliminar bboxes pequeñas
-    if bbox_height * bbox_width < 40000:
+    if bbox_height * bbox_width <= 40000:
         continue
 
     # eliminar bboxes demasiado alargadas
@@ -32,9 +38,9 @@ for region in regions:
         continue
 
     # eliminar bboxes demasiado vacías de píxeles blancos
-    fill_area_ratio = float(region.area) / ((maxr - minr)*(maxc - minc))
+    fill_area_ratio = float(region.area) / (bbox_height*bbox_width)
     if fill_area_ratio < 0.2 or fill_area_ratio > 0.9:  # 0.9 condition just to avoid black margins false positives
-        pass
+        continue
 
     # eliminar bboxes con contenido demasiado poco simétrico
     img_sello = bin_img[minr:maxr, minc:maxc]
@@ -73,7 +79,7 @@ for region in regions:
             minc = new_coords[2]
             maxc = new_coords[3]
 
-    cv2.rectangle(bin_img, (minc, minr), (maxc, maxr), 180, 9)
+    cv2.rectangle(bin_img, (minc, minr), (maxc, maxr), 180, 3)
 
 
 cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)

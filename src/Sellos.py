@@ -1,14 +1,18 @@
 import cv2
 import numpy as np
+import types
 
 
 class Sellos:
     @staticmethod
     def test_simetria(bin_img_region):
-        if len(bin_img_region) < 1:
-            return float('inf')
+        # if len(bin_img_region) < 1:
+        #     return float('inf')
 
         fil, col = bin_img_region.shape
+        if col <= 1 or fil <=1:
+            return float('inf')
+
         if col % 2 != 0:
             img_right = bin_img_region[0:fil, int(col / 2) + 1:col]
         else:
@@ -48,14 +52,6 @@ class Sellos:
     @staticmethod
     def reetiquetado(regions, label_image):
         for region in regions:
-            minr, minc, maxr, maxc = region.bbox
-            bbox_height = maxr - minr
-            bbox_width = maxc - minc
-            img_dims = label_image.shape
-            if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.4:
-                for points in region.coords:
-                    label_image[points[0], points[1]] = 0
-
             all_other_regions = regions
             for i in range(1, len(all_other_regions)):
                 if Sellos.colision(region.bbox, all_other_regions[i].bbox, 4) and region.label != all_other_regions[i].label:
@@ -67,6 +63,19 @@ class Sellos:
         return label_image
 # TODO: Comprobar qué ordenación tienen los bboxes para ahorrar comprobaciones
 # TODO: la búsqueda de colisiones se puede acelerar con matriz de dónde hay rectángulo
+
+    @staticmethod
+    def eliminar_borde(regions, label_image):
+        for region in regions:
+            minr, minc, maxr, maxc = region.bbox
+            bbox_height = maxr - minr
+            bbox_width = maxc - minc
+            img_dims = label_image.shape
+            if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.4:
+                for points in region.coords:
+                    label_image[points[0], points[1]] = 0
+
+        return label_image
 
     @staticmethod
     def detectar_bbox(img_region, coords):
