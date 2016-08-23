@@ -17,7 +17,8 @@ for i in range(0, len(keypoints_database)):
     kp.append(kp_temp)
     desc.append(desc_temp)
 
-img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/29/1877-L119.M23_Tomas_Osborne_Bohl.I_29/IMG_0002.png', 0)
+img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
+                 '29/1877-L119.M23_Tomas_Osborne_Bohl.I_29/IMG_0002.png', 0)
 surf = xf.SURF_create()
 kp_img, des_img = surf.detectAndCompute(img, None)
 

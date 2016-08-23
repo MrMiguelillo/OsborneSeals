@@ -79,5 +79,4 @@ for root, dirs, files in walk:
     # print(KeypointsPickle.seal_string[document_seal])
 
 
-# TODO: Dibujar matches por si se quieren visualizar resultados.
 # TODO en otro archivo: Usar keypoints para delimitar zona de sello ----> Hay que eliminar outliers primero

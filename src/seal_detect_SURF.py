@@ -2,8 +2,8 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-img1 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/1.png', 0)    # trainImage
-img2 = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/1.png', 0)          # queryImage
+img1 = cv2.imread('C:/Users/usuario/Desktop/Registro_sellos/sello5.png', 0)    # trainImage
+img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0003.png', 0)          # queryImage
 
 # Initiate SURF detector
 sift = xf.SURF_create()
@@ -36,19 +36,20 @@ draw_params = dict(matchColor=(0, 255, 0),
                    matchesMask=matchesMask,
                    flags=0)
 
-kp_x = []
-kp_y = []
-for i in range(len(kp_matched)):
-    kp_x.append(kp_matched[i].pt[0])
-    kp_y.append(kp_matched[i].pt[1])
-max_x = np.amax(kp_x)
-min_x = np.amin(kp_x)
-max_y = np.amax(kp_y)
-min_y = np.amin(kp_y)
+# kp_x = []
+# kp_y = []
+# for i in range(len(kp_matched)):
+#     kp_x.append(kp_matched[i].pt[0])
+#     kp_y.append(kp_matched[i].pt[1])
+# max_x = np.amax(kp_x)
+# min_x = np.amin(kp_x)
+# max_y = np.amax(kp_y)
+# min_y = np.amin(kp_y)
 
 # cv2.rectangle(img2, (int(min_x),int(min_y)), (int(max_x),int(max_y)), 150, 5)
 
 img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
+print(len(kp_matched))
 
 
 cv2.namedWindow('win', cv2.WINDOW_NORMAL)
