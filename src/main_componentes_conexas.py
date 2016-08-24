@@ -18,13 +18,13 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar transcripción
-transcripcion = '../T_1892.01.25.txt'
+#transcripcion = '../T_1892.01.25.txt'
 #transcripcion = '../1882-L123.M17.T_2.txt'
 
 # Importar imagen original
 #file = '../imgs/0003_sin_escudo.png'
 #file = '../imgs/Narciso2.png'
-file = '../../../Osborne/RepoOsborne/documentos/1877-L119.M23/2/1877-L119.M23.I_2/IMG_0002.png'
+file = '../../../Osborne/RepoOsborne/documentos/1877-L119.M23/29/IMG_0002.png'
 
 # Parámetros modificables
 erosion = 5
