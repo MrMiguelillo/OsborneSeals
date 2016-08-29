@@ -43,7 +43,7 @@ class Separacion:
                 max_x_hueco = max_x_actual
 
         res_x = round((max_x_hueco - min_x_hueco) / 2, 0) + min_x_hueco
-        return int(res_x)
+        return res_x
 
     # Entrada: Histograma vertical
     # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación

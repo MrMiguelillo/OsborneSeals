@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.6 (RRG)
+------------
+1. Modificado main_componentes_conexas para detectar automáticamente el número de páginas
+
 v2.1.5 (RRG)
 ------------
 1. Modificado main_recortes para generar la base de datos según Ángel

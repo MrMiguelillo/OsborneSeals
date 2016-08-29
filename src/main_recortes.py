@@ -18,13 +18,13 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Parámetros modificables
-num_paginas = 1
 erosion = 5
+num_paginas = 2
 # Importar transcripción
-transcripcion = '../../../Osborne/RepoOsborne/documentos/1877-L119.M23/2/IMG_0002.txt'
-legajo = '1882-L123.M17_2'
+transcripcion = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.txt'
+legajo = '1882-L123.M17_3'
 # Importar imagen original
-file = '../../../Osborne/RepoOsborne/documentos/1877-L119.M23/2/IMG_0002.png'
+file = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.png'
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
