@@ -19,6 +19,7 @@ for root, dirs, files in walk:
 
         surf = xf.SURF_create()
         kp, des = surf.detectAndCompute(img, None)
+        print(len(kp))
 
         temp = KeypointsPickle.pickle(kp, des)
         temp_array.append(temp)

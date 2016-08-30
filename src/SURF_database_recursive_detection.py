@@ -66,7 +66,7 @@ for root, dirs, files in walk:
 
             # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
-        if max_matches < 150:
+        if max_matches < KeypointsPickle.NO_MATCH_THRESH:
             matched_seal = KeypointsPickle.SEAL_NO_MATCH
 
         if document_seal == -1 or document_seal == KeypointsPickle.SEAL_NO_MATCH:

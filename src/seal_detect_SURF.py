@@ -2,8 +2,8 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-img1 = cv2.imread('C:/Users/usuario/Desktop/Registro_sellos/sello5.png', 0)    # trainImage
-img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0003.png', 0)          # queryImage
+img1 = cv2.imread('C:/Users/usuario/Desktop/Base_sellos/sello6.png', 0)    # trainImage
+img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0002.png', 0)  # queryImage
 
 # Initiate SURF detector
 sift = xf.SURF_create()
@@ -27,9 +27,9 @@ matchesMask = [[0, 0] for i in range(len(matches))]
 kp_matched = []
 # ratio test as per Lowe's paper
 for i, (m, n) in enumerate(matches):
-    if m.distance < 0.7*n.distance:
+    if m.distance < 0.9*n.distance:
         matchesMask[i] = [1, 0]
-        kp_matched.append(kp2[m.queryIdx])
+        kp_matched.append(kp2[m.queryIdx])  # keypoints from query image stored for seal location calculation
 
 draw_params = dict(matchColor=(0, 255, 0),
                    singlePointColor=(255, 0, 0),

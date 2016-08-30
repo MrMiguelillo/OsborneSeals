@@ -36,3 +36,5 @@ class KeypointsPickle:
     seal_string = ['No Match', 'IO', 'AG', 'TO Raro', 'Tomas', 'Doble C']
 
     NUM_SELLOS = 5
+
+    NO_MATCH_THRESH = 20

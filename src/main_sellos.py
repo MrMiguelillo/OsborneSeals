@@ -99,6 +99,3 @@ for root, dirs, files in walk:
             # cv2.destroyWindow('Imagen')
             # cv2.imwrite('C:/Users/usuario/Desktop/Registro_sellos/sello%d.png' % i, img[minr:maxr, minc:maxc])
             # i += 1
-
-
-# TODO: Algunos sellos no se detectan, no sé si se abren todas las ubicaciones.
