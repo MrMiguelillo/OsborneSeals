@@ -24,8 +24,8 @@ filtro = Filtros.Filtros()
 # Importar imagen original
 file = '../imgs/0003_sin_escudo.png'
 #file = '../imgs/Narciso2.png'
-#file = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0001.png'
-legajo = '1882-L123.M17_3'
+#file = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/1/IMG_0002.png'
+legajo = '1882-L123.M17_1'
 
 # Parámetros modificables
 erosion = 5
@@ -36,6 +36,7 @@ pag_der = 1
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
+conSello = cv2.imread('../imgs/IMG_0003.png')
 orig = Image.open(file)
 
 # Umbralizado de JSM

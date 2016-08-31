@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.7 (RRG)
+------------
+1. Modificada función Detecciones para integrar en la web
+
 v2.1.6 (RRG)
 ------------
 1. Modificado main_componentes_conexas para detectar automáticamente el número de páginas

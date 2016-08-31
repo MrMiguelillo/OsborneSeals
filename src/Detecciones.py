@@ -12,7 +12,7 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 class Detecciones:
-    def detectar_filas(self, file, numPaginas):
+    def detectar_filas(self, file):
 
         original = cv2.imread(file)
 
@@ -28,13 +28,15 @@ class Detecciones:
         # Plantilla de pertenencia
         img_plant = img < 255
 
-        # Separar columnas
-        if numPaginas == 2:
-            hist_hor = separar.hor_hist(img_plant)
-            div = separar.columnas(hist_hor)
-            tab = [0, div, col_px]
-        else:
+        # Detectar columnas
+        hist_hor = separar.hor_hist(img_plant)
+        div = separar.columnas(hist_hor)
+        if np.isnan(div):
+            numPaginas = 1
             tab = [0, col_px]
+        else:
+            numPaginas = 2
+            tab = [0, int(div), col_px]
 
         # Separar filas
         filas = []
