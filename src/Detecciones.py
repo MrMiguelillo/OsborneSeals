@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 from skimage import measure
 from src import Separacion
 from src import Filtros
@@ -15,6 +16,7 @@ class Detecciones:
     def detectar_filas(self, file):
 
         original = cv2.imread(file)
+        #path = os.path.dirname(file)
 
         # Umbralizado de JSM
         # img = umbralizar.umbralizar_imagen(file)

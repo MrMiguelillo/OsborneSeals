@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.8 (RRG)
+------------
+1. Se generan por linea de comando los div para la web
+2. Versión guardada antes de eliminar SRC
+
 v2.1.7 (RRG)
 ------------
 1. Modificada función Detecciones para integrar en la web
