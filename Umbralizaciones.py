@@ -1,4 +1,4 @@
-from src import AlgoritmosLocales
+import AlgoritmosLocales
 import cv2
 import numpy as np
 

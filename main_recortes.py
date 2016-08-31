@@ -7,10 +7,10 @@ import scipy
 from PIL import Image, ImageDraw, ImageFont
 from skimage import measure
 from scipy import ndimage
-from src import Separacion
-from src import Filtros
-from src import Umbralizaciones
-from src import Umbralizacion
+import Separacion
+import Filtros
+import Umbralizaciones
+import Umbralizacion
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
 umbralizacion = Umbralizacion.Umbralizacion()
@@ -21,10 +21,10 @@ filtro = Filtros.Filtros()
 erosion = 5
 num_paginas = 2
 # Importar transcripción
-transcripcion = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.txt'
+transcripcion = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.txt'
 legajo = '1882-L123.M17_3'
 # Importar imagen original
-file = '../../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.png'
+file = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.png'
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
@@ -125,10 +125,10 @@ for x in range(0, num_paginas):
 
                 recorte = original[palabras[x][y][z][1]:palabras[x][y][z][3], palabras[x][y][z][0]:palabras[x][y][z][2]]
 
-                filestring = '../../../Osborne/BdD/%s_%s_%d_%s.png' % (legajo, nombre, id, texto[p - 1])
+                filestring = '../../Osborne/BdD/%s_%s_%d_%s.png' % (legajo, nombre, id, texto[p - 1])
                 cv2.imwrite(filestring, recorte)
 
-                filestring = '../../../Osborne/BdD/%s_%s_%d_%s.txt' % (legajo, nombre, id, texto[p - 1])
+                filestring = '../../Osborne/BdD/%s_%s_%d_%s.txt' % (legajo, nombre, id, texto[p - 1])
                 txt = open(filestring, 'w')
                 txt.write('%s\n%s\n%s\n%d\n%d\n%d\n%d' % (legajo, nombre, texto[p - 1], palabras[x][y][z][0],
                                                           palabras[x][y][z][1], palabras[x][y][z][2],

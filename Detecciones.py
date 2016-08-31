@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 import os
 from skimage import measure
-from src import Separacion
-from src import Filtros
-from src import Umbralizaciones
-from src import Umbralizacion
+import Separacion
+import Filtros
+import Umbralizaciones
+import Umbralizacion
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
 umbralizacion = Umbralizacion.Umbralizacion()

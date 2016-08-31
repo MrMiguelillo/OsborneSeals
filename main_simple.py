@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from src import Separacion
-from src import Filtros
+import Separacion
+import Filtros
 
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()

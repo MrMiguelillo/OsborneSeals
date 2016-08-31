@@ -1,8 +1,7 @@
 import cv2
 # import numpy as np
 import os
-
-from src import Umbralizacion
+import Umbralizacion
 
 separar = Umbralizacion.Umbralizacion()
 

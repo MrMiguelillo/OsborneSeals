@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.1.9 (RRG)
+------------
+1. Reordenación de los archivos py. para funcionar igual que la consola de comandos
+
 v2.1.8 (RRG)
 ------------
 1. Se generan por linea de comando los div para la web

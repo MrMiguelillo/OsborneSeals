@@ -1,4 +1,4 @@
-from src import Detecciones
+import Detecciones
 
 detectar = Detecciones.Detecciones()
 
