@@ -3,8 +3,12 @@ import numpy as np
 from src.Sellos import Sellos
 from skimage import measure
 
+# img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
+#                  '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
+
 img = cv2.imread('C:/Users/usuario/Desktop/documentos/1883-L119.M29_Tomas_Osborne_Born/'
                  '1/1883-L119.M29_Tomas_Osborne_Born/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
+
 ret, bin_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 kernel = np.ones((11, 11), np.uint8)
 # bin_img = cv2.dilate(bin_img, kernel)
@@ -15,7 +19,8 @@ regions = measure.regionprops(label_image)
 # eliminar borde si hubiese
 new_label_image = Sellos.eliminar_borde(regions, label_image)
 regions = measure.regionprops(new_label_image)
-# TODO: eliminar región de borde de la lista de regiones para acelerar. También hacerlo sólo si se encuentra borde (devolviendo un bool ademas de new_label)
+# TODO: eliminar región de borde de la lista de regiones para acelerar. También hacerlo sólo si se encuentra
+# borde (devolviendo un bool ademas de new_label)
 
 # unificar regiones que deberían ser conexas reetiquetando convenientemente
 new_label_image = Sellos.reetiquetado(regions, new_label_image)
