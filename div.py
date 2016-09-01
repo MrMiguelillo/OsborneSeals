@@ -1,16 +1,15 @@
 import cv2
 import numpy as np
 import os
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import scipy
+#import matplotlib.pyplot as plt
+#import matplotlib.patches as mpatches
+#import scipy
 import sys
-from PIL import Image, ImageDraw, ImageFont
 from skimage import measure
-from scipy import ndimage
+#from scipy import ndimage
 import Separacion
 import Filtros
-import Umbralizaciones
+#import Umbralizaciones
 import Umbralizacion
 
 #umbralizaciones = Umbralizaciones.Umbralizaciones()
@@ -19,39 +18,30 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-file = 'imgs/0003_sin_escudo.png'
-#file = sys.argv[1]
+#file = 'imgs/0003_sin_escudo.png'
+file = sys.argv[1]
 # Importar transcripción
-transcripcion = 'tran/1882-L123.M17.T_2.txt'
-#transcripcion = sys.argv[2]
-
-#legajo = '1882-L123.M17_1'
+#transcripcion = 'tran/1882-L123.M17.T_2.txt'
+transcripcion = sys.argv[2]
+pag_izq = 2
+#pag_izq = int(sys.argv[3])
+pag_der = 3
+#pag_der = int(sys.argv[4])
 
 # Parámetros modificables
 erosion = 5
-pag_izq = 2
-pag_der = 3
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
-orig = Image.open(file)
 
 # Umbralizado de JSM
 #img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-font = ImageFont.truetype("Arial.ttf",40)
-d = ImageDraw.Draw(orig)
-
 # Calcular tamaño de imagen en centímetros
-ppi = orig.info['dpi']
 fil_px, col_px = img.shape
-fil_cm = fil_px/(ppi[0]*0.39370)
-col_cm = col_px/(ppi[0]*0.39370)
-
 # Plantilla de pertenencia
 img_plant = img < 255
 
@@ -61,9 +51,7 @@ txt_pag = []
 txt_documento = []
 with open(transcripcion) as inputfile:
     for line in inputfile:
-        #texto.append(line.strip().split('\t'))
         texto.append(line.strip())
-
 for z in range (1, len(texto)):
     if texto[z] == "..........":
         txt_documento.append(txt_pag)
@@ -71,7 +59,6 @@ for z in range (1, len(texto)):
     else:
         txt_pag.append(texto[z])
 txt_documento.append(txt_pag)
-
 
 hist_hor = separar.hor_hist(img_plant)
 div = separar.columnas(hist_hor)
@@ -128,9 +115,6 @@ for x in range(0, num_paginas):
             num_palabras_fila += 1
             minr, minc, maxr, maxc = region.bbox
             palabras_fila.append([minc + filas[x][2], minr + filas[x][0][y], maxc + filas[x][2], maxr + filas[x][0][y]])
-
-            #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
-            #ax.add_patch(rect)
 
         # Añadir número de palabras de una fila
         num_palabras_pagina.append(num_palabras_fila)
@@ -201,11 +185,11 @@ for x in range(0, num_paginas):
             if palabras[x][y][z][2] > B1:
                 B1 = palabras[x][y][z][2]
 
-        left = (palabras[x][y][0][0]/col_px)*0.9*100
+        left = (palabras[x][y][0][0] / col_px) * 0.9 * 100
         top = (filas[x][0][y] / col_px) * 0.9 * 100
 
-        width = ((B1 - palabras[x][y][0][0])/col_px)*0.9*100
-        height = ((filas[x][1][y] - filas[x][0][y])/col_px)*0.9*100
+        width = ((B1 - palabras[x][y][0][0]) / col_px) * 0.9 * 100
+        height = ((filas[x][1][y] - filas[x][0][y]) / col_px) * 0.9 * 100
 
         xml.write('<div class="tooltip" style="position: absolute;  width:%.2fvw; height:%.2fvw; top:%.2fvw;'
                   'left: %.2fvw; border:0px solid #0000FF;"> <span class = "classic"> %s'
