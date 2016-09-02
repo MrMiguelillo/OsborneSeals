@@ -14,16 +14,18 @@ filtro = Filtros.Filtros()
 # Importar imagen original
 #file = 'imgs/0003_sin_escudo.png'
 #file = 'imgs/Narciso2.png'
-file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
-#file = sys.argv[1]
+#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
+file = sys.argv[1]
 # Importar transcripción
 #transcripcion = 'tran/1882-L123.M17.T_2.txt'
-transcripcion = 'tran/T_2_2.txt'
-#transcripcion = sys.argv[2]
-pag_izq = 3
-#pag_izq = int(sys.argv[3])
-pag_der = 1
-#pag_der = int(sys.argv[4])
+#transcripcion = 'tran/T_2_2.txt'
+transcripcion = sys.argv[2]
+#pag_izq = 3
+pag_izq = int(sys.argv[3])
+
+if len(sys.argv) == 5:
+    #pag_der = 1
+    pag_der = int(sys.argv[4])
 
 # Parámetros modificables
 erosion = 5
