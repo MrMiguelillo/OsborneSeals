@@ -1,32 +1,29 @@
 import cv2
 import numpy as np
 import os
-#import matplotlib.pyplot as plt
-#import matplotlib.patches as mpatches
-#import scipy
 import sys
 from skimage import measure
-#from scipy import ndimage
 import Separacion
 import Filtros
-#import Umbralizaciones
-import Umbralizacion
+import Umbralizaciones
 
-#umbralizaciones = Umbralizaciones.Umbralizaciones()
-umbralizacion = Umbralizacion.Umbralizacion()
+umbralizaciones = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
 #file = 'imgs/0003_sin_escudo.png'
+#file = 'imgs/Narciso2.png'
+#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
 file = sys.argv[1]
 # Importar transcripción
 #transcripcion = 'tran/1882-L123.M17.T_2.txt'
+#transcripcion = 'tran/T_2_2.txt'
 transcripcion = sys.argv[2]
-pag_izq = 2
-#pag_izq = int(sys.argv[3])
-pag_der = 3
-#pag_der = int(sys.argv[4])
+#pag_izq = 3
+pag_izq = int(sys.argv[3])
+#pag_der = 1
+pag_der = int(sys.argv[4])
 
 # Parámetros modificables
 erosion = 5
@@ -40,7 +37,7 @@ original = cv2.imread(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-# Calcular tamaño de imagen en centímetros
+# Calcular tamaño de imagen
 fil_px, col_px = img.shape
 # Plantilla de pertenencia
 img_plant = img < 255
@@ -60,18 +57,19 @@ for z in range (1, len(texto)):
         txt_pag.append(texto[z])
 txt_documento.append(txt_pag)
 
+# Separar columnas
 hist_hor = separar.hor_hist(img_plant)
 div = separar.columnas(hist_hor)
-
-# Separar columnas
 if np.isnan(div):
     num_paginas = 1
     tab = [0, col_px]
     txt = [txt_documento[pag_izq - 1]]
+    filas_txt = len(txt[0])
 else:
     num_paginas = 2
     tab = [0, int(div), col_px]
     txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
+    filas_txt = [len(txt[0]),len(txt[1])]
 
 # Separar filas
 filas = []
@@ -82,11 +80,17 @@ for x in range(0, num_paginas):
     hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
     # Filtrado
     hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
-    # Separar filas
-    ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], 100)
-    # Toma de datos
-    num_filas.append(len(ini_filas))
-    filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
+
+    for minTest in range(0, np.max(hist_ver_filtrado[x]) -1, 1):
+
+        # Separar filas
+        ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minTest)
+
+        if len(ini_filas) == filas_txt[x]:
+            # Toma de datos
+            num_filas.append(len(ini_filas))
+            filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
+            break
 
 # Encontrar palabras
 kernel = np.ones((5, 5), np.uint8)

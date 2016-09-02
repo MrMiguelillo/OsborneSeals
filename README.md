@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.0 (RRG)
+------------
+1. div.py genera los div para la pagina a través del txt
+
 v2.1.9 (RRG)
 ------------
 1. Reordenación de los archivos py. para funcionar igual que la consola de comandos

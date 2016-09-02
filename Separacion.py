@@ -55,12 +55,15 @@ class Separacion:
         inicio =[]
         final = []
 
-        for x in range(0, long-1):
-            if (histograma[x] == 0) & (histograma[x + 1] > 0):
-                inicio.append(x+1)
-                break
+        if (histograma[0] > 0):
+            inicio.append(0)
+        else:
+            for x in range(0, long - 1):
+                if(histograma[x]==0) & (histograma[x + 1] > 0):
+                    inicio.append(x+1)
+                    break
 
-        for x in range(0, long-1):
+        for x in range(1, long-1):
             if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
                 ini.append(x + 1)
 
@@ -89,10 +92,13 @@ class Separacion:
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))
 
-        for x in range(long - 1,0,-1):
-            if (histograma[x] == 0) & (histograma[x - 1] > 0):
-                final.append(x-1)
-                break
+        if (histograma[long - 1] < 0):
+            final.append(long - 1)
+        else:
+            for x in range(long - 1,0,-1):
+                if (histograma[x] == 0) & (histograma[x - 1] > 0):
+                    final.append(x-1)
+                    break
 
         return (inicio, final)
 
