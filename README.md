@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.1 (RRG)
+------------
+1. div.py modificado para detectar paginas según txt 
+
 v2.2.0 (RRG)
 ------------
 1. div.py genera los div para la pagina a través del txt

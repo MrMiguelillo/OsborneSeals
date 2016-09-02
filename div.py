@@ -14,16 +14,16 @@ filtro = Filtros.Filtros()
 # Importar imagen original
 #file = 'imgs/0003_sin_escudo.png'
 #file = 'imgs/Narciso2.png'
-#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
-file = sys.argv[1]
+file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
+#file = sys.argv[1]
 # Importar transcripción
 #transcripcion = 'tran/1882-L123.M17.T_2.txt'
-#transcripcion = 'tran/T_2_2.txt'
-transcripcion = sys.argv[2]
-#pag_izq = 3
-pag_izq = int(sys.argv[3])
-#pag_der = 1
-pag_der = int(sys.argv[4])
+transcripcion = 'tran/T_2_2.txt'
+#transcripcion = sys.argv[2]
+pag_izq = 3
+#pag_izq = int(sys.argv[3])
+pag_der = 1
+#pag_der = int(sys.argv[4])
 
 # Parámetros modificables
 erosion = 5
@@ -58,18 +58,18 @@ for z in range (1, len(texto)):
 txt_documento.append(txt_pag)
 
 # Separar columnas
-hist_hor = separar.hor_hist(img_plant)
-div = separar.columnas(hist_hor)
-if np.isnan(div):
+if len(sys.argv) == 5:
+    num_paginas = 2
+    hist_hor = separar.hor_hist(img_plant)
+    div = separar.columnas(hist_hor)
+    tab = [0, int(div), col_px]
+    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
+    filas_txt = [len(txt[0]), len(txt[1])]
+else:
     num_paginas = 1
     tab = [0, col_px]
     txt = [txt_documento[pag_izq - 1]]
     filas_txt = len(txt[0])
-else:
-    num_paginas = 2
-    tab = [0, int(div), col_px]
-    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
-    filas_txt = [len(txt[0]),len(txt[1])]
 
 # Separar filas
 filas = []
