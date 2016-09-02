@@ -19,13 +19,10 @@ file = sys.argv[1]
 # Importar transcripción
 #transcripcion = 'tran/1882-L123.M17.T_2.txt'
 #transcripcion = 'tran/T_2_2.txt'
+#transcripcion = 'tran/T_1892.01.25.txt'
 transcripcion = sys.argv[2]
-#pag_izq = 3
+#pag_izq = 1
 pag_izq = int(sys.argv[3])
-
-if len(sys.argv) == 5:
-    #pag_der = 1
-    pag_der = int(sys.argv[4])
 
 # Parámetros modificables
 erosion = 5
@@ -61,6 +58,7 @@ txt_documento.append(txt_pag)
 
 # Separar columnas
 if len(sys.argv) == 5:
+    pag_der = int(sys.argv[4])
     num_paginas = 2
     hist_hor = separar.hor_hist(img_plant)
     div = separar.columnas(hist_hor)
@@ -71,7 +69,7 @@ else:
     num_paginas = 1
     tab = [0, col_px]
     txt = [txt_documento[pag_izq - 1]]
-    filas_txt = len(txt[0])
+    filas_txt = [len(txt[0])]
 
 # Separar filas
 filas = []
