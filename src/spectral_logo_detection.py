@@ -3,25 +3,26 @@ import numpy as np
 from math import sqrt
 from src import Umbralizacion
 
-img = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/sello1_trozo.png', 1)
+# img = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/sello1_trozo.png', 1)
+img = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/to1_trozo.png', 1)
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 g_img = cv2.GaussianBlur(gray, (0, 0), 6)
 
 Y = abs(gray - g_img)
 # Y = High pass filtered image
 
-spectral_thresh = 30
+spectral_thresh = 35
 chrom_thresh = 190
 
-# YCC_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-# R = np.array(Y, dtype=float)
-# m, n = R.shape
-# Fl = img
-# for i in range(0, m):
-#     for j in range(0, n):
-#         R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
-#         if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
-#             Fl[i, j] = (255, 255, 255)
+YCC_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+R = np.array(Y, dtype=float)
+m, n = R.shape
+Fl = img.copy()
+for i in range(0, m):
+    for j in range(0, n):
+        R[i, j] = sqrt(int(YCC_img[i][j][1]) * int(YCC_img[i][j][1]) + int(YCC_img[i][j][2]) * int(YCC_img[i][j][2]))
+        if Y[i, j] >= spectral_thresh and R[i, j] <= chrom_thresh:
+            Fl[i, j] = (255, 255, 255)
 
 
 # umbralizar = Umbralizacion.Umbralizacion()
@@ -35,7 +36,7 @@ gray_Fl = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 # out = img * mask
 
 
-gray_Fl = (gray_Fl > 180).astype(np.uint8)*255
+# gray_Fl = (gray_Fl > 180).astype(np.uint8)*255
 # for i in range(0, m):
 #     for j in range(0, n):
 #         if gray_Fl[i,j] < 180:
@@ -69,8 +70,10 @@ gray_Fl = (gray_Fl > 180).astype(np.uint8)*255
 # img2 = cv2.rectangle(Fl, (x,y), (x+w,y+h), (255, 0, 255),20)
 
 # cv2.imwrite('sello1_Test.png', Fl)
-cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-cv2.imshow('img', Y)
+cv2.namedWindow('filtered', cv2.WINDOW_NORMAL)
+cv2.imshow('filtered', Fl)
+cv2.namedWindow('original', cv2.WINDOW_NORMAL)
+cv2.imshow('original', img)
 cv2.waitKey()
 
 
