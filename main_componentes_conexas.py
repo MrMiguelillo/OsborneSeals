@@ -17,19 +17,19 @@ filtro = Filtros.Filtros()
 
 # Importar transcripción
 #transcripcion = 'tran/T_1892.01.25.txt'
-#transcripcion = 'tran/1882-L123.M17.T_2.txt'
+transcripcion = 'tran/1882-L123.M17.T_2.txt'
 
 # Importar imagen original
-#file = 'imgs/0003_sin_escudo.png'
-#file = 'imgs/Narciso2.png'
-file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
+file = 'imgs/0003_sin_escudo.png'
+#file = 'imgs/Narciso1.png'
+#file = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/1/IMG_0003.png'
 legajo = '1883-L119.M29_2'
 
 # Parámetros modificables
 erosion = 5
 
-#pag_izq = 1
-#pag_der = 1
+pag_izq = 2
+pag_der = 3
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
@@ -54,20 +54,36 @@ fil_px, col_px = img.shape
 # Plantilla de pertenencia
 img_plant = img < 255
 
+print('Generar transcripción')
+texto = []
+txt_pag = []
+txt_documento = []
+with open(transcripcion) as inputfile:
+    for line in inputfile:
+        #texto.append(line.strip().split('\t'))
+        texto.append(line.strip())
+
+for z in range (1, len(texto)):
+    if texto[z] == "..........":
+        txt_documento.append(txt_pag)
+        txt_pag = []
+    else:
+        txt_pag.append(texto[z])
+txt_documento.append(txt_pag)
 
 print("Separar columnas")
-
+minCol = 10
 hist_hor = separar.hor_hist(img_plant)
-div = separar.columnas(hist_hor)
+div = separar.columnas(hist_hor, minCol)
 
 if np.isnan(div):
     num_paginas = 1
     tab = [0, col_px]
-    # txt = [txt_documento[pag_izq - 1]]
+    txt = [txt_documento[pag_izq - 1]]
 else:
     num_paginas = 2
     tab = [0, int(div), col_px]
-    # txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
+    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
 
 print("Separar filas")
 #kernel = np.ones((5, 5), np.uint8)
@@ -94,6 +110,7 @@ for x in range(0, num_paginas):
     num_filas.append(len(ini_filas))
     filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
 
+'''
 print("Ajustando")
 res = [2, 20]
 for x in range(0, num_paginas):
@@ -123,9 +140,7 @@ for x in range(0, num_paginas):
     # Toma de datos
     num_filas.append(len(ini_filas))
     filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
-
-
-
+'''
 
 print("Encontrar palabras")
 kernel = np.ones((5, 5), np.uint8)
@@ -152,8 +167,9 @@ for x in range(0, num_paginas):
         num_palabras_fila = 0
         palabras_fila = []
 
+        #try:
         for region in measure.regionprops(label_image):
-            # skip small images
+                # skip small images
             if region.area < 1000:
                 continue
 
@@ -163,6 +179,8 @@ for x in range(0, num_paginas):
 
             #rect = mpatches.Rectangle((minc, minr + ini_filas[y]), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1)
             #ax.add_patch(rect)
+        #except ValueError:
+        #pass
 
         # Añadir número de palabras de una fila
         num_palabras_pagina.append(num_palabras_fila)
@@ -173,26 +191,6 @@ for x in range(0, num_paginas):
 
     num_palabras.append(num_palabras_pagina)
     palabras.append(palabras_pagina)
-
-
-'''
-
-print('Generar transcripción')
-texto = []
-txt_pag = []
-txt_documento = []
-with open(transcripcion) as inputfile:
-    for line in inputfile:
-        #texto.append(line.strip().split('\t'))
-        texto.append(line.strip())
-
-for z in range (1, len(texto)):
-    if texto[z] == "..........":
-        txt_documento.append(txt_pag)
-        txt_pag = []
-    else:
-        txt_pag.append(texto[z])
-txt_documento.append(txt_pag)
 
 
 print("Generar XML")
@@ -255,7 +253,7 @@ for x in range(0, num_paginas):
             if palabras[x][y][z][2] > B1:
                 B1 = palabras[x][y][z][2]
 
-        cv2.rectangle(original, (palabras[x][y][0][0], filas[x][0][y]), (B1, filas[x][1][y]), 0, 1)
+        #cv2.rectangle(original, (palabras[x][y][0][0], filas[x][0][y]), (B1, filas[x][1][y]), 0, 1)
         #cv2.rectangle(original, (palabras[x][y][0][0], filas[x][0][y]), (palabras[x][y][len(palabras[x][y])-1][2], filas[x][1][y]), 0, 1)
 
         left = (palabras[x][y][0][0]/col_px)*0.9*100
@@ -270,7 +268,7 @@ for x in range(0, num_paginas):
 
 xml.write('</body>\n</html>\n')
 xml.close()
-'''
+
 '''
 # Detectar lados de palabras que se unen con otras líneas
 integ = cv2.integral(palabras)
@@ -352,7 +350,7 @@ for x in range(0, num_paginas):
         cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (0, 0, 0), 1)
         cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (0, 0, 0), 1)
         # Dibujar número de línea
-        cv2.putText(original, str(l), (palabras[x][y][0][0], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+        cv2.putText(original, str(l), (filas[x][2], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
         # Imprimir texto
         #d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
@@ -379,12 +377,15 @@ if num_paginas == 2:
     ax.set_title('Histograma horizontal: %d páginas' % (num_paginas))
     plt.plot(hist_hor)
     plt.plot([int(div), int(div)],[0, np.max(hist_hor)], 'r')
+    plt.plot(minCol * np.ones(col_px), 'r')
     plt.axis([0, col_px, 0, np.max(hist_hor)])
+
     ax = fig.add_subplot(312)
     ax.set_title('Histograma vertical página izquierda: %d filas' % (num_filas[0]))
     plt.plot(hist_ver_filtrado[0])
     plt.plot(minimo[0] * np.ones(fil_px),'r')
     plt.axis([0, fil_px, 0, np.max(hist_ver_filtrado[0])])
+
     ax = fig.add_subplot(313)
     ax.set_title('Histograma vertical página derecha: %d filas' % (num_filas[1]))
     plt.plot(hist_ver_filtrado[1])
@@ -397,6 +398,7 @@ else:
     ax.set_title('Histograma horizontal: %d páginas' % (num_paginas))
     plt.plot(hist_hor)
     plt.axis([0, col_px, 0, np.max(hist_hor)])
+
     ax = fig.add_subplot(212)
     ax.set_title('Histograma vertical: %d filas' % (num_filas[0]))
     plt.plot(hist_ver_filtrado[0])

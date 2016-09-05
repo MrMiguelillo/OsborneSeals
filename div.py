@@ -21,7 +21,7 @@ file = sys.argv[1]
 #transcripcion = 'tran/T_2_2.txt'
 #transcripcion = 'tran/T_1892.01.25.txt'
 transcripcion = sys.argv[2]
-#pag_izq = 1
+#pag_izq = 2
 pag_izq = int(sys.argv[3])
 
 # Parámetros modificables
@@ -59,9 +59,16 @@ txt_documento.append(txt_pag)
 # Separar columnas
 if len(sys.argv) == 5:
     pag_der = int(sys.argv[4])
+    #pag_der = 3
     num_paginas = 2
     hist_hor = separar.hor_hist(img_plant)
-    div = separar.columnas(hist_hor)
+
+    for minTest in range(0, np.max(hist_hor)):
+        div = separar.columnas(hist_hor, minTest)
+
+        if np.isnan(div) == False:
+            break
+
     tab = [0, int(div), col_px]
     txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
     filas_txt = [len(txt[0]), len(txt[1])]

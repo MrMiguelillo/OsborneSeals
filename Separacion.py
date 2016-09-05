@@ -15,7 +15,7 @@ class Separacion:
     # Salida: Tuplet: (Coordenada horizontal de la división de la página, longitud de la racha máxima de mínimos en el
     #       histograma). El segundo valor del tuplet se utiliza para saber si el documento tiene una columna de texto
     #       únicamente y no necesita ser dividido
-    def columnas(self, histograma):
+    def columnas(self, histograma, minimo):
         long = histograma.size
         min_i = round(long / 3, 0)
         max_i = round(2 * long / 3, 0)
@@ -28,7 +28,7 @@ class Separacion:
         max_x_hueco = 0
 
         for x in range(int(min_i), int(max_i)):
-            if histograma[x] <= 10:
+            if histograma[x] <= minimo:
                 suma += 1
                 if min_x_actual == float('Inf'):
                     min_x_actual = x
@@ -92,7 +92,7 @@ class Separacion:
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))
 
-        if (histograma[long - 1] < 0):
+        if (histograma[long - 1] > 0):
             final.append(long - 1)
         else:
             for x in range(long - 1,0,-1):
