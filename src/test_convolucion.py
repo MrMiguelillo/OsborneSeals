@@ -7,13 +7,13 @@ img1 = cv2.imread('C:/Users/usuario/Desktop/Base_sellos/sello6.png', 0)    # que
 img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0002.png', 0)  # trainImage
 
 
-# --------------- DETECTION ---------------
+# --------------- FEATURE EXTRACTION ---------------
 
 
 # Initiate SURF detector
 surf = xf.SURF_create()
 
-# find the keypoints and descriptors with SIFT
+# find the keypoints and descriptors with SURF
 kp1, des1 = surf.detectAndCompute(img1, None)
 kp2, des2 = surf.detectAndCompute(img2, None)
 
@@ -46,11 +46,7 @@ draw_params = dict(matchColor=(0, 255, 0),
 img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
 
-cv2.namedWindow('win', cv2.WINDOW_NORMAL)
-cv2.imshow('win', img3)
-
-
-# --------------- OUTLIERS ELIMINATION ---------------
+# --------------- POSITION DETECTION ---------------
 
 seal_locator = em.SealLocator(img2)
 seal_locator.calc_occurrences(kp_matched)
@@ -64,8 +60,17 @@ img4 = cv2.cvtColor(img4, cv2.COLOR_GRAY2BGR)
 
 cv2.circle(img4, (x*num_div, y*num_div), 15, (255, 0, 255), thickness=-1)
 
+
+# --------------- SEAL REMOVAL ---------------
+
+fils, cols = img1.shape
+pt1 = (int(x*num_div-cols/2), int(y*num_div-fils/2))
+pt2 = (int(x*num_div+cols/2), int(y*num_div+fils/2))
+cv2.rectangle(img4, pt1, pt2, (255, 255, 255), -1)
+
+cv2.namedWindow('win', cv2.WINDOW_NORMAL)
+cv2.imshow('win', img2)
 cv2.namedWindow('win2', cv2.WINDOW_NORMAL)
 cv2.imshow('win2', img4)
 cv2.waitKey()
 cv2.destroyAllWindows()
-
