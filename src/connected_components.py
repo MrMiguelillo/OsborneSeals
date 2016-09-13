@@ -3,11 +3,11 @@ import numpy as np
 from src.Sellos import Sellos
 from skimage import measure
 
-# img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
-#                  '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
+                 '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
 
-img = cv2.imread('C:/Users/usuario/Desktop/documentos/1883-L119.M29_Tomas_Osborne_Born/'
-                 '1/1883-L119.M29_Tomas_Osborne_Born/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
+# img = cv2.imread('C:/Users/usuario/Desktop/documentos/1883-L119.M29_Tomas_Osborne_Born/'
+#                  '1/1883-L119.M29_Tomas_Osborne_Born/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
 
 ret, bin_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 kernel = np.ones((11, 11), np.uint8)
