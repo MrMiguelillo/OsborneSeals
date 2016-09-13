@@ -19,15 +19,17 @@ filtro = Filtros.Filtros()
 
 # Parámetros modificables
 erosion = 5
-num_paginas = 2
-# Importar transcripción
-transcripcion = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.txt'
-legajo = '1882-L123.M17_3'
+num_paginas = 1
+minimo = [100, 150]
+
 # Importar imagen original
-file = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/3/IMG_0004.png'
+file = '../../Osborne/RepoOsborne/documentos/1877-L119.M23/25/IMG_0001.png'
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
+transcripcion = '%s/%s.txt' % (path, nombre)
+legajo = path.split('documentos/')
+legajo[1] = legajo[1].replace('/', '_')
 original = cv2.imread(file)
 # Importar imagen binarizada
 # Umbralizado de JSM
@@ -52,21 +54,25 @@ with open(transcripcion) as inputfile:
 print("Separar columnas")
 if num_paginas == 2:
     hist_hor = separar.hor_hist(img_plant)
-    div = separar.columnas(hist_hor)
-    tab = [0, div, col_px]
+    div = separar.columnas(hist_hor, 10)
+    tab = [0, int(div), col_px]
 else:
     tab = [0, col_px]
 
 print("Separar filas")
 filas = []
 num_filas = []
+hist_ver_filtrado = []
+#minimo = np.zeros(num_paginas)
 for x in range(0, num_paginas):
     # Histograma vertical
     hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
     # Filtrado
-    hist_ver_filtrado = filtro.mediana(hist_ver, 10)
+    hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
+    # Elegir mínimo
+    # minimo[x] = int(np.max(hist_ver_filtrado[x])/3) + np.min(hist_ver_filtrado[x])
     # Separar filas
-    ini_filas, fin_filas = separar.filas(hist_ver_filtrado, 100)
+    ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minimo[x])
     # Toma de datos
     num_filas.append(len(ini_filas))
     filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
@@ -125,12 +131,12 @@ for x in range(0, num_paginas):
 
                 recorte = original[palabras[x][y][z][1]:palabras[x][y][z][3], palabras[x][y][z][0]:palabras[x][y][z][2]]
 
-                filestring = '../../Osborne/BdD/%s_%s_%d_%s.png' % (legajo, nombre, id, texto[p - 1])
+                filestring = '../../Osborne/BdD/%s_%s_%d_%s.png' % (legajo[1], nombre, id, texto[p - 1])
                 cv2.imwrite(filestring, recorte)
 
-                filestring = '../../Osborne/BdD/%s_%s_%d_%s.txt' % (legajo, nombre, id, texto[p - 1])
+                filestring = '../../Osborne/BdD/%s_%s_%d_%s.txt' % (legajo[1], nombre, id, texto[p - 1])
                 txt = open(filestring, 'w')
-                txt.write('%s\n%s\n%s\n%d\n%d\n%d\n%d' % (legajo, nombre, texto[p - 1], palabras[x][y][z][0],
+                txt.write('%s\n%s\n%s\n%d\n%d\n%d\n%d' % (legajo[1], nombre, texto[p - 1], palabras[x][y][z][0],
                                                           palabras[x][y][z][1], palabras[x][y][z][2],
                                                           palabras[x][y][z][3]))
                 id += 1

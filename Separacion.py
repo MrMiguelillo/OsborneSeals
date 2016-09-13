@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+from skimage import measure
 
 class Separacion:
     def vert_hist(self, img):
@@ -50,15 +50,16 @@ class Separacion:
     # Salidas: Vectores de coordenadas 'y' de inicio y final de línea
     def filas(self, histograma, minimo):
         long = histograma.size
-        ini = []
-        fin = []
+        inicioFila = []
+        finalFila = []
         inicio =[]
         final = []
 
         # Detectar inicio de la primera fila
+        inicioPrimeraFila = 0
         for x in range(0, long - 1):
             if (histograma[x] <= minimo) & (histograma[x] > 0):
-                inicio.append(x)
+                inicioPrimeraFila = x
                 break
         # Detectar final de la última fila
         finalUltimaFila = long - 1
@@ -67,32 +68,34 @@ class Separacion:
                 finalUltimaFila = x
                 break
         #Detectar filas
-        for x in range(inicio[0], finalUltimaFila):
+        for x in range(inicioPrimeraFila, finalUltimaFila):
             # Detectar inicio de fila
             if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
-                ini.append(x + 1)
+                inicioFila.append(x + 1)
             # Detectar final de fila
             if (histograma[x] >= minimo) & (histograma[x + 1] < minimo):
-                fin.append(x)
+                finalFila.append(x)
 
-        tam = len(ini)
-        zeros_ini = np.zeros(tam)
-        zeros_fin = np.zeros(tam)
+        inicio.append(inicioPrimeraFila)
 
-        for x in range(0, tam - 1):
-            zeros_fin[x] = fin[x]
-            zeros_ini[x] = ini[x + 1]
+        numeroFilas = len(inicioFila)
+        zeros_ini = np.zeros(numeroFilas)
+        zeros_fin = np.zeros(numeroFilas)
 
-            for y in range(fin[x], ini[x + 1]):
+        for x in range(0, numeroFilas - 1):
+            zeros_fin[x] = finalFila[x]
+            zeros_ini[x] = inicioFila[x + 1]
+
+            for y in range(finalFila[x], inicioFila[x + 1]):
                 if (histograma[y] == 0) & (histograma[y + 1] > 0):
                     zeros_ini[x] = y + 1
 
                 if (histograma[y] > 0) & (histograma[y + 1] == 0):
                     zeros_fin[x] = y
 
-            if (zeros_ini[x] == ini[x + 1]) & (zeros_fin[x] == fin[x]):
-                final.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
-                inicio.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
+            if (zeros_ini[x] == inicioFila[x + 1]) & (zeros_fin[x] == finalFila[x]):
+                final.append(int((finalFila[x] - inicioFila[x + 1]) / 2 + inicioFila[x + 1]))
+                inicio.append(int((finalFila[x] - inicioFila[x + 1]) / 2 + inicioFila[x + 1]))
             else:
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))
@@ -174,3 +177,20 @@ class Separacion:
                     final = x - (long - 1 - margen)
 
         return (inicio, final)
+
+    def borde(self, img):
+
+        img_bw = (img < 1).astype('uint8')
+
+        label = measure.label(img_bw)
+
+        for region in measure.regionprops(label):
+            minr, minc, maxr, maxc = region.bbox
+            bbox_height = maxr - minr
+            bbox_width = maxc - minc
+            img_dims = label.shape
+            if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.4:
+                for points in region.coords:
+                    img[points[0], points[1]] = 255
+
+        return img

@@ -20,17 +20,16 @@ filtro = Filtros.Filtros()
 transcripcion = 'tran/1882-L123.M17.T_2.txt'
 
 # Importar imagen original
-file = 'imgs/0003_sin_escudo.png'
+#file = 'imgs/0003_sin_escudo.png'
 #file = 'imgs/85_IMG_0002.png'
-#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
-#file = 'imgs/Narciso1.png'
-#file = '../../Osborne/RepoOsborne/documentos/1882-L123.M17/1/IMG_0003.png'
-#legajo = '1883-L119.M29_2'
+#file = '../../Osborne/RepoOsborne/documentos/1877-L119.M23/25/IMG_0001.png'
+file = 'imgs/Narciso1.png'
 legajo = 'WI'
-
 # Parámetros modificables
 erosion = 5
 num_paginas = 1
+#minimo = [100,150]
+
 pag_izq = 2
 pag_der = 3
 
@@ -44,6 +43,8 @@ orig = Image.open(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+img = separar.borde(img)
 
 #font = ImageFont.truetype("Arial.ttf",40)
 #d = ImageDraw.Draw(orig)
@@ -74,7 +75,7 @@ for z in range (1, len(texto)):
         txt_pag.append(texto[z])
 txt_documento.append(txt_pag)
 
-print("Separar columnas")
+print("Separar columnas forzado")
 if num_paginas == 1:
     div = 0
     tab = [0, col_px]
@@ -83,27 +84,40 @@ else:
     minCol = 10
     hist_hor = separar.hor_hist(img_plant)
     div = separar.columnas(hist_hor, minCol)
-    #if np.isnan(div):
+    if np.isnan(div):
+        div = col_px / 2
     tab = [0, int(div), col_px]
     txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
 
+'''
+print("Separar columnas automático")
+minCol = 10
+hist_hor = separar.hor_hist(img_plant)
+div = separar.columnas(hist_hor, minCol)
+if np.isnan(div):
+    num_paginas = 1
+    div = 0
+    tab = [0, col_px]
+    txt = [txt_documento[pag_izq]]
+else:
+    num_paginas = 2
+    tab = [0, int(div), col_px]
+    txt = [txt_documento[pag_izq - 1], txt_documento[pag_der - 1]]
+'''
 print("    Páginas: %d - División = %d" % (num_paginas, int(div)))
 
 print("Separar filas")
 filas = []
 num_filas = []
 hist_ver_filtrado = []
-#minimo = np.zeros(num_paginas)
-minimo = [250,240]
+minimo = np.zeros(num_paginas)
 for x in range(0, num_paginas):
     # Histograma vertical
     hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
     # Filtrado
     hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
-
     # Elegir mínimo
-    #minimo[x] = int(np.max(hist_ver_filtrado[x])/3) + np.min(hist_ver_filtrado[x])
-
+    minimo[x] = int(np.max(hist_ver_filtrado[x])/4)
     # Separar filas
     ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minimo[x])
     # Toma de datos
@@ -319,8 +333,8 @@ for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
         #print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
         # Dibujar líneas de separación de filas
-        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (0, 0, 0), 1)
-        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (0, 0, 0), 1)
+        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (0, 0, 255), 1)
+        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (0, 0, 255), 1)
         # Dibujar número de línea
         cv2.putText(original, str(l), (filas[x][2], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
@@ -339,7 +353,7 @@ print("%d palabras encontradas" % (p-1))
 
 
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-filestring = '../../Osborne/%s_%s_comp_conx.png' % (legajo, nombre)
+filestring = '../../Osborne/%s_%s_CC.png' % (legajo, nombre)
 cv2.imwrite(filestring, original)
 #filestring = '../../Osborne/%s_%s_comp_conx_texto.png' % (legajo, nombre)
 #orig.save(filestring)

@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.4 (RRG)
+------------
+1. Incluida separacion.borde para detectar posibles bordes en la imagen
+
 v2.2.3 (RRG)
 ------------
 1. Mejorada separacion.filas. Cambios en div y main_cc
