@@ -45,7 +45,9 @@ img_plant = img < 255
 texto = []
 txt_pag = []
 txt_documento = []
-with open(transcripcion) as inputfile:
+
+
+with open(transcripcion, 'r', encoding='utf8') as inputfile:
     for line in inputfile:
         texto.append(line.strip())
 for z in range (1, len(texto)):
@@ -59,7 +61,6 @@ txt_documento.append(txt_pag)
 # Separar columnas
 if len(sys.argv) == 5:
     pag_der = int(sys.argv[4])
-    #pag_der = 3
     num_paginas = 2
     hist_hor = separar.hor_hist(img_plant)
 
@@ -67,6 +68,7 @@ if len(sys.argv) == 5:
         div = separar.columnas(hist_hor, minTest)
 
         if np.isnan(div) == False:
+            print("Columnas: minTest = %d" % minTest)
             break
 
     tab = [0, int(div), col_px]
@@ -88,12 +90,13 @@ for x in range(0, num_paginas):
     # Filtrado
     hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
 
-    for minTest in range(0, np.max(hist_ver_filtrado[x]) -1, 1):
+    for minTest in range(np.max(hist_ver_filtrado[x]) -1, 0, -1):
 
         # Separar filas
         ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minTest)
 
         if len(ini_filas) == filas_txt[x]:
+            print("Página %d: minTest = %d" % (x+1, minTest))
             # Toma de datos
             num_filas.append(len(ini_filas))
             filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
@@ -110,6 +113,9 @@ for x in range(0, num_paginas):
     num_palabras_pagina = []
     palabras_pagina = []
     for y in range(0, num_filas[x]):
+
+        print("%s - Página %d de %d - Fila %2d de %d - %s" % (nombre, x+1, num_paginas, y+1, num_filas[x], txt[x][y]))
+
         # Seleccionar fila
         fila_ero_bw = img_ero_bw[filas[x][0][y]:filas[x][1][y], filas[x][2]:filas[x][3]]
         # Componentes conexas
@@ -139,7 +145,7 @@ for x in range(0, num_paginas):
 
 # Generar XML
 filestring_xml = '%s/%s_xml.html' % (path, nombre)
-xml = open(filestring_xml, 'w')
+xml = open(filestring_xml, 'w', encoding='utf8')
 
 cabecera = """<!DOCTYPE html>
 <html>
@@ -161,7 +167,7 @@ cabecera = """<!DOCTYPE html>
         border-radius: 1px 1px; -moz-border-radius: 1px; -webkit-border-radius: 1px;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
         font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 2vw; color:blue; text-align: center;
-        position: absolute; left: 0em; top: 0em; z-index: 99; opacity: 0.5;
+        position: absolute; left: 0em; top: -1em; z-index: 99; opacity: 1;
         margin-left: 0; width: 90%;
     }
     .tooltip:hover img {
@@ -175,7 +181,7 @@ cabecera = """<!DOCTYPE html>
     .classic { padding: 0.1em 1em; }
     .custom { padding: 0.5em 0.8em 0.8em 2em; }
     * html a:hover { background: transparent; }
-    .classic {background: #FFFFAA; border: 1px solid #FFAD33; }
+    .classic {background: #FFFFFF; border: 1px solid #7F7F7F; }
     .critical { background: #FFCCAA; border: 1px solid #FF3334;	}
     .help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
     .info { background: #9FDAEE; border: 1px solid #2BB0D7;	}

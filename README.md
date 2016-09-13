@@ -1,6 +1,10 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.3 (RRG)
+------------
+1. Mejorada separacion.filas. Cambios en div y main_cc
+
 v2.2.2 (RRG)
 ------------
 1. Modificado div.py

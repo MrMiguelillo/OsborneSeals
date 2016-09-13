@@ -55,50 +55,49 @@ class Separacion:
         inicio =[]
         final = []
 
-        if (histograma[0] > 0):
-            inicio.append(0)
-        else:
-            for x in range(0, long - 1):
-                if(histograma[x]==0) & (histograma[x + 1] > 0):
-                    inicio.append(x+1)
-                    break
-
-        for x in range(1, long-1):
+        # Detectar inicio de la primera fila
+        for x in range(0, long - 1):
+            if (histograma[x] <= minimo) & (histograma[x] > 0):
+                inicio.append(x)
+                break
+        # Detectar final de la última fila
+        finalUltimaFila = long - 1
+        for x in range(long - 1, 0, -1):
+            if (histograma[x] <= minimo) & (histograma[x] > 0):
+                finalUltimaFila = x
+                break
+        #Detectar filas
+        for x in range(inicio[0], finalUltimaFila):
+            # Detectar inicio de fila
             if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
                 ini.append(x + 1)
-
+            # Detectar final de fila
             if (histograma[x] >= minimo) & (histograma[x + 1] < minimo):
                 fin.append(x)
 
-        tam=len(ini)
-        zeros_ini=np.zeros(tam)
-        zeros_fin=np.zeros(tam)
+        tam = len(ini)
+        zeros_ini = np.zeros(tam)
+        zeros_fin = np.zeros(tam)
 
-        for x in range(0, tam-1):
-            zeros_fin[x]=fin[x]
-            zeros_ini[x]=ini[x+1]
+        for x in range(0, tam - 1):
+            zeros_fin[x] = fin[x]
+            zeros_ini[x] = ini[x + 1]
 
-            for y in range(fin[x],ini[x+1]):
-                if (histograma[y] == 0) & (histograma[y+1] > 0):
+            for y in range(fin[x], ini[x + 1]):
+                if (histograma[y] == 0) & (histograma[y + 1] > 0):
                     zeros_ini[x] = y + 1
 
-                if (histograma[y] > 0) & (histograma[y+1] == 0):
+                if (histograma[y] > 0) & (histograma[y + 1] == 0):
                     zeros_fin[x] = y
 
-            if (zeros_ini[x]==ini[x+1]) & (zeros_fin[x]==fin[x]):
+            if (zeros_ini[x] == ini[x + 1]) & (zeros_fin[x] == fin[x]):
                 final.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
                 inicio.append(int((fin[x] - ini[x + 1]) / 2 + ini[x + 1]))
             else:
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))
 
-        if (histograma[long - 1] > 0):
-            final.append(long - 1)
-        else:
-            for x in range(long - 1,0,-1):
-                if (histograma[x] == 0) & (histograma[x - 1] > 0):
-                    final.append(x-1)
-                    break
+        final.append(finalUltimaFila)
 
         return (inicio, final)
 
