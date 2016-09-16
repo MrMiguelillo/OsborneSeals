@@ -1,13 +1,14 @@
 import cv2
 import cv2.xfeatures2d as xf
 import pickle
-from src.Keypoints_Pickle import KeypointsPickle as KeyP
+# from src.Keypoints_Pickle import KeypointsPickle as KeyP
 import src.EvidenceMatrix as em
+from src.FeaturesIO import FeaturesIO
 
 
 class EliminacionSellos:
-    kps_pickle = []
-    desc_pickle = []
+    kps_saved = []
+    desc_saved = []
     kp_matched = []
     position = (0, 0)  # position is (rows, cols), therefore, (y, x)
     detected_seal = 0
@@ -17,14 +18,9 @@ class EliminacionSellos:
         self.seal_locator = em.SealLocator(img)
 
     def get_keypoints(self, path):
-        keypoints_database = pickle.load(open(path, "rb"))
+        self.kps_saved, self.desc_saved = FeaturesIO.load_features(path)
 
-        for i in range(0, len(keypoints_database)):
-            kp_temp, desc_temp = KeyP.unpickle(keypoints_database[i])
-            self.kps_pickle.append(kp_temp)
-            self.desc_pickle.append(desc_temp)
-
-    def detect_seal(self):
+    def get_matched_keypoints(self):
         surf = xf.SURF_create()
         kp_img, des_img = surf.detectAndCompute(self.img, None)
 
@@ -37,27 +33,30 @@ class EliminacionSellos:
 
         max_matches = 0
         matched_seal = 0
-        for i in range(0, len(self.desc_pickle)):
-            good_matches = []
+        all_kp = []
+        for i in range(0, len(self.desc_saved)):
+            # good_matches = []
             aux_kp = []
 
-            matches = flann.knnMatch(self.desc_pickle[i], des_img, k=2)
+            matches = flann.knnMatch(self.desc_saved[i], des_img, k=2)
             for j, (m, n) in enumerate(matches):
                 if m.distance < 0.9 * n.distance:
-                    good_matches.append(m)
+                    # good_matches.append(m)
                     aux_kp.append(kp_img[m.trainIdx])
 
-            if len(good_matches) > max_matches:
-                max_matches = len(good_matches)
-                matched_seal = i + 1
-                self.kp_matched = aux_kp
+            all_kp.append(aux_kp)
 
-        if max_matches < KeyP.NO_MATCH_THRESH:
-            matched_seal = KeyP.SEAL_NO_MATCH
+        #     if len(good_matches) > max_matches:
+        #         max_matches = len(good_matches)
+        #         matched_seal = i + 1
+        #         self.kp_matched = aux_kp
+        #
+        # if max_matches < 100:
+        #     matched_seal = 0
+# TODO: mover constantes de sellos que hay en KeypointsPickle.py
+#         self.detected_seal = matched_seal
 
-        self.detected_seal = matched_seal
-
-        return matched_seal
+        return all_kp
 
     def detect_position(self):
         self.seal_locator.calc_occurrences(self.kp_matched)

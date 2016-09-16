@@ -37,4 +37,4 @@ class KeypointsPickle:
 
     NUM_SELLOS = 5
 
-    NO_MATCH_THRESH = 20
+    NO_MATCH_THRESH = 100

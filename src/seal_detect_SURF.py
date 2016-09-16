@@ -2,16 +2,18 @@ import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
 
-img1 = cv2.imread('C:/Users/usuario/Desktop/Base_sellos/sello6.png', 0)    # trainImage
-img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
-                  '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', 0)  # queryImage
+img1 = cv2.imread('C:/Users/usuario/Desktop/Base_sellos/sello0.png', 0)    # trainImage
+# img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
+#                   '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', 0)  # queryImage
+
+img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0002.png', 0)
 
 # Initiate SURF detector
-sift = xf.SURF_create()
+surf = xf.SURF_create()
 
 # find the keypoints and descriptors with SIFT
-kp1, des1 = sift.detectAndCompute(img1, None)
-kp2, des2 = sift.detectAndCompute(img2, None)
+kp1, des1 = surf.detectAndCompute(img1, None)
+kp2, des2 = surf.detectAndCompute(img2, None)
 
 # FLANN parameters
 FLANN_INDEX_KDTREE = 0
@@ -28,7 +30,7 @@ matchesMask = [[0, 0] for i in range(len(matches))]
 kp_matched = []
 # ratio test as per Lowe's paper
 for i, (m, n) in enumerate(matches):
-    if m.distance < 0.9*n.distance:
+    if True:  # m.distance < 0.9*n.distance:
         matchesMask[i] = [1, 0]
         kp_matched.append(kp2[m.queryIdx])  # keypoints from query image stored for seal location calculation
 
