@@ -6,8 +6,8 @@ img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.
 path = 'C:/Users/usuario/Desktop/Base_sellos/'
 
 elim_sellos = ElimSe.EliminacionSellos(img)
-elim_sellos.get_keypoints('car_sellos.npy')
-print(elim_sellos.get_matched_keypoints())
+elim_sellos.get_keypoints_from_db('car_sellos.npy')
+elim_sellos.get_matched_keypoints()
 elim_sellos.detect_position()
 seal_name = 'sello%d.png' % elim_sellos.detected_seal
 elim_sellos.remove_seal(path + seal_name)

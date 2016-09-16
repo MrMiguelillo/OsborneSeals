@@ -31,8 +31,6 @@ class SealLocator:
 
         return final_coords
 
-    # def convolution(self):
-
     def is_this_seal_type(self):
         a = self.evidence_matrix.reshape(self.evidence_matrix.shape[0] * self.evidence_matrix.shape[1])
         b = a.copy()
@@ -49,7 +47,7 @@ class SealLocator:
 
         dist = np.linalg.norm(vect, axis=0)
 
-        if max(dist) > (self.SEAL_DIMENSION/self.DIVISION_SIZE)*1.1:
+        if np.amax(dist) > (self.SEAL_DIMENSION/self.DIVISION_SIZE)*1.1:
             return False
         else:
             return True

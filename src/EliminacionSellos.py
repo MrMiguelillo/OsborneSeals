@@ -1,7 +1,5 @@
 import cv2
 import cv2.xfeatures2d as xf
-import pickle
-# from src.Keypoints_Pickle import KeypointsPickle as KeyP
 import src.EvidenceMatrix as em
 from src.FeaturesIO import FeaturesIO
 
@@ -17,7 +15,7 @@ class EliminacionSellos:
         self.img = img
         self.seal_locator = em.SealLocator(img)
 
-    def get_keypoints(self, path):
+    def get_keypoints_from_db(self, path):
         self.kps_saved, self.desc_saved = FeaturesIO.load_features(path)
 
     def get_matched_keypoints(self):
@@ -31,30 +29,16 @@ class EliminacionSellos:
 
         flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-        max_matches = 0
-        matched_seal = 0
         all_kp = []
         for i in range(0, len(self.desc_saved)):
-            # good_matches = []
             aux_kp = []
 
             matches = flann.knnMatch(self.desc_saved[i], des_img, k=2)
             for j, (m, n) in enumerate(matches):
                 if m.distance < 0.9 * n.distance:
-                    # good_matches.append(m)
                     aux_kp.append(kp_img[m.trainIdx])
 
             all_kp.append(aux_kp)
-
-        #     if len(good_matches) > max_matches:
-        #         max_matches = len(good_matches)
-        #         matched_seal = i + 1
-        #         self.kp_matched = aux_kp
-        #
-        # if max_matches < 100:
-        #     matched_seal = 0
-# TODO: mover constantes de sellos que hay en KeypointsPickle.py
-#         self.detected_seal = matched_seal
 
         return all_kp
 
