@@ -12,20 +12,16 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Importar imagen original
-#file = 'imgs/0003_sin_escudo.png'
-#file = 'imgs/Narciso2.png'
-#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/2/IMG_0001.png'
 file = sys.argv[1]
 # Importar transcripción
-#transcripcion = 'tran/1882-L123.M17.T_2.txt'
-#transcripcion = 'tran/T_2_2.txt'
-#transcripcion = 'tran/T_1892.01.25.txt'
 transcripcion = sys.argv[2]
-#pag_izq = 2
 pag_izq = int(sys.argv[3])
 
 # Parámetros modificables
 erosion = 5
+areaMinimaDePalabra = 2000
+anchoMinimoDePalabra = 70
+alturaMinimaDePalabra = 40
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
@@ -36,6 +32,7 @@ original = cv2.imread(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+img = separar.borde(img)
 # Calcular tamaño de imagen
 fil_px, col_px = img.shape
 # Plantilla de pertenencia
@@ -45,8 +42,6 @@ img_plant = img < 255
 texto = []
 txt_pag = []
 txt_documento = []
-
-
 with open(transcripcion, 'r', encoding='utf8') as inputfile:
     for line in inputfile:
         texto.append(line.strip())
@@ -68,7 +63,8 @@ if len(sys.argv) == 5:
         div = separar.columnas(hist_hor, minTest)
 
         if np.isnan(div) == False:
-            print("Columnas: minTest = %d" % minTest)
+            minCol = minTest
+            print("Columnas: minTest = %d" % minCol)
             break
 
     tab = [0, int(div), col_px]
@@ -84,6 +80,7 @@ else:
 filas = []
 num_filas = []
 hist_ver_filtrado = []
+minimo = np.zeros(num_paginas)
 for x in range(0, num_paginas):
     # Histograma vertical
     hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
@@ -96,7 +93,8 @@ for x in range(0, num_paginas):
         ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minTest)
 
         if len(ini_filas) == filas_txt[x]:
-            print("Página %d: minTest = %d" % (x+1, minTest))
+            minimo[x] = minTest
+            print("Página %d: minTest = %d" % (x+1, minimo[x]))
             # Toma de datos
             num_filas.append(len(ini_filas))
             filas.append([ini_filas, fin_filas, tab[x], tab[x + 1]])
@@ -114,7 +112,7 @@ for x in range(0, num_paginas):
     palabras_pagina = []
     for y in range(0, num_filas[x]):
 
-        print("%s - Página %d de %d - Fila %2d de %d - %s" % (nombre, x+1, num_paginas, y+1, num_filas[x], txt[x][y]))
+        #print("%s - Página %d de %d - Fila %2d de %d - %s" % (nombre, x+1, num_paginas, y+1, num_filas[x], txt[x][y]))
 
         # Seleccionar fila
         fila_ero_bw = img_ero_bw[filas[x][0][y]:filas[x][1][y], filas[x][2]:filas[x][3]]
@@ -125,12 +123,19 @@ for x in range(0, num_paginas):
         palabras_fila = []
 
         for region in measure.regionprops(label_image):
+
+            minr, minc, maxr, maxc = region.bbox
+            bbox_width = maxc - minc
+            bbox_height = maxr - minr
+
             # skip small images
-            if region.area < 1000:
+            if (region.area < areaMinimaDePalabra) \
+                    | (bbox_width < anchoMinimoDePalabra) \
+                    | (bbox_height < alturaMinimaDePalabra) \
+                    | (bbox_width > (tab[x + 1] - tab[x]) * 0.9):
                 continue
 
             num_palabras_fila += 1
-            minr, minc, maxr, maxc = region.bbox
             palabras_fila.append([minc + filas[x][2], minr + filas[x][0][y], maxc + filas[x][2], maxr + filas[x][0][y]])
 
         # Añadir número de palabras de una fila
@@ -140,8 +145,47 @@ for x in range(0, num_paginas):
         # Añadir palabras de una fila
         palabras_pagina.append(palabras_fila)
 
+    # Añadir número de palabras de una página
     num_palabras.append(num_palabras_pagina)
+    # Añadir palabras de una página
     palabras.append(palabras_pagina)
+
+'''
+for x in range(0, num_paginas):
+
+    # Meter número de filas  en vector con ceros
+    testFilas = np.zeros(len(filas_txt[0]) + 4)
+    testFilas[3:3+len(filas_txt[0])] = num_palabras[0]
+'''
+
+print("Generando imágenes")
+l = 1
+p = 1
+for x in range(0, num_paginas):
+    for y in range(0, num_filas[x]):
+        #print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
+        # Dibujar líneas de separación de filas
+        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (255, 0, 0), 5)
+        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (255, 0, 0), 5)
+        # Dibujar número de línea
+        cv2.putText(original, str(l), (filas[x][2], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
+        l += 1
+        # Imprimir texto
+        #d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
+
+        for z in range(0, num_palabras[x][y]):
+            # Dibujar rectángulos de palabras
+            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            # Dibujar número de palabra
+            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            p += 1
+
+filestring = '../../Osborne/%s_CC.png' % nombre
+cv2.imwrite(filestring, original)
+
+
+
+
 
 # Generar XML
 filestring_xml = '%s/%s_xml.html' % (path, nombre)
@@ -196,6 +240,10 @@ xml.write('<img src="%s.png" alt="Documento Osborne" style="position: absolute; 
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
 
+        if palabras[x][y] == []:
+            palabras[x][y] = [[filas[x][2], filas[x][0][y], filas[x][3], filas[x][1][y]]]
+            num_palabras[x][y] = 1
+
         B1 = -1
         for z in range(0, num_palabras[x][y]):
 
@@ -214,3 +262,52 @@ for x in range(0, num_paginas):
 
 xml.write('</body>\n</html>\n')
 xml.close()
+
+
+
+
+
+
+
+
+
+
+
+
+import matplotlib.pyplot as plt
+fig = plt.figure(1)
+if num_paginas == 2:
+    ax = fig.add_subplot(311)
+    ax.set_title('Histograma horizontal: %d páginas' % (num_paginas))
+    plt.plot(hist_hor)
+    plt.plot([int(div), int(div)],[0, np.max(hist_hor)], 'r')
+    plt.plot(minCol * np.ones(col_px), 'r')
+    plt.axis([0, col_px, 0, np.max(hist_hor)])
+
+    ax = fig.add_subplot(312)
+    ax.set_title('Histograma vertical página derecha: %d filas' % (num_filas[1]))
+    plt.plot(hist_ver_filtrado[1])
+    plt.plot(minimo[1] * np.ones(fil_px), 'r')
+    plt.plot(filas[1][0], minimo[1] * np.ones(num_filas[1]), 'ro')
+    plt.plot(filas[1][1], minimo[1] * np.ones(num_filas[1]), 'bo')
+    plt.axis([0, fil_px, 0, np.max(hist_ver_filtrado[1])])
+
+    ax = fig.add_subplot(313)
+    ax.set_title('Histograma vertical página izquierda: %d filas' % (num_filas[0]))
+    plt.plot(hist_ver_filtrado[0])
+    plt.plot(minimo[0] * np.ones(fil_px), 'r')
+    plt.plot(filas[0][0], minimo[0] * np.ones(num_filas[0]), 'ro')
+    plt.plot(filas[0][1], minimo[0] * np.ones(num_filas[0]), 'bo')
+    plt.axis([0, fil_px, 0, np.max(hist_ver_filtrado[0])])
+
+else:
+    ax = fig.add_subplot(111)
+    ax.set_title('Histograma vertical: %d filas' % (num_filas[0]))
+    plt.plot(hist_ver_filtrado[0])
+    plt.plot(minimo[0] * np.ones(fil_px), 'r')
+    plt.plot(filas[0][0], minimo[0] * np.ones(num_filas[0]), 'ro')
+    plt.plot(filas[0][1], minimo[0] * np.ones(num_filas[0]), 'bo')
+    plt.axis([0, fil_px, 0, np.max(hist_ver_filtrado[0])])
+
+plt.subplots_adjust(.03, .03, .97, .97)
+plt.show()

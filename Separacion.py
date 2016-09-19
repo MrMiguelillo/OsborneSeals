@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 from skimage import measure
 
@@ -48,7 +47,7 @@ class Separacion:
     # Entrada: Histograma vertical
     # Entrada: Valor mínimo sobre el que realizar la media para colocar las líneas de separación
     # Salidas: Vectores de coordenadas 'y' de inicio y final de línea
-    def filas(self, histograma, minimo):
+    def filas(self, histograma, umbral):
         long = histograma.size
         inicioFila = []
         finalFila = []
@@ -58,22 +57,22 @@ class Separacion:
         # Detectar inicio de la primera fila
         inicioPrimeraFila = 0
         for x in range(0, long - 1):
-            if (histograma[x] <= minimo) & (histograma[x] > 0):
+            if (histograma[x] <= umbral) & (histograma[x] > 50):
                 inicioPrimeraFila = x
                 break
         # Detectar final de la última fila
         finalUltimaFila = long - 1
         for x in range(long - 1, 0, -1):
-            if (histograma[x] <= minimo) & (histograma[x] > 0):
+            if (histograma[x] <= umbral) & (histograma[x] > 50):
                 finalUltimaFila = x
                 break
         #Detectar filas
         for x in range(inicioPrimeraFila, finalUltimaFila):
             # Detectar inicio de fila
-            if (histograma[x] < minimo) & (histograma[x + 1] >= minimo):
+            if (histograma[x] < umbral) & (histograma[x + 1] >= umbral):
                 inicioFila.append(x + 1)
             # Detectar final de fila
-            if (histograma[x] >= minimo) & (histograma[x + 1] < minimo):
+            if (histograma[x] >= umbral) & (histograma[x + 1] < umbral):
                 finalFila.append(x)
 
         inicio.append(inicioPrimeraFila)
@@ -94,8 +93,9 @@ class Separacion:
                     zeros_fin[x] = y
 
             if (zeros_ini[x] == inicioFila[x + 1]) & (zeros_fin[x] == finalFila[x]):
-                final.append(int((finalFila[x] - inicioFila[x + 1]) / 2 + inicioFila[x + 1]))
-                inicio.append(int((finalFila[x] - inicioFila[x + 1]) / 2 + inicioFila[x + 1]))
+                index = np.argmin(histograma[finalFila[x]:inicioFila[x + 1]]) + finalFila[x]
+                final.append(index)
+                inicio.append(index)
             else:
                 final.append(int(zeros_fin[x]))
                 inicio.append(int(zeros_ini[x]))

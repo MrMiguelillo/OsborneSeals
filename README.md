@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.5 (RRG)
+------------
+1. Cambios varios en la detección de palabras para evitar falsos positivos
+2. Corregido error en html cuando no detecta ninguna palabra
+
 v2.2.4 (RRG)
 ------------
 1. Incluida separacion.borde para detectar posibles bordes en la imagen
