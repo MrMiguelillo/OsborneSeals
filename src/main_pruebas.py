@@ -33,15 +33,15 @@ ppi = orig.info['dpi']
 original = cv2.imread('../imgs/Narciso2.png')
 
 # Importar imagen binarizada
-img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
-fil_px, col_px = img.shape
+doc_img = cv2.imread('../Narciso2_met_1_vec_0_sig_0_thr_134.png', 0)
+fil_px, col_px = doc_img.shape
 
 # Calcular tamaño de imagen en centímetros
 fil_cm = fil_px/(ppi[0]*0.39370)
 col_cm = col_px/(ppi[0]*0.39370)
 
 # Plantilla de pertenencia
-img_plant = img < 255
+img_plant = doc_img < 255
 
 print("Separar filas")
 # Histograma vertical
@@ -54,7 +54,7 @@ num_filas = len(ini_filas)
 
 print("Separar palabras")
 kernel = np.ones((5,5),np.uint8)
-img_ero = cv2.erode(img, kernel, iterations=2)
+img_ero = cv2.erode(doc_img, kernel, iterations=2)
 img_ero_plant = img_ero < 255
 num_palabras = []
 res=[]
@@ -102,7 +102,7 @@ for z in range(0, total_palabras):
 im2 = cv2.findContours(img_ero,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 cv2.drawContours(im2)
 print("Resultados gráficos")
-#cv2.imwrite('../prueba_compconex.png', img)
+#cv2.imwrite('../prueba_compconex.png', doc_img)
 plt.figure(1)
 plt.subplots_adjust(.01,.01,.99,.99)
 plt.set_cmap("gray")

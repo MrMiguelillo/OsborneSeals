@@ -48,7 +48,7 @@ img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
 # --------------- POSITION DETECTION ---------------
 
-seal_locator = em.SealLocator(img2)
+seal_locator = em.EvidenceMatrix(img2.shape)
 seal_locator.calc_occurrences(kp_matched)
 y, x = seal_locator.calc_position()
 num_div = seal_locator.DIVISION_SIZE

@@ -12,7 +12,7 @@ elim_sellos.detect_position()
 seal_name = 'sello%d.png' % elim_sellos.detected_seal
 elim_sellos.remove_seal(path + seal_name)
 
-img_sin_sello = elim_sellos.img
+img_sin_sello = elim_sellos.doc_img
 
 cv2.namedWindow('win', cv2.WINDOW_NORMAL)
 cv2.imshow('win', img_sin_sello)

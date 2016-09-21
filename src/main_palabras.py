@@ -84,7 +84,7 @@ for z in range(0, total_palabras):
 
 print("Resultados gráficos")
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-#cv2.imshow('result', img)
+#cv2.imshow('result', doc_img)
 cv2.imwrite('../salida_ampliada_pruebas.png', img)
 
 #plt.figure(1)

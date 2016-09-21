@@ -4,22 +4,23 @@ import cv2
 import cv2.xfeatures2d as xf
 
 
-def write_features_to_file(filename, locs, desc):
-    np.save(filename, np.hstack((locs, desc)))
+def write_features_to_file(filename, locs, desc, shape):
+    np.savez(filename, np.hstack((locs, desc)), shape)
 
 
-def pack_keypoint(keypoints, descriptors):
+def pack_keypoint(keypoints, descriptors, shape):
     kpts = np.array([[kp.pt[0], kp.pt[1], kp.size, kp.angle,
                       kp.response, kp.octave,
                       kp.class_id]
                      for kp in keypoints])
     desc = np.array(descriptors)
-    return kpts, desc
+    return kpts, desc, shape
 
 
-def unpack_keypoint(array):
+def unpack_keypoint(file):
     seals_kps = []
     seals_des = []
+    array = file['arr_0']
     for i in range(0, 5):
         kpts = array[i]
 
@@ -31,13 +32,16 @@ def unpack_keypoint(array):
         desc = np.array(array[i])
         seals_des.append(desc)
 
-    return seals_kps, seals_des
+    seal_shps = file['arr_1']
+
+    return seals_kps, seals_des, seal_shps
 
 
 def process_and_save(path, resultname, detector):
     walk = os.walk(path)
     all_k = []
     all_d = []
+    all_s = []
     for root, dirs, files in walk:
         for curr_file in files:
             if not curr_file.endswith(".png"):
@@ -51,27 +55,30 @@ def process_and_save(path, resultname, detector):
                 k, des = detector.compute(img, k)
             else:
                 des = []
-            k, des = pack_keypoint(k, des)  #
+            k, des, shape = pack_keypoint(k, des, img.shape)  #
             all_k.append(k.tolist())
             all_d.append(des.tolist())
+            all_s.append(shape)
 
-    write_features_to_file(resultname, all_k, all_d)
+    write_features_to_file(resultname, all_k, all_d, all_s)
 
 
 def load_features(filename):
-    array = np.load(filename)
-    kp, des = unpack_keypoint(array)
-    return kp, des
+    file = np.load(filename)
+    kp, des, shps = unpack_keypoint(file)
+    return kp, des, shps
 
 path_sello = 'C:/Users/usuario/Desktop/Base_sellos/'
 img1 = cv2.imread(path_sello + "sello1.png", 0)  # Sello
 img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0002.png', 0)  # Documento
 
 surf = xf.SURF_create()
-# process_and_save(path_sello, "car_sellos", surf)
+process_and_save(path_sello, "car_sellos", surf)
 
+npzfile = np.load('car_sellos.npz')
+a = 0
 kp1, desc1 = surf.detectAndCompute(img1, None)
-kp_saved, desc_saved = load_features("car_sellos.npy")
+kp_saved, desc_saved, shapes = load_features("car_sellos.npz")
 
 diff = desc1 - desc_saved[1]
 print(np.linalg.norm(diff))

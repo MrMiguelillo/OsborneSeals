@@ -94,8 +94,8 @@ for root, dirs, files in walk:
 
             # print(root + curr_file)
             # cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
-            # cv2.imshow('Imagen', img[minr:maxr, minc:maxc])
+            # cv2.imshow('Imagen', doc_img[minr:maxr, minc:maxc])
             # cv2.waitKey()
             # cv2.destroyWindow('Imagen')
-            # cv2.imwrite('C:/Users/usuario/Desktop/Registro_sellos/sello%d.png' % i, img[minr:maxr, minc:maxc])
+            # cv2.imwrite('C:/Users/usuario/Desktop/Registro_sellos/sello%d.png' % i, doc_img[minr:maxr, minc:maxc])
             # i += 1

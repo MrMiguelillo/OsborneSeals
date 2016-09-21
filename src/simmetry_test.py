@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-# 1. crop half img
+# 1. crop half doc_img
 # 2. flip it and put it on top of the other half
 # 3. substract it and calc area
 # 4. compare it with the original area of that half
