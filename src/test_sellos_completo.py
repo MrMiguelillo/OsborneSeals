@@ -7,7 +7,6 @@ img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborn
 # img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/
 # 1/1882-L123.M17.I-1/IMG_0002.png', 0)  # trainImage
 
-path = 'C:/Users/usuario/Desktop/Base_sellos/'
 elim_sellos = []
 
 for i in range(0, 5):
