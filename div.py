@@ -46,11 +46,12 @@ with open(transcripcion, 'r', encoding='utf8') as inputfile:
     for line in inputfile:
         texto.append(line.strip())
 for z in range (1, len(texto)):
-    if texto[z] == "..........":
+    #if texto[z] == "..........":
+    if texto[z].count('.') > 7:
         txt_documento.append(txt_pag)
         txt_pag = []
     else:
-        txt_pag.append(texto[z])
+        txt_pag.append([texto[z], texto[z].count(' ') + 1])
 txt_documento.append(txt_pag)
 
 # Separar columnas
@@ -149,14 +150,6 @@ for x in range(0, num_paginas):
     num_palabras.append(num_palabras_pagina)
     # Añadir palabras de una página
     palabras.append(palabras_pagina)
-
-'''
-for x in range(0, num_paginas):
-
-    # Meter número de filas  en vector con ceros
-    testFilas = np.zeros(len(filas_txt[0]) + 4)
-    testFilas[3:3+len(filas_txt[0])] = num_palabras[0]
-'''
 
 print("Generando imágenes")
 l = 1
@@ -258,14 +251,10 @@ for x in range(0, num_paginas):
 
         xml.write('<div class="tooltip" style="position: absolute;  width:%.2fvw; height:%.2fvw; top:%.2fvw;'
                   'left: %.2fvw; border:0px solid #0000FF;"> <span class = "classic"> %s'
-                  '<span> </div>\n' % (width, height, top, left, txt[x][y]))
+                  '<span> </div>\n' % (width, height, top, left, txt[x][y][0]))
 
 xml.write('</body>\n</html>\n')
 xml.close()
-
-
-
-
 
 
 
@@ -278,14 +267,14 @@ import matplotlib.pyplot as plt
 fig = plt.figure(1)
 if num_paginas == 2:
     ax = fig.add_subplot(311)
-    ax.set_title('Histograma horizontal: %d páginas' % (num_paginas))
+    ax.set_title('Histograma horizontal: %d páginas' % num_paginas)
     plt.plot(hist_hor)
     plt.plot([int(div), int(div)],[0, np.max(hist_hor)], 'r')
     plt.plot(minCol * np.ones(col_px), 'r')
     plt.axis([0, col_px, 0, np.max(hist_hor)])
 
     ax = fig.add_subplot(312)
-    ax.set_title('Histograma vertical página derecha: %d filas' % (num_filas[1]))
+    ax.set_title('Página derecha - Histograma vertical: %d filas' % num_filas[1])
     plt.plot(hist_ver_filtrado[1])
     plt.plot(minimo[1] * np.ones(fil_px), 'r')
     plt.plot(filas[1][0], minimo[1] * np.ones(num_filas[1]), 'ro')
@@ -293,7 +282,7 @@ if num_paginas == 2:
     plt.axis([0, fil_px, 0, np.max(hist_ver_filtrado[1])])
 
     ax = fig.add_subplot(313)
-    ax.set_title('Histograma vertical página izquierda: %d filas' % (num_filas[0]))
+    ax.set_title('Página izquierda - Histograma vertical: %d filas' % num_filas[0])
     plt.plot(hist_ver_filtrado[0])
     plt.plot(minimo[0] * np.ones(fil_px), 'r')
     plt.plot(filas[0][0], minimo[0] * np.ones(num_filas[0]), 'ro')
@@ -302,7 +291,7 @@ if num_paginas == 2:
 
 else:
     ax = fig.add_subplot(111)
-    ax.set_title('Histograma vertical: %d filas' % (num_filas[0]))
+    ax.set_title('Página 1 - Histograma vertical: %d filas' % num_filas[0])
     plt.plot(hist_ver_filtrado[0])
     plt.plot(minimo[0] * np.ones(fil_px), 'r')
     plt.plot(filas[0][0], minimo[0] * np.ones(num_filas[0]), 'ro')
@@ -311,3 +300,4 @@ else:
 
 plt.subplots_adjust(.03, .03, .97, .97)
 plt.show()
+

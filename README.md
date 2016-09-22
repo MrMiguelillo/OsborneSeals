@@ -1,6 +1,12 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.2.6 (RRG)
+------------
+1. Ahora se cuentan las palabras de cada linea de la transcripción en div.py
+2. Añadido div2.py para hacer pruebas en el ajuste de las lineas y la transcripción
+3. detecciones.py creado para dar a la web el nº lineas sin transcripción
+
 v2.2.5 (RRG)
 ------------
 1. Cambios varios en la detección de palabras para evitar falsos positivos

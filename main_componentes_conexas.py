@@ -15,25 +15,21 @@ umbralizaciones = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
-import time
-fecha = str(time.strftime("%H:%M:%S"))
-hora = str(time.strftime("%d/%m/%Y"))
-
 # Importar transcripción
 #transcripcion = 'tran/T_1892.01.25.txt'
 transcripcion = 'tran/1882-L123.M17.T_2.txt'
 
 # Importar imagen original
 #file = 'imgs/0003_sin_escudo.png'
-file = 'imgs/47_IMG_0001.png'
-#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/1/IMG_0002.png'
+file = 'imgs/119_IMG_0002.png'
+#file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/42/42.png'
 #file = 'imgs/Narciso1.png'
-legajo = 'WI'
+legajo = '20'
 
 # Parámetros modificables
 erosion = 5
-num_paginas = 2
-minimo = [394,218]
+num_paginas = 1
+minimo = [100,100]
 minCol = 0
 areaMinimaDePalabra = 2000
 anchoMinimoDePalabra = 70
@@ -77,7 +73,8 @@ with open(transcripcion) as inputfile:
         texto.append(line.strip())
 
 for z in range (1, len(texto)):
-    if texto[z] == "..........":
+    #if texto[z] == "..........":
+    if texto[z].count('.') > 7:
         txt_documento.append(txt_pag)
         txt_pag = []
     else:
@@ -368,9 +365,8 @@ for x in range(0, num_paginas):
 
 print("%d palabras encontradas" % (p-1))
 
-'''
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-filestring = '../../Osborne/%s_%s_%s_CC.png' % (fecha, hora, nombre)
+filestring = '../../Osborne/%s_%s_CC.png' % (legajo, nombre)
 cv2.imwrite(filestring, original)
 #filestring = '../../Osborne/%s_%s_comp_conx_texto.png' % (legajo, nombre)
 #orig.save(filestring)
@@ -416,6 +412,4 @@ else:
 
 plt.subplots_adjust(.03, .03, .97, .97)
 plt.show()
-#figManager = plt.get_current_fig_manager()
-#figManager.window.showMaximized()
-'''
+

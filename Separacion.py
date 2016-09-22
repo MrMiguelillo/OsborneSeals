@@ -57,13 +57,13 @@ class Separacion:
         # Detectar inicio de la primera fila
         inicioPrimeraFila = 0
         for x in range(0, long - 1):
-            if (histograma[x] <= umbral) & (histograma[x] > 50):
+            if (histograma[x] <= umbral) & (histograma[x] > 0):
                 inicioPrimeraFila = x
                 break
         # Detectar final de la última fila
         finalUltimaFila = long - 1
         for x in range(long - 1, 0, -1):
-            if (histograma[x] <= umbral) & (histograma[x] > 50):
+            if (histograma[x] <= umbral) & (histograma[x] > 0):
                 finalUltimaFila = x
                 break
         #Detectar filas

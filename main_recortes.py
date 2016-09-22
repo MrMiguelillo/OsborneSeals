@@ -8,21 +8,20 @@ import Umbralizaciones
 import Umbralizacion
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
-umbralizacion = Umbralizacion.Umbralizacion()
 separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 # Parámetros modificables
 erosion = 5
 num_paginas = 1
-minimo = [100, 110]
+minimo = [100, 100]
 minCol = 0
 areaMinimaDePalabra = 2000
 anchoMinimoDePalabra = 70
 alturaMinimaDePalabra = 40
 
 # Importar imagen original
-file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/18/IMG_0002.png'
+file = '../../Osborne/RepoOsborne/documentos/1883-L119.M29/42/IMG_0001.png'
 
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
@@ -31,7 +30,7 @@ legajo = path.split('documentos/')
 legajo[1] = legajo[1].replace('/', '_')
 original = cv2.imread(file)
 # Umbralizado de JSM
-#img = umbralizar.umbralizar_imagen(file)
+#img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -51,12 +50,15 @@ with open(transcripcion) as inputfile:
         texto.append(line.strip())
 
 print("Separar columnas")
-if num_paginas == 2:
+if num_paginas == 1:
+    div = 0
+    tab = [0, col_px]
+else:
     hist_hor = separar.hor_hist(img_plant)
     div = separar.columnas(hist_hor, minCol)
+    if np.isnan(div):
+        div = col_px / 2
     tab = [0, int(div), col_px]
-else:
-    tab = [0, col_px]
 
 print("Separar filas")
 filas = []
