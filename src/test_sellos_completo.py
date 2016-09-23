@@ -31,4 +31,3 @@ cv2.namedWindow('Result', cv2.WINDOW_NORMAL)
 cv2.imshow('Result', img)
 cv2.waitKey()
 
-# TODO: Funciona, falta ver si devuelve el resultado correcto

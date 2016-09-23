@@ -129,6 +129,3 @@ class Sellos:
         return img_region[min_fil:max_fil, min_col:max_col], new_coords
 
     # def unificar_con(self, ):
-
-
-# TODO: Detection is buggy when seals have text on top or very close
