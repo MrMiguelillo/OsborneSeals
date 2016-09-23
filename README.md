@@ -1,5 +1,145 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
-================== 
+==================
+
+v2.2.6 (RRG)
+------------
+1. Ahora se cuentan las palabras de cada linea de la transcripción en div.py
+2. Añadido div2.py para hacer pruebas en el ajuste de las lineas y la transcripción
+3. detecciones.py creado para dar a la web el nº lineas sin transcripción
+
+v2.2.5 (RRG)
+------------
+1. Cambios varios en la detección de palabras para evitar falsos positivos
+2. Corregido error en html cuando no detecta ninguna palabra
+
+v2.2.4 (RRG)
+------------
+1. Incluida separacion.borde para detectar posibles bordes en la imagen
+
+v2.2.3 (RRG)
+------------
+1. Mejorada separacion.filas. Cambios en div y main_cc
+
+v2.2.2 (RRG)
+------------
+1. Modificado div.py
+
+v2.2.1 (RRG)
+------------
+1. div.py modificado para detectar paginas según txt 
+
+v2.2.0 (RRG)
+------------
+1. div.py genera los div para la pagina a través del txt
+
+v2.1.9 (RRG)
+------------
+1. Reordenación de los archivos py. para funcionar igual que la consola de comandos
+
+v2.1.8 (RRG)
+------------
+1. Se generan por linea de comando los div para la web
+2. Versión guardada antes de eliminar SRC
+
+v2.1.7 (RRG)
+------------
+1. Modificada función Detecciones para integrar en la web
+
+v2.1.6 (RRG)
+------------
+1. Modificado main_componentes_conexas para detectar automáticamente el número de páginas
+
+v2.1.5 (RRG)
+------------
+1. Modificado main_recortes para generar la base de datos según Ángel
+
+v2.1.4 (RRG)
+------------
+1. Añadido main_recortes para realizar la base de datos
+
+v2.1.3 (RRG)
+------------
+1. Creada clase Deteciones.py y detecciones_main.py para probarlo
+
+v2.1.2 (JMC)
+------------
+1. Cambios en main_componentes_conexas para realizar la umbralización OT y esta arreglado.
+2. Guarda el trabajo en local no en el servidor 
+
+v2.1.1 (RRG)
+------------
+1. Cambios en main_componentes_conexas para realizar la umbralización OTSU y trabajar desde el servidor
+
+v2.1.0 (MRL)
+------------
+1. Añadidos archivos de reconocimiento de sellos. Unificación de algoritmos, pendiente.
+
+v2.0.0 (RRG)
+------------
+1. main_componentes_conexas ahora genera correctamente el archivo html
+
+v1.3.3 (RRG)
+------------
+1. Optimizada main_componentes_conexas
+
+v1.3.2 (RRG)
+------------
+1. Eliminamos main_componentes_conexas_pag
+2. main_componentes_conexas funciona correctamente y la salida es guardada directamente en el servidor
+3. Las salidas ahora también contienen el nombre del archivo de entrada
+
+v1.3.1 (JMC)
+------------
+1. main_componentes_conexas  funciona correctamente par una o dos imágenes
+2. Usamos el umbralizado de JSM en main_componentes_conexas
+
+v1.3.0 (RRG)
+------------
+1. main_componentes_conexas_pag funciona correctamente par una o dos imágenes
+2. Movidas imágenes de resultados al servidor
+3. Movidos varios txt al servidor
+
+v1.2.1 (RRG)
+------------
+1. main_componentes_conexas funciona correctamente par una imagen con 2 paginas
+
+v1.2.0 (JSM)
+------------
+1. Subidos los archivos para la realizacion de transformacion a grises de la imagen original
+2. Umbralizacion a global y algoritmos locales
+
+v1.1.7 (RRG)
+------------
+1. Modificado main_componentes_conexas para reordenar las palabras encontradas en orden
+
+v1.1.6 (JMC)
+------------
+1. Añadido 1882-L123.M17.T_2.txt
+2. Realizada la umbralización de la pagina 2-3 del met_0_vec_0_sig_0_thr_0.png
+3. La imagen umbralizada es met_0_vec_0_sig_0_thr_0.png
+
+v1.1.5 (RRG)
+------------
+1. Cambios varios para imprimir el texto en la imagen
+
+v1.1.4 (RRG)
+------------
+1. Añadido test para comprobar el groundtruth
+2. Añadido main_componentes_conexas_pag 
+
+v1.1.3 (RRG)
+------------
+1. Añadidos txt de ground truth
+2. Añadidas imágenes de ground truth
+3. importar_txt.py como pruebas para json
+
+v1.1.2 (RRG)
+------------
+1. Añadidos archivos para el ground truth
+
+v1.1.1 (RRG)
+------------
+1. Pruebas para unir componentes conexas en distintas lineas
 
 v1.1.0 (RRG)
 ------------
