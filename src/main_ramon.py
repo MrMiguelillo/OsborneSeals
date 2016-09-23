@@ -8,7 +8,7 @@ separar = Separacion.Separacion()
 filtro = Filtros.Filtros()
 
 print("Importar imagen umbralizada")
-#img = cv2.imread('../IMG_0003_met_1_vec_0_sig_-1_thr_180.png', 0)
+#doc_img = cv2.imread('../IMG_0003_met_1_vec_0_sig_-1_thr_180.png', 0)
 img = cv2.imread('../IMG_0003_met_0_vec_2_sig_-1_thr_0.png', 0)
 
 filas, colum = img.shape

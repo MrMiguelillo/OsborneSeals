@@ -4,11 +4,11 @@ import cv2
 import pickle
 from src.Keypoints_Pickle import KeypointsPickle
 
-NUM_SELLOS = 3
 
-seal_string = ['No Match', 'Tomas', 'AG', 'Doble T']
+seal_string = KeypointsPickle.seal_string
 
-keypoints_database = pickle.load(open("keypoints_database.p", "rb"))
+path = 'C:/Users/usuario/Desktop/Base_sellos/'
+keypoints_database = pickle.load(open(path + "keypoints_database.p", "rb"))
 kp = []
 desc = []
 
@@ -17,7 +17,7 @@ for i in range(0, len(keypoints_database)):
     kp.append(kp_temp)
     desc.append(desc_temp)
 
-img = cv2.imread('C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/2.png', 0)
+img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/1/1882-L123.M17.I-1/IMG_0002.png', 0)
 surf = xf.SURF_create()
 kp_img, des_img = surf.detectAndCompute(img, None)
 
@@ -34,7 +34,7 @@ for i in range(0, len(keypoints_database)):
     good_matches = []
     matches = flann.knnMatch(desc[i], des_img, k=2)
     for j, (m, n) in enumerate(matches):
-        if m.distance < 0.7*n.distance:
+        if m.distance < 0.8*n.distance:
             good_matches.append(m)
 
     if len(good_matches) > max_matches:
@@ -47,12 +47,18 @@ for i in range(0, len(keypoints_database)):
                        matchesMask=mask,
                        flags=0)
 
+    print(len(good_matches))
+    print(KeypointsPickle.seal_string[i+1])
     # img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, matches, None, **draw_params)
 
-if max_matches < 150:
+if max_matches < KeypointsPickle.NO_MATCH_THRESH:
     matched_seal = KeypointsPickle.SEAL_NO_MATCH
 
-print(seal_string[matched_seal])
+print(KeypointsPickle.seal_string[matched_seal])
+
 
 # TODO: Dibujar matches por si se quieren visualizar resultados.
 # TODO en otro archivo: Usar keypoints para delimitar zona de sello ----> Hay que eliminar outliers primero
+
+# TODO IMPORTANTE!!: Por algún motivo el resultado usando bbdd de descriptores es distinto de directamente
+# Probar comparar en seal_detect_SURF.py y este mismo archivo.

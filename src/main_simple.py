@@ -41,8 +41,8 @@ for x in range(0,tam):
         cv2.line(img, (fin_palabras[y], ini_filas[x]), (fin_palabras[y], fin_filas[x]), 100, 3)
 
 #cv2.namedWindow('result', cv2.WINDOW_AUTOSIZE)
-#cv2.imshow('result', img)
-#cv2.imwrite('../salida1_umbralizada.png', img)
+#cv2.imshow('result', doc_img)
+#cv2.imwrite('../salida1_umbralizada.png', doc_img)
 
 print("Resultados gráficos")
 plt.figure(1)

@@ -8,7 +8,7 @@ separar = SeparacionPalabras()
 img = cv2.imread('../imgs/IMG_0003.png', 0)
 bin_img = separar.umbralizar_imagen(img, ThreshMethod.FIXED,180)
 
-#hist_vert = histograma_vertical(img)
+#hist_vert = histograma_vertical(doc_img)
 #plt.plot(hist_vert)
 #plt.show()
 

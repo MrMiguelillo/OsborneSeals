@@ -1,3 +1,4 @@
+import os
 import cv2.xfeatures2d as xf
 import cv2
 import numpy as np
@@ -6,14 +7,21 @@ from src.Keypoints_Pickle import KeypointsPickle
 
 
 temp_array = []
-for i in range(1, 4):
-    img_path = 'C:/Users/usuario/Documents/Lab_Osborne/Fotos_sellos/muestras/%d.png' % i
-    img = cv2.imread(img_path, 0)
+path = "C:/Users/usuario/Desktop/Base_sellos"
+walk = os.walk(path)
+for root, dirs, files in walk:
+    for curr_file in files:
+        if curr_file.endswith(".p"):
+            continue
 
-    surf = xf.SURF_create()
-    kp, des = surf.detectAndCompute(img, None)
+        img = cv2.imread(root + "/" + curr_file, cv2.IMREAD_GRAYSCALE)
+        print(curr_file)
 
-    temp = KeypointsPickle.pickle(kp, des)
-    temp_array.append(temp)
+        surf = xf.SURF_create()
+        kp, des = surf.detectAndCompute(img, None)
+        print(len(kp))
 
-pickle.dump(temp_array, open("keypoints_database.p", "wb"))
+        temp = KeypointsPickle.pickle(kp, des)
+        temp_array.append(temp)
+
+pickle.dump(temp_array, open(path + "/" + "keypoints_database.p", "wb"))
