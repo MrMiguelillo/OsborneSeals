@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.3 (MRL)
+----------
+1. Realizado merge de branch sellos_total.
+2. TODO: Limpiado de archivos de test y unificación de algoritmos.
+
 v2.2.6 (RRG)
 ------------
 1. Ahora se cuentan las palabras de cada linea de la transcripción en div.py
