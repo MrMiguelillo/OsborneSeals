@@ -1,6 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
 
+v2.3.1 (RRG)
+-----------
+1. Cambiado directorio de salida de imágenes
+2. Eliminación de warnings
+
 v2.3 (MRL)
 ----------
 1. Realizado merge de branch sellos_total.
