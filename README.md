@@ -1,8 +1,8 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 =====================================
 
-v3.3 (RRG)
-----------
+v3.2.1 (RRG)
+------------
 1. Commit final RRG
 
 v3.2 (MRL)

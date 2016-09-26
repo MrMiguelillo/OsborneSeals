@@ -31,7 +31,7 @@ class FeaturesIO:
             seals_kps.append(keypoints)
 
         for i in range(int(num_elements/2), num_elements):
-            desc = np.array(array[i]).astype(np.uint8)
+            desc = np.array(array[i]).astype(np.float32)  # float32 for surf; uint8 for ORB
             seals_des.append(desc)
 
         seal_shps = file['arr_1']
