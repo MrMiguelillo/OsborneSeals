@@ -1,5 +1,8 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
+v3(MRL)
+-----------
+1. Eliminacion de sellos encapsulada en función
 
 v2.3.1 (RRG)
 -----------
