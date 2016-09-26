@@ -28,7 +28,7 @@ path = os.path.dirname(file)
 original = cv2.imread(file)
 
 # Umbralizado de JSM
-#img = umbralizaciones.umbralizar_imagen(file)
+# img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -45,8 +45,8 @@ txt_documento = []
 with open(transcripcion, 'r', encoding='utf8') as inputfile:
     for line in inputfile:
         texto.append(line.strip())
-for z in range (1, len(texto)):
-    #if texto[z] == "..........":
+for z in range(1, len(texto)):
+    # if texto[z] == "..........":
     if texto[z].count('.') > 7:
         txt_documento.append(txt_pag)
         txt_pag = []
@@ -88,7 +88,7 @@ for x in range(0, num_paginas):
     # Filtrado
     hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
 
-    for minTest in range(np.max(hist_ver_filtrado[x]) -1, 0, -1):
+    for minTest in range(np.max(hist_ver_filtrado[x]) - 1, 0, -1):
 
         # Separar filas
         ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minTest)
@@ -113,7 +113,7 @@ for x in range(0, num_paginas):
     palabras_pagina = []
     for y in range(0, num_filas[x]):
 
-        #print("%s - Página %d de %d - Fila %2d de %d - %s" % (nombre, x+1, num_paginas, y+1, num_filas[x], txt[x][y]))
+        # print("%s - Página %d de %d - Fila %2d de %d - %s" % (nombre, x+1, num_paginas, y+1, num_filas[x], txt[x][y]))
 
         # Seleccionar fila
         fila_ero_bw = img_ero_bw[filas[x][0][y]:filas[x][1][y], filas[x][2]:filas[x][3]]
@@ -156,7 +156,7 @@ l = 1
 p = 1
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
-        #print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
+        # print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
         # Dibujar líneas de separación de filas
         cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (255, 0, 0), 5)
         cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (255, 0, 0), 5)
@@ -164,7 +164,7 @@ for x in range(0, num_paginas):
         cv2.putText(original, str(l), (filas[x][2], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
         # Imprimir texto
-        #d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
+        # d.text((palabras[x][y][0][0] + 20, palabras[x][y][0][1] + 50), txt[x][y], font=font, fill=(0, 0, 255, 255))
 
         for z in range(0, num_palabras[x][y]):
             # Dibujar rectángulos de palabras
@@ -173,7 +173,7 @@ for x in range(0, num_paginas):
             cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
             p += 1
 
-filestring = '../../Osborne/%s_CC.png' % nombre
+filestring = '%s_CC.png' % nombre
 cv2.imwrite(filestring, original)
 
 
@@ -228,7 +228,7 @@ cabecera = """<!DOCTYPE html>
  <body>
  """
 xml.write(cabecera)
-xml.write('<img src="%s.png" alt="Documento Osborne" style="position: absolute; width:90%%"></img>\n' % (nombre))
+xml.write('<img src="%s.png" alt="Documento Osborne" style="position: absolute; width:90%%"></img>\n' % nombre)
 
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
@@ -269,7 +269,7 @@ if num_paginas == 2:
     ax = fig.add_subplot(311)
     ax.set_title('Histograma horizontal: %d páginas' % num_paginas)
     plt.plot(hist_hor)
-    plt.plot([int(div), int(div)],[0, np.max(hist_hor)], 'r')
+    plt.plot([int(div), int(div)], [0, np.max(hist_hor)], 'r')
     plt.plot(minCol * np.ones(col_px), 'r')
     plt.axis([0, col_px, 0, np.max(hist_hor)])
 
@@ -300,4 +300,3 @@ else:
 
 plt.subplots_adjust(.03, .03, .97, .97)
 plt.show()
-

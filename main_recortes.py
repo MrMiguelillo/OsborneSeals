@@ -30,7 +30,7 @@ legajo = path.split('documentos/')
 legajo[1] = legajo[1].replace('/', '_')
 original = cv2.imread(file)
 # Umbralizado de JSM
-#img = umbralizaciones.umbralizar_imagen(file)
+# img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
 gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -46,7 +46,7 @@ print('Generar transcripción')
 texto = []
 with open(transcripcion) as inputfile:
     for line in inputfile:
-        #texto.append(line.strip().split('\t'))
+        # texto.append(line.strip().split('\t'))
         texto.append(line.strip())
 
 print("Separar columnas")
@@ -64,14 +64,14 @@ print("Separar filas")
 filas = []
 num_filas = []
 hist_ver_filtrado = []
-#minimo = np.zeros(num_paginas)
+# minimo = np.zeros(num_paginas)
 for x in range(0, num_paginas):
     # Histograma vertical
     hist_ver = separar.vert_hist(img_plant[0:fil_px, tab[x]:tab[x+1]])
     # Filtrado
     hist_ver_filtrado.append(filtro.mediana(hist_ver, 10))
     # Elegir mínimo
-    #minimo[x] = int(np.max(hist_ver_filtrado[x])/4)
+    # minimo[x] = int(np.max(hist_ver_filtrado[x])/4)
     # Separar filas
     ini_filas, fin_filas = separar.filas(hist_ver_filtrado[x], minimo[x])
     # Toma de datos
@@ -138,10 +138,10 @@ for x in range(0, num_paginas):
 
                 recorte = original[palabras[x][y][z][1]:palabras[x][y][z][3], palabras[x][y][z][0]:palabras[x][y][z][2]]
 
-                filestring = '../../Osborne/BdD/%s_%s_%d_%s.png' % (legajo[1], nombre, id, texto[p - 1])
+                filestring = 'BdD/%s_%s_%d_%s.png' % (legajo[1], nombre, id, texto[p - 1])
                 cv2.imwrite(filestring, recorte)
 
-                filestring = '../../Osborne/BdD/%s_%s_%d_%s.txt' % (legajo[1], nombre, id, texto[p - 1])
+                filestring = 'BdD/%s_%s_%d_%s.txt' % (legajo[1], nombre, id, texto[p - 1])
                 txt = open(filestring, 'w')
                 txt.write('%s\n%s\n%s\n%d\n%d\n%d\n%d' % (legajo[1], nombre, texto[p - 1], palabras[x][y][z][0],
                                                           palabras[x][y][z][1], palabras[x][y][z][2],
