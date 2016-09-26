@@ -1,6 +1,12 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
-==================
-v3(MRL)
+=====================================
+
+v3.1 (RRG)
+----------
+1. Unión del código main y detección de sellos
+2. Error de ejecución en Mac y Ubuntu
+
+v3 (MRL)
 -----------
 1. Eliminacion de sellos encapsulada en función
 

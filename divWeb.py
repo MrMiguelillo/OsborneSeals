@@ -9,6 +9,8 @@ import Filtros
 import Umbralizaciones
 import codecs
 import random
+from FuncionSellosCompleta import detectar_sello
+
 sys.stdin = codecs.getreader('utf-8')(sys.stdin)
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
@@ -28,12 +30,14 @@ alturaMinimaDePalabra = 40
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
+# gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+gray_img = cv2.imread(file, 0)
 
 # Umbralizado de JSM
 # img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
-gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+imgSinSello, sello, txtSello = detectar_sello(gray_img)
+ret, img = cv2.threshold(imgSinSello, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 img = separar.borde(img)
 # Calcular tamano de imagen
 fil_px, col_px = img.shape
@@ -187,6 +191,17 @@ xml.write('<div style="overflow: hidden;" id="myImagePosition" class="modal-cont
 # xml.write('<img src="http://146.255.101.63%s/%s.png" alt="Documento Osborne" width="100%%"></img>\n' % (urlImage[1], nombre))
 xml.write('<span class="closeModalWindow" >&times;</span>')
 xml.write('<img id="imageWithDivs" src="" alt="Documento Osborne" width="100%%"></img>\n')
+
+'''
+leftSello = (sello[0][0] / col_px) * 0.9 * 100
+topSello = (sello[0][1] / col_px) * 0.9 * 100
+widthSello = ((sello[1][0] - sello[0][0]) / col_px) * 0.9 * 100
+heightSello = ((sello[1][1] - sello [0][1]) / col_px) * 0.9 * 100
+
+xml.write('<div class="tooltip" style="position: absolute;  width:%.2fvw; height:%.2fvw; top:%.2fvw;'
+          'left: %.2fvw; border:1px solid #0000FF;"> <span class = "classic"> %s'
+          '<span> </div>\n' % (widthSello, heightSello, topSello, leftSello, txtSello))
+'''
 
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):

@@ -6,6 +6,7 @@ from skimage import measure
 import Separacion
 import Filtros
 import Umbralizaciones
+from FuncionSellosCompleta import detectar_sello
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
@@ -26,20 +27,21 @@ alturaMinimaDePalabra = 40
 nombre = os.path.splitext(os.path.basename(file))[0]
 path = os.path.dirname(file)
 original = cv2.imread(file)
+#gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+gray_img = cv2.imread(file, 0)
 
 # Deteccion de sellos MARL
 import time
 print("Detectando sello")
 t = time.time()
-# gray_img, sello, txtSello = funcionderMigue
+imgSinSello, sello, txtSello = detectar_sello(gray_img)
 elapsed = time.time() - t
 print("Sello detectado en %f segundos" % elapsed)
 
 # Umbralizado de JSM
 # img = umbralizaciones.umbralizar_imagen(file)
 # Umbralizado nuestro
-gray_img = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-ret, img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+ret, img = cv2.threshold(imgSinSello, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 img = separar.borde(img)
 # Calcular tamaño de imagen
 fil_px, col_px = img.shape
@@ -182,7 +184,7 @@ for x in range(0, num_paginas):
             p += 1
 
 filestring = '%s_CC.png' % nombre
-cv2.imwrite(filestring, gray_img)
+cv2.imwrite(filestring, imgSinSello)
 
 
 
@@ -238,8 +240,8 @@ cabecera = """<!DOCTYPE html>
 xml.write(cabecera)
 xml.write('<img src="%s.png" alt="Documento Osborne" style="position: absolute; width:90%%"></img>\n' % nombre)
 
-sello = [(755, 238), (996, 531)]
-txtSello = 'hola'
+# sello = [(755, 238), (996, 531)]
+# txtSello = 'hola'
 
 leftSello = (sello[0][0] / col_px) * 0.9 * 100
 topSello = (sello[0][1] / col_px) * 0.9 * 100
