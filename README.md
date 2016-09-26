@@ -1,11 +1,17 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
-==================
-v3.1(MRL)
--------
-1. Método cambiado para usar ORB. Además eso esquiva un bug the opencv3
+=====================================
+v3.2 (MRL)
+-----------
+1. Método cambiado a ORB. Además eso esquiva un bug de openCV3
 
-v3(MRL)
--------
+
+v3.1 (RRG)
+----------
+1. Unión del código main y detección de sellos
+2. Error de ejecución en Mac y Ubuntu
+
+v3 (MRL)
+-----------
 1. Eliminacion de sellos encapsulada en función
 
 v2.3.1 (RRG)
