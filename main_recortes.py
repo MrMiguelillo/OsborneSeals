@@ -5,7 +5,6 @@ from skimage import measure
 import Separacion
 import Filtros
 import Umbralizaciones
-import Umbralizacion
 
 umbralizaciones = Umbralizaciones.Umbralizaciones()
 separar = Separacion.Separacion()
@@ -129,7 +128,7 @@ p = 1
 id = 1
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
-        print("Página %d de %d - Fila %d de %d:   %d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
+        print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
         l += 1
 
         for z in range(0, num_palabras[x][y]):
