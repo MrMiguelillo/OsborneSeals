@@ -32,12 +32,7 @@ original = cv2.imread(file)
 gray_img = cv2.imread(file, 0)
 
 # Deteccion de sellos MARL
-import time
-print("Detectando sello")
-t = time.time()
 imgSinSello, sello, txtSello = detectar_sello(gray_img)
-elapsed = time.time() - t
-print("Sello detectado en %f segundos" % elapsed)
 
 # Umbralizado de JSM
 # img = umbralizaciones.umbralizar_imagen(file)
@@ -169,8 +164,8 @@ for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):
         # print("Página %d de %d - Fila %2d de %2d:   %2d palabras" % (x + 1, num_paginas, y + 1, num_filas[x], num_palabras[x][y]))
         # Dibujar líneas de separación de filas
-        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (255, 0, 0), 5)
-        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (255, 0, 0), 5)
+        cv2.line(original, (filas[x][2], filas[x][0][y]), (filas[x][3], filas[x][0][y]), (0, 0, 0), 3)
+        cv2.line(original, (filas[x][2], filas[x][1][y]), (filas[x][3], filas[x][1][y]), (0, 0, 0), 3)
         # Dibujar número de línea
         cv2.putText(original, str(l), (filas[x][2], filas[x][1][y]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 1, cv2.LINE_AA)
         l += 1
@@ -179,9 +174,9 @@ for x in range(0, num_paginas):
 
         for z in range(0, num_palabras[x][y]):
             # Dibujar rectángulos de palabras
-            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 1)
+            cv2.rectangle(original, (palabras[x][y][z][0], palabras[x][y][z][1]), (palabras[x][y][z][2], palabras[x][y][z][3]), 0, 3)
             # Dibujar número de palabra
-            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+            cv2.putText(original, str(p), (palabras[x][y][z][0], palabras[x][y][z][1] + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3, cv2.LINE_AA)
             p += 1
 
 filestring = '%s_CC.png' % nombre
@@ -252,6 +247,7 @@ heightSello = ((sello[1][1] - sello [0][1]) / col_px) * 0.9 * 100
 xml.write('<div class="tooltip" style="position: absolute;  width:%.2fvw; height:%.2fvw; top:%.2fvw;'
           'left: %.2fvw; border:1px solid #0000FF;"> <span class = "classic"> %s'
           '<span> </div>\n' % (widthSello, heightSello, topSello, leftSello, txtSello))
+
 
 for x in range(0, num_paginas):
     for y in range(0, num_filas[x]):

@@ -17,7 +17,7 @@ filtro = Filtros.Filtros()
 
 # Importar transcripción
 # transcripcion = 'tran/T_1892.01.25.txt'
-transcripcion = 'tran/1882-L123.M17.T_2.txt'
+transcripcion = 'tran/10.txt'
 
 # Importar imagen original
 # file = 'imgs/0003_sin_escudo.png'

@@ -1,9 +1,13 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 =====================================
+
+v3.3 (RRG)
+----------
+1. Commit final RRG
+
 v3.2 (MRL)
 -----------
 1. Método cambiado a ORB. Además eso esquiva un bug de openCV3
-
 
 v3.1 (RRG)
 ----------

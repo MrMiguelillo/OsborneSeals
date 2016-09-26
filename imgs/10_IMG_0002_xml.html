@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>ToolTips Example</title>
+    <style type="text/css">
+    .tooltip {
+        border-bottom: 1px dotted #000000; color: #000000; outline: none;
+        cursor: help; text-decoration: none;
+        position: relative;
+    }
+    .tooltip span {
+        margin-left: -999em;
+        position: absolute;
+    }
+    .tooltip:hover span {
+        border-radius: 1px 1px; -moz-border-radius: 1px; -webkit-border-radius: 1px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        font-family: Calibri, Tahoma, Geneva, sans-serif; font-size: 2vw; color:blue; text-align: center;
+        position: absolute; left: 0em; top: -1em; z-index: 99; opacity: 1;
+        margin-left: 0; width: 90%;
+    }
+    .tooltip:hover img {
+        border: 0; margin: -10px 0 0 -55px;
+        float: left; position: absolute;
+    }
+    .tooltip:hover em {
+        font-family: Candara, Tahoma, Geneva, sans-serif; font-size: 1.2em; font-weight: bold;
+        display: block; padding: 0.2em 0 0.6em 0;
+    }
+    .classic { padding: 0.1em 1em; }
+    .custom { padding: 0.5em 0.8em 0.8em 2em; }
+    * html a:hover { background: transparent; }
+    .classic {background: #FFFFFF; border: 1px solid #7F7F7F; }
+    .critical { background: #FFCCAA; border: 1px solid #FF3334;	}
+    .help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .info { background: #9FDAEE; border: 1px solid #2BB0D7;	}
+    .warning { background: #FFFFAA; border: 1px solid #FFAD33; }
+    </style>
+</head>
+ <body>
+ <img src="10_IMG_0002.png" alt="Documento Osborne" style="position: absolute; width:90%"></img>
+<div class="tooltip" style="position: absolute;  width:18.58vw; height:10.33vw; top:13.10vw;left: -9.04vw; border:1px solid #0000FF;"> <span class = "classic"> Sello no catalogado<span> </div>
+<div class="tooltip" style="position: absolute;  width:42.64vw; height:11.14vw; top:0.28vw;left: 1.29vw; border:0px solid #0000FF;"> <span class = "classic"> dos curas el mismo año, de Aguas<span> </div>
+<div class="tooltip" style="position: absolute;  width:41.83vw; height:2.84vw; top:11.42vw;left: 1.14vw; border:0px solid #0000FF;"> <span class = "classic"> buenas, divididas por un mes de<span> </div>
+<div class="tooltip" style="position: absolute;  width:35.28vw; height:2.56vw; top:14.26vw;left: 9.31vw; border:0px solid #0000FF;"> <span class = "classic"> descanso. Quiere decir tres meses<span> </div>
+<div class="tooltip" style="position: absolute;  width:34.01vw; height:2.54vw; top:16.83vw;left: 9.31vw; border:0px solid #0000FF;"> <span class = "classic"> de potteres en el midi: -Para<span> </div>
+<div class="tooltip" style="position: absolute;  width:35.99vw; height:3.58vw; top:19.37vw;left: 9.31vw; border:0px solid #0000FF;"> <span class = "classic"> aquel punto de baños pienso salir<span> </div>
+<div class="tooltip" style="position: absolute;  width:40.71vw; height:2.69vw; top:22.94vw;left: 0.94vw; border:0px solid #0000FF;"> <span class = "classic"> el 10 y en cuanto llegue te<span> </div>
+<div class="tooltip" style="position: absolute;  width:45.43vw; height:0.89vw; top:25.63vw;left: 0.00vw; border:0px solid #0000FF;"> <span class = "classic"> escribiré con la indicación de<span> </div>
+<div class="tooltip" style="position: absolute;  width:41.35vw; height:6.04vw; top:26.52vw;left: 0.74vw; border:0px solid #0000FF;"> <span class = "classic"> hostal &o.-<span> </div>
+<div class="tooltip" style="position: absolute;  width:33.55vw; height:2.99vw; top:32.56vw;left: 5.08vw; border:0px solid #0000FF;"> <span class = "classic"> Concluyo para que esta<span> </div>
+<div class="tooltip" style="position: absolute;  width:40.56vw; height:2.74vw; top:35.56vw;left: 0.81vw; border:0px solid #0000FF;"> <span class = "classic"> carta pueda salir hoy y me<span> </div>
+<div class="tooltip" style="position: absolute;  width:32.66vw; height:3.02vw; top:38.30vw;left: 0.66vw; border:0px solid #0000FF;"> <span class = "classic"> repito tuyo afmo hermano<span> </div>
+<div class="tooltip" style="position: absolute;  width:23.53vw; height:28.35vw; top:41.32vw;left: 9.37vw; border:0px solid #0000FF;"> <span class = "classic"> Juan. N. Osborne<span> </div>
+<div class="tooltip" style="position: absolute;  width:26.83vw; height:14.04vw; top:6.24vw;left: 62.59vw; border:0px solid #0000FF;"> <span class = "classic"> Versalles, 10 junio 1882<span> </div>
+<div class="tooltip" style="position: absolute;  width:22.21vw; height:2.72vw; top:23.68vw;left: 47.34vw; border:0px solid #0000FF;"> <span class = "classic"> Mi querido Tomás,<span> </div>
+<div class="tooltip" style="position: absolute;  width:33.53vw; height:2.94vw; top:26.40vw;left: 56.40vw; border:0px solid #0000FF;"> <span class = "classic"> Ayer envié, en pliego certi-<span> </div>
+<div class="tooltip" style="position: absolute;  width:42.46vw; height:3.10vw; top:29.34vw;left: 46.62vw; border:0px solid #0000FF;"> <span class = "classic"> -ficado, a América el papel que<span> </div>
+<div class="tooltip" style="position: absolute;  width:41.85vw; height:3.15vw; top:32.44vw;left: 46.75vw; border:0px solid #0000FF;"> <span class = "classic"> me incluias, después de firmarlo<span> </div>
+<div class="tooltip" style="position: absolute;  width:42.34vw; height:2.74vw; top:35.58vw;left: 47.13vw; border:0px solid #0000FF;"> <span class = "classic"> en los N. P.- quiero decir, en el<span> </div>
+<div class="tooltip" style="position: absolute;  width:12.49vw; height:1.85vw; top:39.42vw;left: 47.16vw; border:0px solid #0000FF;"> <span class = "classic"> consulado.<span> </div>
+<div class="tooltip" style="position: absolute;  width:33.43vw; height:2.84vw; top:41.88vw;left: 56.57vw; border:0px solid #0000FF;"> <span class = "classic"> Ves que estamos in medias<span> </div>
+<div class="tooltip" style="position: absolute;  width:39.34vw; height:3.35vw; top:44.72vw;left: 46.78vw; border:0px solid #0000FF;"> <span class = "classic"> res.- Los pros y los cons da<span> </div>
+<div class="tooltip" style="position: absolute;  width:41.24vw; height:1.78vw; top:48.38vw;left: 47.03vw; border:0px solid #0000FF;"> <span class = "classic"> una solucion son datos en un<span> </div>
+<div class="tooltip" style="position: absolute;  width:42.87vw; height:2.51vw; top:51.45vw;left: 46.29vw; border:0px solid #0000FF;"> <span class = "classic"> sentido o en otro que me hacen<span> </div>
+<div class="tooltip" style="position: absolute;  width:42.97vw; height:2.82vw; top:55.03vw;left: 46.07vw; border:0px solid #0000FF;"> <span class = "classic"> positivamente el efecto de una<span> </div>
+<div class="tooltip" style="position: absolute;  width:41.32vw; height:2.97vw; top:58.32vw;left: 46.83vw; border:0px solid #0000FF;"> <span class = "classic"> Clapham junction.- Otra compe-<span> </div>
+<div class="tooltip" style="position: absolute;  width:39.19vw; height:2.89vw; top:61.29vw;left: 48.02vw; border:0px solid #0000FF;"> <span class = "classic"> -tencia que la mia se nece-<span> </div>
+<div class="tooltip" style="position: absolute;  width:40.33vw; height:2.36vw; top:64.64vw;left: 47.08vw; border:0px solid #0000FF;"> <span class = "classic"> -sita para formase una opi-<span> </div>
+</body>
+</html>
