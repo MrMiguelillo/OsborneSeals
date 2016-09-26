@@ -1,7 +1,11 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 ==================
+v3.1(MRL)
+-------
+1. Método cambiado para usar ORB. Además eso esquiva un bug the opencv3
+
 v3(MRL)
------------
+-------
 1. Eliminacion de sellos encapsulada en función
 
 v2.3.1 (RRG)

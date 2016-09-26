@@ -1,7 +1,6 @@
 import numpy as np
 import EliminacionSellos as ElimSe
 
-
 seal_string = []
 
 
