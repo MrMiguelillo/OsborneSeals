@@ -31,33 +31,32 @@ class EliminacionSellos:
             = FeaturesIO.load_features(path)
 
     def get_document_features(self):
-        # surf = xf.SURF_create()
-        orb = cv2.ORB_create()
-        EliminacionSellos.doc_kps, EliminacionSellos.doc_des = orb.detectAndCompute(EliminacionSellos.doc_img, None)
+        surf = xf.SURF_create()
+        # orb = cv2.ORB_create()
+        EliminacionSellos.doc_kps, EliminacionSellos.doc_des = surf.detectAndCompute(EliminacionSellos.doc_img, None)
 
     def get_matched_keypoints(self):
-        # # FLANN parameters
-        # FLANN_INDEX_KDTREE = 0
-        # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-        # search_params = dict(checks=50)  # or pass empty dictionary
-        #
-        # flann = cv2.FlannBasedMatcher(index_params, search_params)
-        #
-        # aux_kp = []
-        # matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
-        # # matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des)
-        # for j, (m, n) in enumerate(matches):
-        #     if m.distance < 0.9 * n.distance:
-        #         aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
-        #
-        # self.kp_matched = aux_kp
+        # FLANN parameters
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        search_params = dict(checks=50)  # or pass empty dictionary
+
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+
         aux_kp = []
-        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-        matches = bf.match(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des)
-        for j, m in enumerate(matches):
-            aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
+        matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
+        for j, (m, n) in enumerate(matches):
+            if m.distance < 0.9 * n.distance:
+                aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
 
         self.kp_matched = aux_kp
+        # aux_kp = []
+        # bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        # matches = bf.match(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des)
+        # for j, m in enumerate(matches):
+        #     aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
+        #
+        # self.kp_matched = aux_kp
 
     def compute_evidence_matrix(self):
         self.evidence_matrix.calc_occurrences(self.kp_matched)
@@ -77,7 +76,6 @@ class EliminacionSellos:
 
     def remove_seal(self):
         div_size = self.evidence_matrix.DIVISION_SIZE
-        # seal_img = cv2.imread(path, 0)
         fils, cols = EliminacionSellos.seals_dims[self.index]
         pt1 = (int(self.position[1] * div_size - cols / 2), int(self.position[0] * div_size - fils / 2))
         pt2 = (int(self.position[1] * div_size + cols / 2), int(self.position[0] * div_size + fils / 2))
