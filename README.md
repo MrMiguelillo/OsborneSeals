@@ -7,6 +7,10 @@ Esto significa que no podrá ejecutarse en Mac o Linux debido a un bug
 conocido en los bindings para Python.
 2. Corregido un bug introducido al cambiar de métodos (SURF Y ORB)
 
+v3.2.1 (RRG)
+------------
+1. Commit final RRG
+
 v3.2 (MRL)
 -----------
 1. Método cambiado a ORB. Además eso esquiva un bug de openCV3
