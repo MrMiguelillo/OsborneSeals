@@ -1,9 +1,15 @@
 Readme Lab Osborne JMC, MRL, RRG, JSM
 =====================================
+v3.3 (MRL)
+-----------
+1. Vuelta a SURF en sellos. ORB no es suficientemente robusto.
+Esto significa que no podrá ejecutarse en Mac o Linux debido a un bug
+conocido en los bindings para Python.
+2. Corregido un bug introducido al cambiar de métodos (SURF Y ORB)
+
 v3.2 (MRL)
 -----------
 1. Método cambiado a ORB. Además eso esquiva un bug de openCV3
-
 
 v3.1 (RRG)
 ----------

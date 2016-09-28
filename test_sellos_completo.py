@@ -7,7 +7,7 @@ img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/'
 
 elim_sellos = []
 
-for i in range(0, 9):
+for i in range(0, 8):
     elim_sellos.append(ElimSe.EliminacionSellos(img, i))
 
 elim_sellos[0].get_keypoints_from_db('car_sellos.npz')
@@ -15,7 +15,7 @@ elim_sellos[0].get_document_features()
 
 real_seal = -1
 max_occurrences = 0
-for i in range(0, 9):
+for i in range(0, 8):
     elim_sellos[i].get_matched_keypoints()
     elim_sellos[i].compute_evidence_matrix()
     elim_sellos[i].compute_position_and_max_occurrences()

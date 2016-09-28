@@ -36,18 +36,18 @@ class EliminacionSellos:
         EliminacionSellos.doc_kps, EliminacionSellos.doc_des = surf.detectAndCompute(EliminacionSellos.doc_img, None)
 
     def get_matched_keypoints(self):
-        # # FLANN parameters
-        # FLANN_INDEX_KDTREE = 0
-        # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-        # search_params = dict(checks=50)  # or pass empty dictionary
-        #
-        # flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # FLANN parameters
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        search_params = dict(checks=50)  # or pass empty dictionary
+
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
 
         aux_kp = []
 
-        bf = cv2.BFMatcher()
-        matches = bf.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
-        # matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
+        # bf = cv2.BFMatcher()
+        # matches = bf.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
+        matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
         for j, (m, n) in enumerate(matches):
             if m.distance < 0.9 * n.distance:
                 aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
@@ -88,4 +88,5 @@ class EliminacionSellos:
         # print(pt1)
         # print(pt2)
         # cv2.rectangle(EliminacionSellos.doc_img, pt1, pt2, (255, 255, 255), -1)
-        cv2.circle(EliminacionSellos.doc_img, (self.position[1], self.position[0]), 20, (255, 0, 255), -1)
+        print(self.position)
+        cv2.circle(EliminacionSellos.doc_img, (self.position[1], self.position[0]), 200, (255, 0, 255), -1)
