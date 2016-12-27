@@ -1,7 +1,7 @@
 import numpy as np
 import EliminacionSellos as ElimSe
 
-seal_string = []
+seal_string = ['O Doble C', 'TO', 'Moneda O Doble C', 'MSA', 'Grifos', 'Dedal MSE', 'TO Sucio Largo', 'AG']
 
 
 def detectar_sello(img):
@@ -30,11 +30,13 @@ def detectar_sello(img):
     elim_sellos[real_seal].remove_seal()
 
     center_coords = elim_sellos[real_seal].position  # (row,col) = (y,x)
-    fils, cols = ElimSe.EliminacionSellos.seals_dims[real_seal]
+    real_seal_height, real_seal_width = ElimSe.EliminacionSellos.seals_dims[real_seal]
     div_size = elim_sellos[real_seal].evidence_matrix.DIVISION_SIZE
 
-    pt1 = (int(center_coords[1] * div_size - cols / 2), int(center_coords[0] * div_size - fils / 2))
-    pt2 = (int(center_coords[1] * div_size + cols / 2), int(center_coords[0] * div_size + fils / 2))
+    pt1 = (int(center_coords[1] * div_size - real_seal_width / 2),
+           int(center_coords[0] * div_size - real_seal_height / 2))
+    pt2 = (int(center_coords[1] * div_size + real_seal_width / 2),
+           int(center_coords[0] * div_size + real_seal_height / 2))
 
     corner_coords = [pt1, pt2]
 
@@ -43,4 +45,4 @@ def detectar_sello(img):
     else:
         seal_name = seal_string[real_seal]
 
-    return elim_sellos[real_seal].doc_img, corner_coords, seal_name
+    return elim_sellos[real_seal].doc_img, corner_coords, seal_name, max_occurrences
