@@ -1,13 +1,13 @@
 import cv2
 import EliminacionSellos as ElimSe
 
-# img = cv2.imread('C:/Users/usuario/Desktop/document/1883-L119.M29/11/IMG_0001.png', 0)
-img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/'
-                 '1/1882-L123.M17.I-1/IMG_0002.png', 0)  # trainImage
+img = cv2.imread('C:/Users/usuario/Desktop/document/1883-L119.M29/11/IMG_0001.png', 0)
+# img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/'
+#                  '1/1882-L123.M17.I-1/IMG_0002.png', 0)  # trainImage
 
 elim_sellos = []
 
-for i in range(0, 8):
+for i in range(0, 8):  # 8 is the number of seals found and store at car_sellos.npz
     elim_sellos.append(ElimSe.EliminacionSellos(img, i))
 
 elim_sellos[0].get_keypoints_from_db('car_sellos.npz')

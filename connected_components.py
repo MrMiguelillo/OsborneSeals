@@ -92,3 +92,4 @@ cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
 cv2.imshow('Imagen', bin_img)
 cv2.waitKey()
 
+# TODO: convert this into a class
