@@ -15,7 +15,7 @@ class EliminacionSellos:
     seals_dims = []
 
     def __init__(self, img, index):
-        EliminacionSellos.doc_img = img.copy()
+        EliminacionSellos.doc_img = img.copy()  # TODO: Optimize by copying only with the first object
         self.kp_matched = []
         self.evidence_matrix = em.EvidenceMatrix(img.shape)
         self.position = (0, 0)  # position is (rows, cols), therefore, (y, x)

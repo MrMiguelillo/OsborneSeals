@@ -1,9 +1,12 @@
 import cv2
 import os
 from FuncionSellosCompleta import detectar_sello
+from Database import Database
 
 path = 'C:/Users/usuario/Desktop/document'
 walk = os.walk(path)
+db = Database('docs_osborne', 'testuser', 'test123')
+
 
 for root, dirs, files in walk:
     print(root)
@@ -22,8 +25,10 @@ for root, dirs, files in walk:
                 max_coords = coords
 
     if there_is_any_image:
-        txt_file = open(root + '/result.txt', 'w')
-        txt_file.write(curr_name + '\n')
-        txt_file.write(str(max_coords) + '\n')
-        txt_file.write(str(max_points) + '\n')
-        txt_file.close()
+        # txt_file = open(root + '/result.txt', 'w')
+        # txt_file.write(curr_name + '\n')
+        # txt_file.write(str(max_coords) + '\n')
+        # txt_file.write(str(max_points) + '\n')
+        # txt_file.close()
+
+        db.insert_results(root, max_coords, curr_name, max_points)
