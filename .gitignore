@@ -3,7 +3,8 @@ src/__pycache__/
 __pychache__/
 objects/
 refs/
-__pycache__/*
 imgs/
 base_sellos/
 *.png
+__pycache__/
+tran/
