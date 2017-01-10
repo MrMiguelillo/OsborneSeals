@@ -10,7 +10,7 @@ class Database:
     def insert_results(self, path, coords, found_seal_name, found_occurrences):
         sql = """insert into %s(ruta, sello, coordenadas_x1, coordenadas_y1, coordenadas_x2, coordenadas_y2)
             values ('%s', '%s', '%s', '%s', '%s', '%s')""" % (self.table_names, path, found_seal_name,
-                                                              coords[0], coords[1], coords[2], coords[3])
+                                                              coords[0][0], coords[0][1], coords[1][0], coords[1][1])
 
         try:
             self.cursor.execute(sql)

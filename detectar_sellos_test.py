@@ -5,11 +5,10 @@ from Database import Database
 
 path = 'C:/Users/usuario/Desktop/document'
 walk = os.walk(path)
-db = Database('docs_osborne', 'testuser', 'test123')
+db = Database('docs_osborne', 'testuser', 'test123', 'results')
 
 
 for root, dirs, files in walk:
-    print(root)
     max_points = 0
     curr_name = ''
     max_coords = (0, 0)
@@ -31,4 +30,5 @@ for root, dirs, files in walk:
         # txt_file.write(str(max_points) + '\n')
         # txt_file.close()
 
-        db.insert_results(root, max_coords, curr_name, max_points)
+        path_to_save = root.replace("\\", "/")
+        db.insert_results(path_to_save, max_coords, curr_name, max_points)
