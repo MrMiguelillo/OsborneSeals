@@ -1,7 +1,8 @@
 import numpy as np
 import EliminacionSellos as ElimSe
 
-seal_string = ['O Doble C', 'TO', 'Moneda O Doble C', 'MSA', 'Grifos', 'Dedal MSE', 'TO Sucio Largo', 'AG']
+seal_string = ['sello1', 'sello2', 'sello3', 'sello4', 'sello5', 'sello6',
+               'sello7', 'sello8', 'sello9', 'sello10', 'sello11', 'sello12']
 
 
 def detectar_sello(img):
@@ -26,6 +27,8 @@ def detectar_sello(img):
         if elim_sellos[i].max_occurrences > max_occurrences:
             max_occurrences = elim_sellos[i].max_occurrences
             real_seal = i
+
+        # TODO: Cambiar el que tenga mayor ocurrencias por el que tenga el mayor ratio con respecto al total de keypts.
 
     elim_sellos[real_seal].remove_seal()
 
