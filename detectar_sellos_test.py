@@ -24,11 +24,5 @@ for root, dirs, files in walk:
                 max_coords = coords
 
     if there_is_any_image:
-        # txt_file = open(root + '/result.txt', 'w')
-        # txt_file.write(curr_name + '\n')
-        # txt_file.write(str(max_coords) + '\n')
-        # txt_file.write(str(max_points) + '\n')
-        # txt_file.close()
-
         path_to_save = root.replace("\\", "/")
         db.insert_results(path_to_save, max_coords, curr_name, max_points)

@@ -93,3 +93,4 @@ cv2.imshow('Imagen', bin_img)
 cv2.waitKey()
 
 # TODO: convert this into a class
+# TODO: SellosHeuristica, sellos_extraccion_heuristica and this repeats a lot of code -> CLEAN
