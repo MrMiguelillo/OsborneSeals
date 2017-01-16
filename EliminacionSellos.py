@@ -63,7 +63,7 @@ class EliminacionSellos:
     def compute_evidence_matrix(self):
         self.evidence_matrix.calc_occurrences(self.kp_matched)
 
-    def compute_position_and_max_occurrences(self):
+    def compute_position_and_max_ratio(self):
         num_cells = int(self.evidence_matrix.SEAL_DIMENSION / self.evidence_matrix.DIVISION_SIZE)
         kernel = np.ones((num_cells, num_cells))
 

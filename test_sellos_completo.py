@@ -18,7 +18,7 @@ max_occurrences = 0
 for i in range(0, 8):
     elim_sellos[i].get_matched_keypoints()
     elim_sellos[i].compute_evidence_matrix()
-    elim_sellos[i].compute_position_and_max_occurrences()
+    elim_sellos[i].compute_position_and_max_ratio()
     if elim_sellos[i].max_occurrences > max_occurrences:
         max_occurrences = elim_sellos[i].max_occurrences
         real_seal = i

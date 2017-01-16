@@ -19,16 +19,16 @@ def detectar_sello(img):
     elim_sellos[0].get_document_features()
 
     real_seal = -1
-    max_occurrences = 0
+    max_ratio = 0
     for i in range(0, num_elements):
         elim_sellos[i].get_matched_keypoints()
         elim_sellos[i].compute_evidence_matrix()
-        elim_sellos[i].compute_position_and_max_occurrences()
-        if elim_sellos[i].max_occurrences > max_occurrences:
-            max_occurrences = elim_sellos[i].max_occurrences
+        elim_sellos[i].compute_position_and_max_ratio()
+        if elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]) > max_ratio:
+            max_ratio = elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i])
             real_seal = i
 
-        # TODO: Cambiar el que tenga mayor ocurrencias por el que tenga el mayor ratio con respecto al total de keypts.
+        # TODO: Medir cómo cambiar a ratio en lugar de max_ocurrences afecta a los resultados.
 
     elim_sellos[real_seal].remove_seal()
 
@@ -48,4 +48,4 @@ def detectar_sello(img):
     else:
         seal_name = seal_string[real_seal]
 
-    return elim_sellos[real_seal].doc_img, corner_coords, seal_name, max_occurrences
+    return elim_sellos[real_seal].doc_img, corner_coords, seal_name, max_ratio
