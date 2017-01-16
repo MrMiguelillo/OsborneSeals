@@ -21,7 +21,6 @@ class EliminacionSellos:
         self.position = (0, 0)  # position is (rows, cols), therefore, (y, x)
         self.max_occurrences = 0
         self.index = index
-        self.corner_coords = (0, 0, 0, 0)
         # self.seal_dims = (0, 0)
         # self.detected_seal = 0
         # self.vect = []
