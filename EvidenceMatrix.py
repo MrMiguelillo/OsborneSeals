@@ -10,7 +10,6 @@ class EvidenceMatrix:
         self.evidence_matrix = np.array([])
         self.evidence_matrix.resize((fils / EvidenceMatrix.DIVISION_SIZE, cols / EvidenceMatrix.DIVISION_SIZE))
         self.evidence_matrix.fill(0)
-        self.vect = []
 
     def calc_occurrences(self, keypoints):
         for kp in keypoints:
