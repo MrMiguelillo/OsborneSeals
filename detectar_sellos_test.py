@@ -9,7 +9,7 @@ db = Database('docs_osborne', 'testuser', 'test123', 'results')
 
 
 for root, dirs, files in walk:
-    max_points = 0
+    max_ratio = 0
     curr_name = ''
     max_coords = (0, 0)
     there_is_any_image = False
@@ -17,12 +17,12 @@ for root, dirs, files in walk:
         if curr_file.endswith('.png'):
             there_is_any_image = True
             img = cv2.imread(root + '/' + curr_file, 0)
-            img2, coords, nombre, points = detectar_sello(img)
-            if points > max_points:
-                max_points = points
+            img2, coords, nombre, ratio = detectar_sello(img)
+            if ratio > max_ratio:
+                max_ratio = ratio
                 curr_name = nombre
                 max_coords = coords
 
     if there_is_any_image:
         path_to_save = root.replace("\\", "/")
-        db.insert_results(path_to_save, max_coords, curr_name, max_points)
+        db.insert_results(path_to_save, max_coords, curr_name, max_ratio)
