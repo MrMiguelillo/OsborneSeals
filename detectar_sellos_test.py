@@ -27,6 +27,7 @@ for root, dirs, files in walk:
             there_is_any_image = True
             img = cv2.imread(root + '/' + curr_file, 0)
             img2, coords, seal_number, ratio = detectar_sello(img, num_elements)
+            # TODO: Take keypts import out of that function in order to perform that step only once
             if ratio > max_ratio:
                 max_ratio = ratio
                 curr_name = seal_string[seal_number]
