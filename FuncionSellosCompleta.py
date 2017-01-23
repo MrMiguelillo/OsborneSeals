@@ -1,16 +1,8 @@
-import numpy as np
 import EliminacionSellos as ElimSe
 
-seal_string = ['sello1', 'sello2', 'sello3', 'sello4', 'sello5', 'sello6',
-               'sello7', 'sello8', 'sello9', 'sello10', 'sello11', 'sello12']
 
-
-def detectar_sello(img):
+def detectar_sello(img, num_elements):
     elim_sellos = []
-
-    file = np.load('car_sellos.npz')
-    num_elements = len(file['arr_1'])
-    file.close()
 
     for i in range(0, num_elements):
         elim_sellos.append(ElimSe.EliminacionSellos(img, i))
@@ -43,9 +35,7 @@ def detectar_sello(img):
 
     corner_coords = [pt1, pt2]
 
-    if len(seal_string) < real_seal:
-        seal_name = 'Sello no catalogado'
-    else:
-        seal_name = seal_string[real_seal]
+    if max_ratio < 0.2:  # TODO BIEN GORDO --> GRAFICAR RESULTADOS Y HALLAR ESTE PARÁMETRO
+        real_seal = -1
 
-    return elim_sellos[real_seal].doc_img, corner_coords, seal_name, max_ratio
+    return elim_sellos[real_seal].doc_img, corner_coords, real_seal, max_ratio

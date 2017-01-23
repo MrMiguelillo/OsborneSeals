@@ -1,12 +1,21 @@
 import cv2
 import os
+import numpy as np
 from FuncionSellosCompleta import detectar_sello
 from Database import Database
 
 path = 'C:/Users/usuario/Desktop/document'
 walk = os.walk(path)
-db = Database('docs_osborne', 'testuser', 'test123', 'results')
+db = Database('docs_osborne', 'testuser', 'test123', 'results2')
 
+seal_string = ['Corona Horizontal', 'Escudo 4 regiones', 'Jorge Muller', 'Leon Unicornio Postal',
+               'OC Corona Diagonal', 'Oxforshire Infantry', 'sello1', 'sello12',
+               'sello14', 'sello17', 'sello18', 'sello19', 'sello32', 'sello33',
+               'sello34', 'Viceconsulado Imp de Rusia']
+
+file = np.load('car_sellos.npz')
+num_elements = len(file['arr_1'])
+file.close()
 
 for root, dirs, files in walk:
     max_ratio = 0
@@ -17,10 +26,10 @@ for root, dirs, files in walk:
         if curr_file.endswith('.png'):
             there_is_any_image = True
             img = cv2.imread(root + '/' + curr_file, 0)
-            img2, coords, nombre, ratio = detectar_sello(img)
+            img2, coords, seal_number, ratio = detectar_sello(img, num_elements)
             if ratio > max_ratio:
                 max_ratio = ratio
-                curr_name = nombre
+                curr_name = seal_string[seal_number]
                 max_coords = coords
 
     if there_is_any_image:
