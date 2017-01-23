@@ -46,7 +46,7 @@ class FeaturesIO:
         all_s = []
         for root, dirs, files in walk:
             for curr_file in files:
-                if not curr_file.endswith(".png"):
+                if not curr_file.endswith(".png") or curr_file == "no_seal.png":
                     continue
 
                 # print(curr_file)
