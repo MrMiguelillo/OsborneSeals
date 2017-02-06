@@ -9,9 +9,9 @@ walk = os.walk(path)
 db = Database('docs_osborne', 'testuser', 'test123', 'results2')
 
 seal_string = ['Corona Horizontal', 'Escudo 4 regiones', 'Jorge Muller', 'Leon Unicornio Postal',
-               'OC Corona Diagonal', 'Oxforshire Infantry', 'sello1', 'sello12',
-               'sello14', 'sello17', 'sello18', 'sello19', 'sello32', 'sello33',
-               'sello34', 'Viceconsulado Imp de Rusia']
+               'OC Corona Diagonal', 'Oxforshire Infantry', 'O Doble C', 'O con T',
+               'Moneda O doble C', 'MSA', 'Grifos', 'Dedal MSE', 'TO Marrón', 'O T casi I',
+               'AOC', 'Viceconsulado Imp de Rusia']
 
 file = np.load('car_sellos.npz')
 num_elements = len(file['arr_1'])
