@@ -6,7 +6,7 @@ from Database import Database
 
 path = 'C:/Users/usuario/Desktop/document'
 walk = os.walk(path)
-db = Database('docs_osborne', 'testuser', 'test123', 'results2')
+db = Database('docs_osborne', 'testuser', 'test123', 'results3')
 
 seal_string = ['Corona Horizontal', 'Escudo 4 regiones', 'Jorge Muller', 'Leon Unicornio Postal',
                'OC Corona Diagonal', 'Oxforshire Infantry', 'sello1', 'sello12',
