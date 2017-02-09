@@ -16,7 +16,8 @@ def detectar_sello(img, num_elements):
         elim_sellos[i].get_matched_keypoints()
         elim_sellos[i].compute_evidence_matrix()
         elim_sellos[i].compute_position_and_max_ratio()
-        if elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]) > max_ratio:
+        if (elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]) > max_ratio and
+                elim_sellos[i].position[0] < img.shape[0] / 2):
             max_ratio = elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i])
             real_seal = i
 
@@ -35,7 +36,7 @@ def detectar_sello(img, num_elements):
 
     corner_coords = [pt1, pt2]
 
-    if max_ratio < 0.2:  # TODO BIEN GORDO --> GRAFICAR RESULTADOS Y HALLAR ESTE PARÁMETRO
-        real_seal = -1
+    # if max_ratio < 0.2:  # TODO BIEN GORDO --> GRAFICAR RESULTADOS Y HALLAR ESTE PARÁMETRO
+    #     real_seal = -1
 
     return elim_sellos[real_seal].doc_img, corner_coords, real_seal, max_ratio
