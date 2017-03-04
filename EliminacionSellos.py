@@ -79,13 +79,13 @@ class EliminacionSellos:
         a=1
 
     def remove_seal(self):
-        div_size = self.evidence_matrix.DIVISION_SIZE
-        fils, cols = EliminacionSellos.seals_dims[self.index]
+        # div_size = self.evidence_matrix.DIVISION_SIZE
+        # fils, cols = EliminacionSellos.seals_dims[self.index]
         # pt1 = (int(self.position[1] - cols / 2), int(self.position[0] - fils / 2))
         # pt2 = (int(self.position[1] + cols / 2), int(self.position[0] + fils / 2))
         # print(self.position)
         # print(pt1)
         # print(pt2)
         # cv2.rectangle(EliminacionSellos.doc_img, pt1, pt2, (255, 255, 255), -1)
-        print(self.position)
+        # print(self.position)
         cv2.circle(EliminacionSellos.doc_img, (self.position[1], self.position[0]), 200, (255, 0, 255), -1)
