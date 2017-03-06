@@ -22,7 +22,7 @@ max_occurrences = 0
 for i in range(0, NUM_SEALS_SAVED):
     elim_sellos[i].get_matched_keypoints()
     elim_sellos[i].compute_evidence_matrix()
-    elim_sellos[i].compute_position_and_max_ratio()
+    elim_sellos[i].compute_position_and_max_occurences()
     print(i)
     print(elim_sellos[i].max_occurrences)
     print(elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]))

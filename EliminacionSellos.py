@@ -70,6 +70,7 @@ class EliminacionSellos:
 
         occurrences = cv2.filter2D(self.evidence_matrix.evidence_matrix, -1, kernel)
         self.max_occurrences = np.amax(occurrences)
+        self.total_matches = np.sum(occurrences)
         max_index = np.where(occurrences == self.max_occurrences)
         avg_index = (np.average(max_index[0]), np.average(max_index[1]))
 
@@ -77,7 +78,6 @@ class EliminacionSellos:
 
         self.position = (final_coords[0] * self.evidence_matrix.DIVISION_SIZE,
                          final_coords[1] * self.evidence_matrix.DIVISION_SIZE)
-        a=1
 
     def remove_seal(self):
         # div_size = self.evidence_matrix.DIVISION_SIZE
