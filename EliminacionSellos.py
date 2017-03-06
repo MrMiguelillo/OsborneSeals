@@ -21,6 +21,7 @@ class EliminacionSellos:
         self.position = (0, 0)  # position is (rows, cols), therefore, (y, x)
         self.max_occurrences = 0
         self.index = index
+        self.total_matches = 0
         # self.seal_dims = (0, 0)
         # self.detected_seal = 0
         # self.vect = []
@@ -30,7 +31,7 @@ class EliminacionSellos:
             = FeaturesIO.load_features(path)
 
     def get_document_features(self):
-        surf = xf.SURF_create()
+        surf = xf.SURF_create(hessianThreshold=400, upright=True, extended=True)
         # orb = cv2.ORB_create()
         EliminacionSellos.doc_kps, EliminacionSellos.doc_des = surf.detectAndCompute(EliminacionSellos.doc_img, None)
 
@@ -63,7 +64,7 @@ class EliminacionSellos:
     def compute_evidence_matrix(self):
         self.evidence_matrix.calc_occurrences(self.kp_matched)
 
-    def compute_position_and_max_ratio(self):
+    def compute_position_and_max_occurences(self):
         num_cells = int(self.evidence_matrix.SEAL_DIMENSION / self.evidence_matrix.DIVISION_SIZE)
         kernel = np.ones((num_cells, num_cells))
 
