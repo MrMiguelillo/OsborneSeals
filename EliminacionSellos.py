@@ -1,9 +1,9 @@
 import cv2
-import cv2.xfeatures2d as xf
 import numpy as np
 from FeaturesIO import FeaturesIO
 
 import EvidenceMatrix as em
+import FeaturesDetector
 
 
 class EliminacionSellos:
@@ -13,6 +13,7 @@ class EliminacionSellos:
     kps_saved = []
     desc_saved = []
     seals_dims = []
+    surf = FeaturesDetector.create_detector()
 
     def __init__(self, img, index):
         EliminacionSellos.doc_img = img.copy()  # TODO: Optimize by copying only with the first object
@@ -31,9 +32,8 @@ class EliminacionSellos:
             = FeaturesIO.load_features(path)
 
     def get_document_features(self):
-        surf = xf.SURF_create(hessianThreshold=400, upright=True, extended=True)
-        # orb = cv2.ORB_create()
-        EliminacionSellos.doc_kps, EliminacionSellos.doc_des = surf.detectAndCompute(EliminacionSellos.doc_img, None)
+        EliminacionSellos.doc_kps, EliminacionSellos.doc_des =\
+            EliminacionSellos.surf.detectAndCompute(EliminacionSellos.doc_img, None)
 
     def get_matched_keypoints(self):
         # FLANN parameters
