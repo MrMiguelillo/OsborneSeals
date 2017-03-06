@@ -49,7 +49,7 @@ class EliminacionSellos:
         # matches = bf.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
         matches = flann.knnMatch(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des, k=2)
         for j, (m, n) in enumerate(matches):
-            if m.distance < 0.9 * n.distance:
+            if m.distance < 0.7 * n.distance:
                 aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
 
         self.kp_matched = aux_kp
