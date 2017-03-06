@@ -9,13 +9,13 @@ class FeaturesIO:
         np.savez(filename, np.hstack((locs, desc)), shape)
 
     @staticmethod
-    def pack_keypoint(keypoints, descriptors, shape):
+    def pack_keypoint(keypoints, descriptors):
         kpts = np.array([[kp.pt[0], kp.pt[1], kp.size, kp.angle,
                           kp.response, kp.octave,
                           kp.class_id]
                          for kp in keypoints])
         desc = np.array(descriptors)
-        return kpts, desc, shape
+        return kpts, desc
 
     @staticmethod
     def unpack_keypoint(file):
@@ -57,10 +57,10 @@ class FeaturesIO:
                     k, des = detector.compute(img, k)
                 else:
                     des = []
-                k, des, shape = FeaturesIO.pack_keypoint(k, des, img.shape)  #
+                k, des = FeaturesIO.pack_keypoint(k, des)  #
                 all_k.append(k.tolist())
                 all_d.append(des.tolist())
-                all_s.append(shape)
+                all_s.append(img.shape)
 
         FeaturesIO.write_features_to_file(resultname, all_k, all_d, all_s)
 
