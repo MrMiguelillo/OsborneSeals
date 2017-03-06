@@ -5,7 +5,7 @@ import path_to_imgs
 path = path_to_imgs.path_to_imgs
 NUM_SEALS_SAVED = 16  # the number of seals found and stored at car_sellos.npz
 
-img = cv2.imread(path + '1849-L119.M6/92/IMG_0001.png', 0)
+img = cv2.imread(path + '/2016_09_09/181/IMG_0002.png', 0)
 # img = cv2.imread('C:/Users/usuario/Desktop/documentos/1882-L123.M17/'
 #                  '1/1882-L123.M17.I-1/IMG_0002.png', 0)  # trainImage
 

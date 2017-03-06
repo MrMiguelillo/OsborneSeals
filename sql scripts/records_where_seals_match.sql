@@ -1,5 +1,5 @@
-select docs_osborne.documentos.sello, docs_osborne.results.sello, docs_osborne.results.ratio
-from docs_osborne.documentos
-inner join docs_osborne.results
-on docs_osborne.documentos.ruta = docs_osborne.results.ruta
-where docs_osborne.documentos.sello=docs_osborne.results.sello;
+select docs_osborne.ground_truth.sello, docs_osborne.results4.sello, docs_osborne.results4.ratio
+from docs_osborne.ground_truth
+inner join docs_osborne.results4
+on substring(docs_osborne.ground_truth.ruta, 34, 999) = substring(docs_osborne.results4.ruta, 21, 999)
+where docs_osborne.ground_truth.sello=docs_osborne.results4.sello;

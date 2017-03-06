@@ -37,7 +37,3 @@ for root, dirs, files in walk:
     if there_is_any_image:
         path_to_save = root.replace("\\", "/")
         db.insert_results(path_to_save, max_coords, curr_name, max_ratio)
-
-# NOTTODO: Pq leches hay coordenadas y negativas en resultados? --> Its ok when there is no seal, since substracting
-# the dimensions of the detected seal from the calculated center could result in negative coordinates.
-# TODO: line 15, database.py, line 39, here. coords from seal 73 is an integer, therefore not subscriptable.

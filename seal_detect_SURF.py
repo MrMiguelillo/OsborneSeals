@@ -1,12 +1,15 @@
 import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
+import path_to_imgs
 
-img1 = cv2.imread('C:/Users/usuario/Desktop/new_base/sello33.png', 0)    # trainImage
+path = path_to_imgs.path_to_imgs
+
+img1 = cv2.imread('D:/Osborne_base/sello12.png', 0)    # trainImage
 # img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
 #                   '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', 0)  # queryImage
 
-img2 = cv2.imread('C:/Users/usuario/Desktop/Document/2016_09_09/181/IMG_0001.png', 0)
+img2 = cv2.imread(path + '/1883-L119.M29/43/IMG_0001.png', 0)
 
 # Initiate SURF detector
 surf = xf.SURF_create()
