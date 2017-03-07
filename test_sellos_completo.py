@@ -1,8 +1,8 @@
 import cv2
 import EliminacionSellos as ElimSe
-import path_to_imgs
+import paths
 
-path = path_to_imgs.path_to_imgs
+path = paths.path_to_imgs
 NUM_SEALS_SAVED = 16  # the number of seals found and stored at car_sellos.npz
 
 img = cv2.imread(path + '/2016_09_09/181/IMG_0002.png', 0)

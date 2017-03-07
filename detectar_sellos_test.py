@@ -3,11 +3,11 @@ import os
 import numpy as np
 from FuncionSellosCompleta import detectar_sello
 from Database import Database
-import path_to_imgs
+import paths
 
-path = path_to_imgs.path_to_imgs
+path = paths.path_to_imgs
 walk = os.walk(path)
-db = Database('docs_osborne', 'testuser', 'test123', 'results4')
+db = Database('docs_osborne', 'testuser', 'test123', 'results5')
 
 seal_string = ['Corona Horizontal', 'Escudo 4 regiones', 'Jorge Muller', 'Leon Unicornio Postal',
                'OC Corona Diagonal', 'Oxforshire Infantry', 'O Doble C', 'O con T',

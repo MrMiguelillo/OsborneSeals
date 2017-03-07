@@ -1,9 +1,9 @@
 import numpy as np
 import cv2.xfeatures2d as xf
 import cv2
-import path_to_imgs
+import paths
 
-path = path_to_imgs.path_to_imgs
+path = paths.path_to_imgs
 
 img1 = cv2.imread('D:/Osborne_base/sello12.png', 0)    # trainImage
 # img2 = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'

@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
 from skimage import measure
-import path_to_imgs
+import paths
 
 from SellosHeuristica import Sellos
 
-path = path_to_imgs.path_to_imgs
+path = paths.path_to_imgs
 img = cv2.imread('C:/Users/usuario/Desktop/documentos/1877-L119.M23_Tomas_Osborne_Bohl/'
                  '1/1877-L119.M23_Tomas_Osborne_Bohl.I_1/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
 

@@ -44,12 +44,12 @@ def detectar_sello(img, num_elements):
     return elim_sellos[real_seal].doc_img, corner_coords, real_seal, max_ratio
 
 if __name__ == '__main__':
-    import path_to_imgs
+    import paths
     import numpy as np
     import os
     import cv2
 
-    path = path = path_to_imgs.path_to_imgs
+    path = path = paths.path_to_imgs
     walk = os.walk(path + '1890-L10.M1/123/')
 
     file = np.load('car_sellos.npz')
