@@ -8,3 +8,4 @@ base_sellos/
 *.png
 __pycache__/
 tran/
+paths.py
