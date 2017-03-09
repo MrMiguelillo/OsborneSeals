@@ -18,10 +18,11 @@ def detectar_sello(img, num_elements):
         elim_sellos[i].compute_position_and_max_occurences()
         # if (elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]) > max_ratio and
         #         elim_sellos[i].position[0] < img.shape[0] / 2):
-        if (elim_sellos[i].max_occurrences / elim_sellos[i].total_matches > max_ratio and
-                elim_sellos[i].position[0] < img.shape[0] / 2):
-            max_ratio = elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i])
-            real_seal = i
+        if elim_sellos[i].total_matches > 0:
+            if (elim_sellos[i].max_occurrences / elim_sellos[i].total_matches > max_ratio and
+                    elim_sellos[i].position[0] < img.shape[0] / 2):
+                max_ratio = elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i])
+                real_seal = i
 
         # TODO: Medir cómo cambiar a ratio en lugar de max_ocurrences afecta a los resultados.
 

@@ -1,5 +1,6 @@
 import cv2
 import EliminacionSellos as ElimSe
+from FuncionSellosCompleta import detectar_sello
 import paths
 
 path = paths.path_to_imgs
@@ -19,16 +20,18 @@ elim_sellos[0].get_document_features()
 
 real_seal = -1
 max_occurrences = 0
-for i in range(0, NUM_SEALS_SAVED):
-    elim_sellos[i].get_matched_keypoints()
-    elim_sellos[i].compute_evidence_matrix()
-    elim_sellos[i].compute_position_and_max_occurences()
-    print(i)
-    print(elim_sellos[i].max_occurrences)
-    print(elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]))
-    if elim_sellos[i].max_occurrences > max_occurrences:
-        max_occurrences = elim_sellos[i].max_occurrences
-        real_seal = i
+# for i in range(0, NUM_SEALS_SAVED):
+#     elim_sellos[i].get_matched_keypoints()
+#     elim_sellos[i].compute_evidence_matrix()
+#     elim_sellos[i].compute_position_and_max_occurences()
+#     print(i)
+#     print(elim_sellos[i].max_occurrences)
+#     print(elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]))
+#     if elim_sellos[i].max_occurrences > max_occurrences:
+#         max_occurrences = elim_sellos[i].max_occurrences
+#         real_seal = i
+
+img2, coords, seal_number, ratio = detectar_sello(img, NUM_SEALS_SAVED)
 
 print(real_seal)
 elim_sellos[real_seal].remove_seal()
