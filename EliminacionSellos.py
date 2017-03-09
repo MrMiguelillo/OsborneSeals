@@ -53,6 +53,7 @@ class EliminacionSellos:
                 aux_kp.append(EliminacionSellos.doc_kps[m.trainIdx])
 
         self.kp_matched = aux_kp
+        self.total_matches = len(self.kp_matched)
         # aux_kp = []
         # bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
         # matches = bf.match(EliminacionSellos.desc_saved[self.index], EliminacionSellos.doc_des)
@@ -70,7 +71,6 @@ class EliminacionSellos:
 
         occurrences = cv2.filter2D(self.evidence_matrix.evidence_matrix, -1, kernel)
         self.max_occurrences = np.amax(occurrences)
-        self.total_matches = np.sum(occurrences)
         max_index = np.where(occurrences == self.max_occurrences)
         avg_index = (np.average(max_index[0]), np.average(max_index[1]))
 
