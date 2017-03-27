@@ -6,12 +6,19 @@ import types
 class Sellos:
     @staticmethod
     def test_simetria(bin_img_region):
+        """
+        Medidor de ratio de simetría. Si la imagen tiene un pixel de alto o ancho (es un entero en lugar de un array) o
+         menos (es tipo None porque no se ha cargado), devuelve 'inf' para evitar errores en tiempo de ejecución.
+        :param bin_img_region: imagen binarizada de la región a testear
+        :return: ratio de simetría
+        """
         # if len(bin_img_region) < 1:
         #     return float('inf')
 
         fil, col = bin_img_region.shape
-        if col <= 1 or fil <=1:
+        if col <= 1 or fil <= 1:
             return float('inf')
+        # TODO: Tranformar en raise + un error.
 
         if col % 2 != 0:
             img_right = bin_img_region[0:fil, int(col / 2) + 1:col]
@@ -31,6 +38,13 @@ class Sellos:
 
     @staticmethod
     def colision(bbox1, bbox2, min_separacion):
+        """
+        Simple detector de colisiones entre bboxes con una cierta distancia umbral
+        :param bbox1: -
+        :param bbox2: -
+        :param min_separacion: distancia umbral dentro de la cual se considera colisión igualmente
+        :return: True -> Colisionan; False -> No colisionan
+        """
         a_minr, a_minc, a_maxr, a_maxc = bbox1
         b_minr, b_minc, b_maxr, b_maxc = bbox2
 
@@ -66,6 +80,15 @@ class Sellos:
 
     @staticmethod
     def eliminar_borde(regions, label_image):
+        """
+        Toma la imagen de etiquetas original y si encuentra alguna región con un área mayor del 40% de la imagen
+        original, la elimina. Se usa 40% ya que algunas imágenes contienen dos páginas y dicho borde será un 50% aprox.
+        De esta forma se garantiza que el borde cumplirá esta condición y se minimiza la posibilidad de eliminar un
+        sello por error (es improbable que un sello ocupe más de el 40% de una imagen).
+        :param regions: Lista de regiones encontradas
+        :param label_image: Imagen de etiquetas
+        :return: Imagen de etiquetas con el supuesto borde etiquetado como fondo (0).
+        """
         for region in regions:
             minr, minc, maxr, maxc = region.bbox
             bbox_height = maxr - minr
@@ -79,6 +102,12 @@ class Sellos:
 
     @staticmethod
     def detectar_bbox(img_region, coords):
+        """
+        Readapta los bboxes de las regiones que hayan crecido o encogido tras el cambio de threshold
+        :param img_region: recorte de la imagen de la región tras crecer o encoger
+        :param coords: coordenadas de el bbox original
+        :return: (nuevo recorte de la imagen, coordenadas de su nuevo bbox)
+        """
         fil, col = img_region.shape
         min_col = 0
         limit_detect = False
