@@ -5,11 +5,12 @@ import numpy as np
 from skimage import measure
 
 from SellosHeuristica import Sellos
+import paths
 
 NUM_DOCUMENTOS = 27
 found_seal = np.empty(NUM_DOCUMENTOS)
 
-path = "C:/Users/usuario/Desktop/document"
+path = paths.path_to_imgs
 walk = os.walk(path)
 i = 0
 for root, dirs, files in walk:
@@ -64,7 +65,7 @@ for root, dirs, files in walk:
             if ratio > 0.25:
                 # si la simetría falla, probar con un binarizado que borre MENOS tinta
                 orig_region = img[max(0, minr-10):min(fils, maxr+10), max(0, minc-10):min(cols, maxc+10)]
-                bin_region_fatter = (orig_region < ret*1.1).astype('uint8')*255
+                bin_region_fatter = np.array(orig_region < ret*1.1).astype('uint8')*255
                 bin_region_fatter = cv2.dilate(bin_region_fatter, kernel)
                 coords = np.array([minr, maxr, minc, maxc])
                 cropped_img, new_coords = Sellos.detectar_bbox(bin_region_fatter, coords)
@@ -72,7 +73,7 @@ for root, dirs, files in walk:
                 ratio = Sellos.test_simetria(cropped_img)
                 if ratio > 0.25:
                     # si falla de nuevo, probar con un binarizado que borre MÁS tinta
-                    bin_region_slimmer = (orig_region < ret * 0.9).astype('uint8') * 255
+                    bin_region_slimmer = np.array(orig_region < ret * 0.9).astype('uint8') * 255
                     bin_region_slimmer = cv2.dilate(bin_region_slimmer, kernel)
                     cropped_img, new_coords = Sellos.detectar_bbox(bin_region_slimmer, coords)
 
@@ -90,10 +91,10 @@ for root, dirs, files in walk:
                     minc = new_coords[2]
                     maxc = new_coords[3]
 
-            print(root + curr_file)
+            print(root + '/' + curr_file)
             # cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
             # cv2.imshow('Imagen', doc_img[minr:maxr, minc:maxc])
             # cv2.waitKey()
             # cv2.destroyWindow('Imagen')
-            cv2.imwrite('C:/Users/usuario/Desktop/new_registro/sello%d.png' % i, img[minr:maxr, minc:maxc])
+            cv2.imwrite('%s/sello%d.png' % (paths.path_to_heur, i), img[minr:maxr, minc:maxc])
             i += 1
