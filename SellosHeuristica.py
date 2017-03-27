@@ -124,7 +124,7 @@ class Sellos:
             if limit_detect:
                 break
 
-        new_coords = np.array([coords[0]+min_fil, coords[1]-(fil-max_fil), coords[2]+min_col, coords[3]-(col-max_col)])
+        new_coords = np.array([coords[0] + min_fil, coords[0] + max_fil, coords[2] + min_col, coords[2] + max_col])
 
         return img_region[min_fil:max_fil, min_col:max_col], new_coords
 
