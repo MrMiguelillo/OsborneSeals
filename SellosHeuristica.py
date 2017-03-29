@@ -66,7 +66,7 @@ class Region:
         def eliminar_borde(regions, label_image):
             """
             Toma la imagen de etiquetas original y si encuentra alguna región con un área mayor del 40% de la imagen
-            original, la elimina. Se usa 40% ya que algunas imágenes contienen dos páginas y dicho borde será un 50% aprox.
+            original, la elimina. Se usa 40% ya que algunas imágenes contienen dos págs y dicho borde será un 50% aprox.
             De esta forma se garantiza que el borde cumplirá esta condición y se minimiza la posibilidad de eliminar un
             sello por error (es improbable que un sello ocupe más de el 40% de una imagen).
             :param regions: Lista de regiones encontradas
