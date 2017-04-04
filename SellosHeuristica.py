@@ -14,9 +14,11 @@ class Region:
         "simm_recheck_thresh": 0.1,  # percentage tweak to original binaryzation threshold
     }
 
-    def __init__(self, document, coords):
-        self.minc, self.maxc, self.minr, self.maxr = coords
-        self.test = self.Tests(document)
+    def __init__(self, document, coords, filled_area, reg_id):
+        self.minr, self.minc, self.maxr, self.maxc = coords
+        self.filled_area = filled_area
+        self.id = reg_id
+        self.test = self.Tests(document, self)
 
     class Bbox:
         @staticmethod
@@ -141,17 +143,15 @@ class Region:
 
             return img_region[min_fil:max_fil, min_col:max_col], new_coords
 
-        # def unificar_con(self, ):
-
     class Tests:
         active_tests = {
             "area": True,
-            "aspect_ratio": True,
+            "aspect_ratio": False,
             "filled_area": True,
-            "simmetry": True,
+            "simmetry": False,
         }
 
-        def __init__(self, document):
+        def __init__(self, document, region):
             self.passed_tests = {
                 "area": False,
                 "aspect_ratio": False,
@@ -159,21 +159,29 @@ class Region:
                 "simmetry": False,
             }
             self.document = document
+            self.region = region
 
-        def area(self, width, height):
+        def area(self):
+            width = self.region.maxr - self.region.minr
+            height = self.region.maxc - self.region.minc
             if width * height <= Region.settings.get("max_area"):
                 self.passed_tests.update({"area": False})
             else:
                 self.passed_tests.update({"area": True})
 
-        def aspect_ratio(self, width, height):
+        def aspect_ratio(self):
+            width = self.region.maxr - self.region.minr
+            height = self.region.maxc - self.region.minc
             if (width / height > Region.settings.get("max_aspect_ratio") or
                height / width < 1 / Region.settings.get("max_aspect_ratio")):
                 self.passed_tests.update({"aspect_ratio": False})
             else:
                 self.passed_tests.update({"aspect_ratio": False})
 
-        def filled_area_ratio(self, filled_area, width, height):
+        def filled_area_ratio(self):
+            width = self.region.maxr - self.region.minr
+            height = self.region.maxc - self.region.minc
+            filled_area = self.region.filled_area
             ratio = float(filled_area) / (width * height)
             # 0.9 condition just to avoid black regions false positives
             if (ratio < Region.settings.get("min_filled_area_ratio") or
@@ -211,31 +219,31 @@ class Region:
             ratio = sub_area / ref_area
             return ratio
 
-        def simmetry(self, coords):
-            minr = coords[0]
-            maxr = coords[1]
-            minc = coords[2]
-            maxc = coords[3]
+        def simmetry(self):
+            minr = self.region.minr
+            maxr = self.region.maxr
+            minc = self.region.minc
+            maxc = self.region.maxc
 
             seal_img = self.document.bin_img[minr:maxr, minc:maxc]
             ratio = self.simmetry_ratio(seal_img)
 
             if ratio < Region.settings.get("simmetry_ratio_thresh"):
                 thickness = Region.settings.get("simm_recheck_enlargement_px")
-                enlarged_img = self.document.img[minr - thickness:maxr + thickness,
-                                                 minc - thickness:maxc + thickness]
+                enlarged_img = self.document.img[abs(minr - thickness):maxr + thickness,
+                                                 abs(minc - thickness):maxc + thickness]
                 enlarged_img_coords = [minr - thickness, maxr + thickness, minc - thickness, maxc + thickness]
 
-                dark_thresh = self.document.orig_thresh * (1 + Region.settings.get("simm_recheck_thresh"))
+                dark_thresh = self.document.bin_thresh * (1 + Region.settings.get("simm_recheck_thresh"))
                 darker_seal_img = (enlarged_img < dark_thresh).astype('uint8') * 255
-                darker_seal_img = self.document.morphology(darker_seal_img)
+                darker_seal_img = self.document.apply_morphology(darker_seal_img)
                 cropped_img, new_coords = Region.Bbox.detectar_bbox(darker_seal_img, enlarged_img_coords)
                 ratio = self.simmetry_ratio(cropped_img)
 
                 if ratio < Region.settings.get("simmetry_ratio_thresh"):
-                    light_thresh = self.document.orig_thresh * (1 - Region.settings.get("simm_recheck_thresh"))
+                    light_thresh = self.document.bin_thresh * (1 - Region.settings.get("simm_recheck_thresh"))
                     lighter_seal_img = (enlarged_img < light_thresh).astype('uint8') * 255
-                    lighter_seal_img = self.document.morphology(lighter_seal_img)
+                    lighter_seal_img = self.document.apply_morphology(lighter_seal_img)
                     cropped_img, new_coords = Region.Bbox.detectar_bbox(lighter_seal_img, enlarged_img_coords)
                     ratio = self.simmetry_ratio(cropped_img)
 
@@ -243,17 +251,16 @@ class Region:
                         self.passed_tests.update({"filled_area": False})
                     else:
                         self.passed_tests.update({"filled_area": True})
-                        minr = new_coords[0]
-                        maxr = new_coords[1]
-                        minc = new_coords[2]
-                        maxc = new_coords[3]
+                        self.region.minr = new_coords[0]
+                        self.region.maxr = new_coords[1]
+                        self.region.minc = new_coords[2]
+                        self.region.maxc = new_coords[3]
                 else:
                     self.passed_tests.update({"filled_area": True})
-                    minr = new_coords[0]
-                    maxr = new_coords[1]
-                    minc = new_coords[2]
-                    maxc = new_coords[3]
-            cv2.rectangle(self.document.bin_img, (minc, minr), (maxc, maxr), 180, 3)
+                    self.region.minr = new_coords[0]
+                    self.region.maxr = new_coords[1]
+                    self.region.minc = new_coords[2]
+                    self.region.maxc = new_coords[3]
 
 
 class Documento:
@@ -272,18 +279,29 @@ class Documento:
         self.path = path
         self.img = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
 
-    def binarization(self):
+    def get_bin_img(self):
         self.bin_thresh, self.bin_img = cv2.threshold(self.img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-    def morphology(self, img=None):
+    def apply_morphology(self, img=None):
         if img is None:
-            self.bin_img = cv2.dilate(self.bin_img, self.kernel)
-            return None
+            pass
         else:
-            return cv2.dilate(img, self.kernel)
-
-    def get_label_img(self):
-        self.label_img = measure.label(self.bin_img)
+            return img
+        # if img is None:
+        #     self.bin_img = cv2.dilate(self.bin_img, self.kernel)
+        #     return None
+        # else:
+        #     return cv2.dilate(img, self.kernel)
 
     def get_regions(self):
-        self.regions = measure.regionprops(self.label_img)
+        aux_label_img = measure.label(self.bin_img)
+        regs = measure.regionprops(aux_label_img)
+        aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
+        regs = measure.regionprops(aux_label_img)
+
+        self.label_img = Region.Bbox.reetiquetado(regs, aux_label_img)
+        regs = measure.regionprops(self.label_img)
+        i = 0
+        for reg in regs:
+            self.regions.append(Region(self, reg.bbox, reg.area, i))
+            i += 1
