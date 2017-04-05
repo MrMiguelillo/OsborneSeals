@@ -3,6 +3,17 @@ import numpy as np
 from skimage import measure
 
 
+class LineSeparator:
+    @staticmethod
+    def vertical_histogram(bin_img):
+        if np.array_equal(bin_img, bin_img.astype(bool)):
+            hist = np.sum(bin_img, 1)
+        else:
+            raise NameError("Image passed to LineSeparator is not binary")
+
+        return hist
+
+
 class Region:
     settings = {
         "max_area": 40000,
@@ -236,14 +247,14 @@ class Region:
 
                 dark_thresh = self.document.bin_thresh * (1 + Region.settings.get("simm_recheck_thresh"))
                 darker_seal_img = (enlarged_img < dark_thresh).astype('uint8') * 255
-                darker_seal_img = self.document.apply_morphology(darker_seal_img)
+                darker_seal_img = self.document.apply_img_corrections(darker_seal_img)
                 cropped_img, new_coords = Region.Bbox.detectar_bbox(darker_seal_img, enlarged_img_coords)
                 ratio = self.simmetry_ratio(cropped_img)
 
                 if ratio < Region.settings.get("simmetry_ratio_thresh"):
                     light_thresh = self.document.bin_thresh * (1 - Region.settings.get("simm_recheck_thresh"))
                     lighter_seal_img = (enlarged_img < light_thresh).astype('uint8') * 255
-                    lighter_seal_img = self.document.apply_morphology(lighter_seal_img)
+                    lighter_seal_img = self.document.apply_img_corrections(lighter_seal_img)
                     cropped_img, new_coords = Region.Bbox.detectar_bbox(lighter_seal_img, enlarged_img_coords)
                     ratio = self.simmetry_ratio(cropped_img)
 
@@ -261,6 +272,28 @@ class Region:
                     self.region.maxr = new_coords[1]
                     self.region.minc = new_coords[2]
                     self.region.maxc = new_coords[3]
+
+        def apply_active_tests(self):
+            region_is_seal = True
+            if self.region.test.active_tests.get("area") is True:
+                self.region.test.area()
+                region_is_seal *= self.region.test.passed_tests.get("area")
+            if self.region.test.active_tests.get("aspect_ratio") is True:
+                self.region.test.aspect_ratio()
+                region_is_seal *= self.region.test.passed_tests.get("aspect_ratio")
+            if self.region.test.active_tests.get("filled_area") is True:
+                self.region.test.filled_area_ratio()
+                region_is_seal *= self.region.test.passed_tests.get("filled_area")
+            if self.region.test.active_tests.get("simmetry") is True:
+                self.region.test.simmetry()
+                region_is_seal *= self.region.test.passed_tests.get("simmetry")
+
+            if region_is_seal:
+                cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
+                              (self.region.maxc, self.region.maxr), 180, 3)
+                # For testing purposes:
+                cv2.putText(self.document.bin_img, str(self.region.id), (self.region.minc, self.region.minr),
+                            cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
 
 
 class Documento:
@@ -280,13 +313,13 @@ class Documento:
         self.img = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
 
     def get_bin_img(self):
-        self.bin_thresh, self.bin_img = cv2.threshold(self.img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        self.bin_thresh, self.bin_img = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-    def apply_morphology(self, img=None):
+    def apply_img_corrections(self, img=None):
         if img is None:
-            pass
+            self.bin_img = cv2.GaussianBlur(self.bin_img, (29, 29), 0)
         else:
-            return img
+            return cv2.GaussianBlur(img, (29, 29), 0)
         # if img is None:
         #     self.bin_img = cv2.dilate(self.bin_img, self.kernel)
         #     return None
