@@ -20,6 +20,3 @@ for region in documento.regions:
 cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
 cv2.imshow('Imagen', documento.bin_img*255)
 cv2.waitKey()
-
-# TODO: convert this into a class
-# TODO: SellosHeuristica, sellos_extraccion_heuristica and this repeats a lot of code -> CLEAN
