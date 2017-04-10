@@ -2,12 +2,12 @@ import cv2
 import os
 import numpy as np
 from FuncionSellosCompleta import detectar_sello
-from Database import Database
+from Database import DatabaseFeatures
 import paths
 
 path = paths.path_to_imgs
 walk = os.walk(path)
-db = Database('docs_osborne', 'testuser', 'test123', 'results5')
+db = DatabaseFeatures('docs_osborne', 'testuser', 'test123', 'results5')
 
 seal_string = ['Corona Horizontal', 'Escudo 4 regiones', 'Jorge Muller', 'Leon Unicornio Postal',
                'OC Corona Diagonal', 'Oxforshire Infantry', 'O Doble C', 'O con T',
@@ -36,4 +36,9 @@ for root, dirs, files in walk:
 
     if there_is_any_image:
         path_to_save = root.replace("\\", "/")
-        db.insert_results(path_to_save, max_coords, curr_name, max_ratio)
+        db.insert_results({
+            "path": path_to_save,
+            "coords": max_coords,
+            "found_seal_name": curr_name,
+            "max_ratio": max_ratio,
+        })
