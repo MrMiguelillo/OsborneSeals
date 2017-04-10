@@ -274,26 +274,29 @@ class Region:
                     self.region.maxc = new_coords[3]
 
         def apply_active_tests(self):
-            region_is_seal = True
+            """
+            Commented code is here for debugging purposes
+            """
+            # region_is_seal = True
             if self.region.test.active_tests.get("area") is True:
                 self.region.test.area()
-                region_is_seal *= self.region.test.passed_tests.get("area")
+                # region_is_seal *= self.region.test.passed_tests.get("area")
             if self.region.test.active_tests.get("aspect_ratio") is True:
                 self.region.test.aspect_ratio()
-                region_is_seal *= self.region.test.passed_tests.get("aspect_ratio")
+                # region_is_seal *= self.region.test.passed_tests.get("aspect_ratio")
             if self.region.test.active_tests.get("filled_area") is True:
                 self.region.test.filled_area_ratio()
-                region_is_seal *= self.region.test.passed_tests.get("filled_area")
+                # region_is_seal *= self.region.test.passed_tests.get("filled_area")
             if self.region.test.active_tests.get("simmetry") is True:
                 self.region.test.simmetry()
-                region_is_seal *= self.region.test.passed_tests.get("simmetry")
+                # region_is_seal *= self.region.test.passed_tests.get("simmetry")
 
-            if region_is_seal:
-                cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
-                              (self.region.maxc, self.region.maxr), 180, 3)
-                # For testing purposes:
-                cv2.putText(self.document.bin_img, str(self.region.id), (self.region.minc, self.region.minr),
-                            cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
+            # if region_is_seal:
+            #     cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
+            #                   (self.region.maxc, self.region.maxr), 180, 3)
+            #     # For testing purposes:
+            #     cv2.putText(self.document.bin_img, str(self.region.id), (self.region.minc, self.region.minr),
+            #                 cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
 
 
 class Documento:

@@ -9,7 +9,7 @@ class Database:
         self.cursor = self.db.cursor()
         self.table_names = tables
 
-    def run_query(self, query):
+    def __run_query(self, query):
         try:
             self.cursor.execute(query)
             self.db.commit()
@@ -34,15 +34,14 @@ class DatabaseFeatures(Database):
                             coords[0][0], coords[0][1], coords[1][0],
                             coords[1][1], max_ratio)
 
-        self.run_query(query)
+        self.__run_query(query)
 
 
 class DatabaseHeur(Database):
-    sql = "insert into %s(ruta, has_seal) values ('%s', '%s')"
+    sql = "insert into %s(ruta) values ('%s')"
 
     def insert_results(self, params):
         path = params.get("path")
-        has_seal = params.get("has_seal")
-        query = self.sql % (self.table_names, path, has_seal)
+        query = self.sql % (self.table_names, path)
 
-        self.run_query(query)
+        self.__run_query(query)
