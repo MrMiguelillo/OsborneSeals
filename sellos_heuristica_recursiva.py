@@ -11,7 +11,7 @@ found_seal = np.empty(NUM_DOCUMENTOS)
 
 path = paths.path_to_imgs
 walk = os.walk(path)
-db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results1')
+db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results2')
 
 i = 0
 for root, dirs, files in walk:
@@ -28,14 +28,14 @@ for root, dirs, files in walk:
 
         for region in documento.regions:
             region.test.apply_active_tests()
+        documento.elim_self_contain()
 
-            if region.region_is_seal:
-                region_img = documento.img[region.minr:region.maxr, region.minc:region.maxc]
+        for seal in documento.seals:
+            seal_img = documento.img[seal.minr:seal.maxr, seal.minc:seal.maxc]
 
-                # img_path[20:-12] takes out 'path' out of the string as well as 'curr_file'
-                cv2.imwrite(paths.path_to_heur + '/' + str(i) + curr_file, region_img)
-                db.insert_results({
-                    "path": root.replace("\\", "/"),
-                    "reg_id": str(i),
-                })
-                i += 1
+            cv2.imwrite(paths.path_to_heur + '/' + str(i) + curr_file, seal_img)
+            db.insert_results({
+                "path": root.replace("\\", "/"),
+                "reg_id": str(i),
+            })
+            i += 1

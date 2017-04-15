@@ -17,7 +17,7 @@ class LineSeparator:
 class Region:
     settings = {
         "max_area": 40000,
-        "max_aspect_ratio": 2,
+        "max_aspect_ratio": 3,
         "min_filled_area_ratio": 0.2,
         "max_filled_area_ratio": 0.9,
         "simmetry_ratio_thresh": 0.25,
@@ -31,6 +31,9 @@ class Region:
         self.id = reg_id
         self.region_is_seal = False
         self.test = self.Tests(document, self)
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     class Bbox:
         @staticmethod
@@ -50,21 +53,21 @@ class Region:
             b_width = b_maxr - b_minr + min_separacion
             b_height = b_maxc - b_minc + min_separacion
 
-            a_x = a_minr
-            a_y = a_minc
-            b_x = b_minr
-            b_y = b_minc
+            a_x = a_minr + a_width / 2
+            a_y = a_minc + a_height / 2
+            b_x = b_minr + b_width / 2
+            b_y = b_minc + b_height / 2
 
-            return (a_x <= b_x + b_width and
-                    b_x <= a_x + a_width and
-                    a_y <= b_y + b_height and
-                    b_y <= a_y + a_height)
+            return (abs(a_x - b_x) * 2 < a_width + b_width and
+                    abs(a_y - b_y) * 2 < a_height + b_height)
 
         @staticmethod
         def reetiquetado(regions, label_image):
+            j = 0
             for region in regions:
+                j += 1
                 all_other_regions = regions
-                for i in range(1, len(all_other_regions)):
+                for i in range(0, len(all_other_regions)):
                     if (Region.Bbox.colision(region.bbox, all_other_regions[i].bbox, 4) and
                        region.label != all_other_regions[i].label):
                         for points in all_other_regions[i].coords:
@@ -292,6 +295,9 @@ class Region:
                 self.region.test.symmetry()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("simmetry")
 
+            if self.region.region_is_seal:
+                self.document.seals.append(self.region)
+
             # if self.region.region_is_seal:
             #     cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
             #                   (self.region.maxc, self.region.maxr), 180, 3)
@@ -311,6 +317,11 @@ class Documento:
     kernel = np.ones((11, 11), np.uint8)
     label_img = np.array([])
     regions = []
+    seals = []
+
+    def __init__(self):
+        del self.regions[:]
+        del self.seals[:]
 
     def load_img(self, path):
         self.path = path
@@ -323,19 +334,29 @@ class Documento:
     def apply_img_corrections(self, img=None):
         if img is None:
             self.bin_img = cv2.GaussianBlur(self.bin_img, (29, 29), 0)
+            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+            mask = cv2.morphologyEx(self.bin_img, cv2.MORPH_CLOSE, se1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+
+            out = self.img * mask
+            self.bin_img = (out > 5).astype('uint8')
         else:
-            return cv2.GaussianBlur(img, (29, 29), 0)
-        # if img is None:
-        #     self.bin_img = cv2.dilate(self.bin_img, self.kernel)
-        #     return None
-        # else:
-        #     return cv2.dilate(img, self.kernel)
+            aux_img = cv2.GaussianBlur(img, (29, 29), 0)
+            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+            mask = cv2.morphologyEx(aux_img, cv2.MORPH_CLOSE, se1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+
+            out = self.img * mask
+
+            return (out > 5).astype('uint8')
 
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
         regs = measure.regionprops(aux_label_img)
-        aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
-        regs = measure.regionprops(aux_label_img)
+        # aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
+        # regs = measure.regionprops(aux_label_img)
 
         self.label_img = Region.Bbox.reetiquetado(regs, aux_label_img)
         regs = measure.regionprops(self.label_img)
@@ -344,3 +365,20 @@ class Documento:
         for reg in regs:
             self.regions.append(Region(self, reg.bbox, reg.area, i))
             i += 1
+
+    def elim_self_contain(self):
+        for seal in self.seals:
+            seal_bbox = (seal.minr, seal.minc, seal.maxr, seal.maxc)
+            for i in range(0, len(self.seals)):
+                bbox2 = (self.seals[i].minr, self.seals[i].minc, self.seals[i].maxr, self.seals[i].maxc)
+                if Region.Bbox.colision(seal_bbox, bbox2, 4) and seal != self.seals[i]:
+                    self.regions[seal.id].minr = min(seal.minr, self.seals[i].minr)
+                    self.regions[seal.id].minc = min(seal.minc, self.seals[i].minc)
+                    self.regions[seal.id].maxr = max(seal.maxr, self.seals[i].maxr)
+                    self.regions[seal.id].maxc = max(seal.maxc, self.seals[i].maxc)
+                    self.regions[seal.id].filled_area = seal.filled_area + self.seals[i].filled_area
+                    del self.seals[i]
+                    break
+
+
+# TODO: Make collision distance a parameter at "settings"

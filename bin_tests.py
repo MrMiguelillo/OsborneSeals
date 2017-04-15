@@ -24,6 +24,6 @@ cv2.imshow("out", out*255)
 # cv2.namedWindow("equ", cv2.WINDOW_NORMAL)
 # cv2.imshow("equ", equ)
 cv2.namedWindow("img", cv2.WINDOW_NORMAL)
-cv2.imshow("img", img)
+cv2.imshow("img", bin_img*255)
 
 cv2.waitKey()
