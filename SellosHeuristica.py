@@ -29,6 +29,7 @@ class Region:
         self.minr, self.minc, self.maxr, self.maxc = coords
         self.filled_area = filled_area
         self.id = reg_id
+        self.region_is_seal = False
         self.test = self.Tests(document, self)
 
     class Bbox:
@@ -157,7 +158,7 @@ class Region:
     class Tests:
         active_tests = {
             "area": True,
-            "aspect_ratio": False,
+            "aspect_ratio": True,
             "filled_area": True,
             "simmetry": False,
         }
@@ -184,10 +185,10 @@ class Region:
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             if (width / height > Region.settings.get("max_aspect_ratio") or
-               height / width < 1 / Region.settings.get("max_aspect_ratio")):
+               height / width > Region.settings.get("max_aspect_ratio")):
                 self.passed_tests.update({"aspect_ratio": False})
             else:
-                self.passed_tests.update({"aspect_ratio": False})
+                self.passed_tests.update({"aspect_ratio": True})
 
         def filled_area_ratio(self):
             width = self.region.maxr - self.region.minr
@@ -202,7 +203,7 @@ class Region:
                 self.passed_tests.update({"filled_area": True})
 
         @staticmethod
-        def simmetry_ratio(bin_seal):
+        def symmetry_ratio(bin_seal):
             """
             Medidor de ratio de simetría. Si la imagen tiene un pixel de alto o ancho (es un entero en lugar de un
              array) o menos (es tipo None porque no se ha cargado), devuelve 'inf' para evitar errores en tiempo de
@@ -230,14 +231,14 @@ class Region:
             ratio = sub_area / ref_area
             return ratio
 
-        def simmetry(self):
+        def symmetry(self):
             minr = self.region.minr
             maxr = self.region.maxr
             minc = self.region.minc
             maxc = self.region.maxc
 
             seal_img = self.document.bin_img[minr:maxr, minc:maxc]
-            ratio = self.simmetry_ratio(seal_img)
+            ratio = self.symmetry_ratio(seal_img)
 
             if ratio < Region.settings.get("simmetry_ratio_thresh"):
                 thickness = Region.settings.get("simm_recheck_enlargement_px")
@@ -249,14 +250,14 @@ class Region:
                 darker_seal_img = (enlarged_img < dark_thresh).astype('uint8') * 255
                 darker_seal_img = self.document.apply_img_corrections(darker_seal_img)
                 cropped_img, new_coords = Region.Bbox.detectar_bbox(darker_seal_img, enlarged_img_coords)
-                ratio = self.simmetry_ratio(cropped_img)
+                ratio = self.symmetry_ratio(cropped_img)
 
                 if ratio < Region.settings.get("simmetry_ratio_thresh"):
                     light_thresh = self.document.bin_thresh * (1 - Region.settings.get("simm_recheck_thresh"))
                     lighter_seal_img = (enlarged_img < light_thresh).astype('uint8') * 255
                     lighter_seal_img = self.document.apply_img_corrections(lighter_seal_img)
                     cropped_img, new_coords = Region.Bbox.detectar_bbox(lighter_seal_img, enlarged_img_coords)
-                    ratio = self.simmetry_ratio(cropped_img)
+                    ratio = self.symmetry_ratio(cropped_img)
 
                     if ratio < Region.settings.get("simmetry_ratio_thresh"):
                         self.passed_tests.update({"filled_area": False})
@@ -277,21 +278,21 @@ class Region:
             """
             Commented code is here for debugging purposes
             """
-            # region_is_seal = True
+            self.region.region_is_seal = True
             if self.region.test.active_tests.get("area") is True:
                 self.region.test.area()
-                # region_is_seal *= self.region.test.passed_tests.get("area")
+                self.region.region_is_seal *= self.region.test.passed_tests.get("area")
             if self.region.test.active_tests.get("aspect_ratio") is True:
                 self.region.test.aspect_ratio()
-                # region_is_seal *= self.region.test.passed_tests.get("aspect_ratio")
+                self.region.region_is_seal *= self.region.test.passed_tests.get("aspect_ratio")
             if self.region.test.active_tests.get("filled_area") is True:
                 self.region.test.filled_area_ratio()
-                # region_is_seal *= self.region.test.passed_tests.get("filled_area")
+                self.region.region_is_seal *= self.region.test.passed_tests.get("filled_area")
             if self.region.test.active_tests.get("simmetry") is True:
-                self.region.test.simmetry()
-                # region_is_seal *= self.region.test.passed_tests.get("simmetry")
+                self.region.test.symmetry()
+                self.region.region_is_seal *= self.region.test.passed_tests.get("simmetry")
 
-            # if region_is_seal:
+            # if self.region.region_is_seal:
             #     cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
             #                   (self.region.maxc, self.region.maxr), 180, 3)
             #     # For testing purposes:
@@ -316,6 +317,7 @@ class Documento:
         self.img = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
 
     def get_bin_img(self):
+        self.img = cv2.GaussianBlur(self.img, (3, 3), 0)
         self.bin_thresh, self.bin_img = cv2.threshold(self.img, 0, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     def apply_img_corrections(self, img=None):
@@ -338,6 +340,7 @@ class Documento:
         self.label_img = Region.Bbox.reetiquetado(regs, aux_label_img)
         regs = measure.regionprops(self.label_img)
         i = 0
+        del self.regions[:]
         for reg in regs:
             self.regions.append(Region(self, reg.bbox, reg.area, i))
             i += 1
