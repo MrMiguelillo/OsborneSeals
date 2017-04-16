@@ -4,14 +4,28 @@ from skimage import measure
 
 
 class LineSeparator:
+    settings = {
+        "min_lin_dist_px": 60
+    }
+
     @staticmethod
-    def vertical_histogram(bin_img):
+    def horiz_proy(bin_img):
         if np.array_equal(bin_img, bin_img.astype(bool)):
             hist = np.sum(bin_img, 1)
         else:
             raise NameError("Image passed to LineSeparator is not binary")
 
         return hist
+
+    @staticmethod
+    def find_min(a):
+        """
+        Encontrar el mínimo valor que se encuentre. Si entre mínimo y mínimo hay menos de, digamos 60px, se ignora el
+        más grande de los dos, PUNTO.
+        :param a: Array to find local minima in.
+        :return: Index of local minima in array
+        """
+        pass
 
 
 class Region:
@@ -164,6 +178,7 @@ class Region:
             "aspect_ratio": True,
             "filled_area": True,
             "simmetry": False,
+            "position": True,
         }
 
         def __init__(self, document, region):
@@ -172,6 +187,7 @@ class Region:
                 "aspect_ratio": False,
                 "filled_area": False,
                 "simmetry": False,
+                "position": False,
             }
             self.document = document
             self.region = region
@@ -277,9 +293,20 @@ class Region:
                     self.region.minc = new_coords[2]
                     self.region.maxc = new_coords[3]
 
+        def position(self):
+            height = (self.region.maxr + self.region.minr) / 2
+
+            docr = self.document.img.shape[0]
+
+            if height > docr / 2:
+                self.passed_tests.update({"position": False})
+            else:
+                self.passed_tests.update({"position": True})
+
         def apply_active_tests(self):
             """
-            Commented code is here for debugging purposes
+            Applies whichever test might be active and updates region_is_seal accordingly. If it is, it gets added to
+            seals list.
             """
             self.region.region_is_seal = True
             if self.region.test.active_tests.get("area") is True:
@@ -294,16 +321,12 @@ class Region:
             if self.region.test.active_tests.get("simmetry") is True:
                 self.region.test.symmetry()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("simmetry")
+            if self.region.test.active_tests.get("position") is True:
+                self.region.test.position()
+                self.region.region_is_seal *= self.region.test.passed_tests.get("position")
 
             if self.region.region_is_seal:
                 self.document.seals.append(self.region)
-
-            # if self.region.region_is_seal:
-            #     cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
-            #                   (self.region.maxc, self.region.maxr), 180, 3)
-            #     # For testing purposes:
-            #     cv2.putText(self.document.bin_img, str(self.region.id), (self.region.minc, self.region.minr),
-            #                 cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
 
 
 class Documento:
@@ -355,8 +378,8 @@ class Documento:
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
         regs = measure.regionprops(aux_label_img)
-        # aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
-        # regs = measure.regionprops(aux_label_img)
+        aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
+        regs = measure.regionprops(aux_label_img)
 
         self.label_img = Region.Bbox.reetiquetado(regs, aux_label_img)
         regs = measure.regionprops(self.label_img)
@@ -369,16 +392,17 @@ class Documento:
     def elim_self_contain(self):
         for seal in self.seals:
             seal_bbox = (seal.minr, seal.minc, seal.maxr, seal.maxc)
-            for i in range(0, len(self.seals)):
-                bbox2 = (self.seals[i].minr, self.seals[i].minc, self.seals[i].maxr, self.seals[i].maxc)
-                if Region.Bbox.colision(seal_bbox, bbox2, 4) and seal != self.seals[i]:
-                    self.regions[seal.id].minr = min(seal.minr, self.seals[i].minr)
-                    self.regions[seal.id].minc = min(seal.minc, self.seals[i].minc)
-                    self.regions[seal.id].maxr = max(seal.maxr, self.seals[i].maxr)
-                    self.regions[seal.id].maxc = max(seal.maxc, self.seals[i].maxc)
-                    self.regions[seal.id].filled_area = seal.filled_area + self.seals[i].filled_area
-                    del self.seals[i]
-                    break
-
+            j = 0
+            while j < len(self.seals):
+                bbox2 = (self.seals[j].minr, self.seals[j].minc, self.seals[j].maxr, self.seals[j].maxc)
+                if Region.Bbox.colision(seal_bbox, bbox2, 4) and seal != self.seals[j]:
+                    self.regions[seal.id].minr = self.seals[j].minr = min(seal.minr, self.seals[j].minr)
+                    self.regions[seal.id].minc = self.seals[j].minc = min(seal.minc, self.seals[j].minc)
+                    self.regions[seal.id].maxr = self.seals[j].maxr = max(seal.maxr, self.seals[j].maxr)
+                    self.regions[seal.id].maxc = self.seals[j].maxc = max(seal.maxc, self.seals[j].maxc)
+                    self.regions[seal.id].filled_area = self.seals[j].filled_area =\
+                        seal.filled_area + self.seals[j].filled_area
+                    del self.seals[j]
+                j += 1
 
 # TODO: Make collision distance a parameter at "settings"

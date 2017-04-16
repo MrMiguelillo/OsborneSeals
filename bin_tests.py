@@ -1,7 +1,7 @@
 import cv2
 import paths
 
-img_path = paths.path_to_imgs + '/1878-L116.M16/143/IMG_0002.png'
+img_path = paths.path_to_imgs + '/1863-L119.M13/107/IMG_0002.png'
 
 img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 img = cv2.GaussianBlur(img, (3, 3), 0)
