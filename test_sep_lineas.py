@@ -12,16 +12,28 @@ otsu_thresh, bin_img = cv2.threshold(img, 0, 1, cv2.THRESH_BINARY_INV + cv2.THRE
 bin_blurred = cv2.GaussianBlur(bin_img, (29, 29), 0)
 
 hist = LiSe.horiz_proy(bin_img)
-plt.plot(hist, 'r')
+plt.plot(hist, 'b')
 
-hist2 = LiSe.horiz_proy(bin_blurred)
-plt.plot(hist2, 'b')
+# for i, value in enumerate(hist):
+
+
+mins = LiSe.find_min(hist)
+min_x = []
+min_y = []
+for m in mins:
+    min_x.append(m[0])
+    min_y.append(m[1])
+plt.plot(min_x, min_y, '.g')
 plt.show()
 
-cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
-cv2.imshow('Imagen', bin_img*255)
-cv2.namedWindow('Imagen2', cv2.WINDOW_NORMAL)
-cv2.imshow('Imagen2', bin_blurred*255)
+# hist2 = LiSe.horiz_proy(bin_blurred)
+# plt.plot(hist2, 'r')
+# plt.show()
+
+# cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
+# cv2.imshow('Imagen', bin_img*255)
+# cv2.namedWindow('Imagen2', cv2.WINDOW_NORMAL)
+# cv2.imshow('Imagen2', bin_blurred*255)
 cv2.waitKey()
 
 

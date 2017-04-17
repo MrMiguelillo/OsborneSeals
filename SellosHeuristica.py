@@ -25,7 +25,45 @@ class LineSeparator:
         :param a: Array to find local minima in.
         :return: Index of local minima in array
         """
-        pass
+        found_mins = []
+        # min_val = float('inf')
+        # min_i = 0
+        # for i, value in enumerate(a):
+        #     if value < min_val:
+        #         dist = i - min_i
+        #         min_val = value
+        #         min_i = i
+        #         if dist >= LineSeparator.settings.get("min_lin_dist_px"):
+        #             found_mins.append((min_i, min_val))
+        #     else:
+        #         dist = i - min_i
+        #         if dist >= int(LineSeparator.settings.get("min_lin_dist_px") / 2):
+        #             min_val = float('inf')
+
+        # take those points which are smaller than their immediate neighbours
+        is_min = np.r_[True, a[1:] < a[:-1]] & np.r_[a[:-1] < a[1:], True]
+        min_points = []
+        true_mins = []
+        min_dist = LineSeparator.settings.get("min_lin_dist_px")
+
+        for i, value in enumerate(a):
+            if is_min[i]:
+                min_points.append((i, value))
+
+        min_points.sort(key=lambda p: p[1])  # lambda function tells sort() which number of the tuple to use
+        true_mins.append(min_points[0])
+
+        for point in min_points[1:]:
+            too_close = False
+            for true_min in true_mins:
+                dist = abs(point[0] - true_min[0])
+                if dist < min_dist:
+                    too_close = True
+
+            if not too_close:
+                true_mins.append(point)
+
+        return true_mins
 
 
 class Region:
