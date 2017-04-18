@@ -14,27 +14,30 @@ bin_blurred = cv2.GaussianBlur(bin_img, (29, 29), 0)
 hist = LiSe.horiz_proy(bin_img)
 plt.plot(hist, 'b')
 
-# for i, value in enumerate(hist):
+smooth_hist = LiSe.savitzky_golay(hist, 51, 3)
+# plt.plot(smooth_hist, 'r')
 
 
-mins = LiSe.find_min(hist)
+mins = LiSe.find_min(smooth_hist)
 min_x = []
 min_y = []
+min_sum = 0
 for m in mins:
+    min_sum += m[1]
     min_x.append(m[0])
     min_y.append(m[1])
+average = min_sum / len(mins)
 plt.plot(min_x, min_y, '.g')
-plt.show()
 
 # hist2 = LiSe.horiz_proy(bin_blurred)
 # plt.plot(hist2, 'r')
-# plt.show()
 
+plt.show()
 # cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
 # cv2.imshow('Imagen', bin_img*255)
 # cv2.namedWindow('Imagen2', cv2.WINDOW_NORMAL)
 # cv2.imshow('Imagen2', bin_blurred*255)
-cv2.waitKey()
+# cv2.waitKey()
 
 
 # TODO: por aqí va la cosa
