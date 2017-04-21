@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from skimage import measure
+from itertools import groupby
 
 
 class LineSeparator:
@@ -8,14 +9,61 @@ class LineSeparator:
         "min_lin_dist_px": 60
     }
 
+    axis = {
+        "vertical": 0,
+        "horizontal": 1,
+    }
+
     @staticmethod
-    def horiz_proy(bin_img):
+    def proyect(bin_img, axis):
+        """
+        Counts the amount of pixels after projecting the binary image towards one of the two axis
+        :param bin_img: 
+        :param axis: 
+        :return: 
+        """
         if np.array_equal(bin_img, bin_img.astype(bool)):
-            hist = np.sum(bin_img, 1)
+            hist = np.sum(bin_img, axis)
         else:
             raise NameError("Image passed to LineSeparator is not binary")
 
         return hist
+
+    @staticmethod
+    def longest_streak(a):
+        """
+        Finds longest streak in a list or numpy array
+        :param a: list or numpy array
+        :return: longest streak found
+        """
+        lst = []
+        for n, c in groupby(a):
+            streak = list(c)
+            if len(streak) > len(lst):
+                lst = streak
+
+        return lst
+
+    @staticmethod
+    def has_two_pages(bin_img):
+        """
+        Return true if the longest streak in a vertical projection is made on zeros and is longer than 1/7 of the 
+        document width
+        :param bin_img: Document image to compute if it has two pages or not, in binary format 
+        :return: True if it has 2 pages, False otherwise. It is based on the assumption of 2 pages max per image.
+        """
+        first_col = int(bin_img.shape[1] / 3)
+        last_col = int(2 * bin_img.shape[1] / 3)
+        hist = LineSeparator.proyect(bin_img[:, first_col:last_col], LineSeparator.axis["vertical"])
+        for i, el in enumerate(hist):
+            if el <= 10:
+                hist[i] = 0
+
+        max_streak = LineSeparator.longest_streak(hist)
+        if max_streak[0] == 0 and len(max_streak) > int(bin_img.shape[1] / 7):
+            return True
+        else:
+            return False
 
     @staticmethod
     def savitzky_golay(y, window_size, order, deriv=0, rate=1):
@@ -90,40 +138,6 @@ class LineSeparator:
         return np.convolve(m[::-1], y, mode='valid')
 
     @staticmethod
-    def is_outlier(points, thresh=2.0035):
-        """
-        Returns a boolean array with True if points are outliers and False 
-        otherwise.
-
-        Parameters:
-        -----------
-            points : An numobservations by numdimensions array of observations
-            thresh : The modified z-score to use as a threshold. Observations with
-                a modified z-score (based on the median absolute deviation) greater
-                than this value will be classified as outliers.
-
-        Returns:
-        --------
-            mask : A numobservations-length boolean array.
-
-        References:
-        ----------
-            Boris Iglewicz and David Hoaglin (1993), "Volume 16: How to Detect and
-            Handle Outliers", The ASQC Basic References in Quality Control:
-            Statistical Techniques, Edward F. Mykytka, Ph.D., Editor. 
-        """
-        if len(points.shape) == 1:
-            points = points[:, None]
-        median = np.median(points, axis=0)
-        diff = np.sum((points - median) ** 2, axis=-1)
-        diff = np.sqrt(diff)
-        med_abs_deviation = np.median(diff)
-
-        modified_z_score = 0.6745 * diff / med_abs_deviation
-
-        return modified_z_score > thresh
-
-    @staticmethod
     def find_min(a):
         """
         Encontrar el mínimo valor que se encuentre. Si entre mínimo y mínimo hay menos de, digamos 60px, se ignora el
@@ -170,6 +184,41 @@ class LineSeparator:
                 true_mins.append(point)
 
         return true_mins
+
+    @staticmethod
+    def is_outlier(points, thresh=2.0035):
+        """
+        Returns a boolean array with True if points are outliers and False 
+        otherwise.
+
+        Parameters:
+        -----------
+            points : An numobservations by numdimensions array of observations
+            thresh : The modified z-score to use as a threshold. Observations with
+                a modified z-score (based on the median absolute deviation) greater
+                than this value will be classified as outliers.
+                NOTE: Thresh calculated from average of min and max thresholds that would work for test image.
+
+        Returns:
+        --------
+            mask : A numobservations-length boolean array.
+
+        References:
+        ----------
+            Boris Iglewicz and David Hoaglin (1993), "Volume 16: How to Detect and
+            Handle Outliers", The ASQC Basic References in Quality Control:
+            Statistical Techniques, Edward F. Mykytka, Ph.D., Editor. 
+        """
+        if len(points.shape) == 1:
+            points = points[:, None]
+        median = np.median(points, axis=0)
+        diff = np.sum((points - median) ** 2, axis=-1)
+        diff = np.sqrt(diff)
+        med_abs_deviation = np.median(diff)
+
+        modified_z_score = 0.6745 * diff / med_abs_deviation
+
+        return modified_z_score > thresh
 
 
 class Region:

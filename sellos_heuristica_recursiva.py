@@ -11,7 +11,7 @@ found_seal = np.empty(NUM_DOCUMENTOS)
 
 path = paths.path_to_imgs
 walk = os.walk(path)
-db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results2')
+db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results3')
 
 i = 0
 for root, dirs, files in walk:
