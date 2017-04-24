@@ -534,6 +534,8 @@ class Documento:
     label_img = np.array([])
     regions = []
     seals = []
+    has_2_pages = False
+    lines_y = []
 
     def __init__(self):
         del self.regions[:]
@@ -568,6 +570,40 @@ class Documento:
 
             return (out > 5).astype('uint8')
 
+    @staticmethod
+    def get_lines(bin_img):
+        if LineSeparator.has_two_pages(bin_img):
+            Documento.has_2_pages = True
+            ranges = ((0, int(bin_img.shape[1] / 2)),
+                      (int(bin_img.shape[1] / 2), bin_img.shape[1]))
+        else:
+            ranges = ((0, bin_img.shape[1]),)
+
+        for page, rng in enumerate(ranges):
+            hist = LineSeparator.proyect(bin_img[:, rng[0]:rng[1]], axis=LineSeparator.axis["horizontal"])
+
+            smooth_hist = LineSeparator.savitzky_golay(hist, 51, 3)
+
+            mins = LineSeparator.find_min(smooth_hist)
+            min_x = [i[0] for i in mins]
+            min_y = [i[1] for i in mins]
+
+            is_out = LineSeparator.is_outlier(np.array(min_y))
+            outliers_x = []
+            outliers_y = []
+            for i, x in enumerate(is_out):
+                if x:
+                    if hist[min_x[i]] > 0:
+                        outliers_x.append(min_x[i])
+                        outliers_y.append(min_y[i])
+                    else:
+                        is_out[i] = False
+
+            del Documento.lines_y[:]
+            for i, xs in enumerate(min_x):
+                if not is_out[i]:
+                    Documento.lines_y.append([xs, page])
+
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
         regs = measure.regionprops(aux_label_img)
@@ -578,6 +614,7 @@ class Documento:
         regs = measure.regionprops(self.label_img)
         i = 0
         del self.regions[:]
+        self.get_lines(self.bin_img)
         for reg in regs:
             self.regions.append(Region(self, reg.bbox, reg.area, i))
             i += 1
