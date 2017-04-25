@@ -11,6 +11,7 @@ documento = Sh.Documento()
 documento.load_img(img_path)
 documento.get_bin_img()
 documento.apply_img_corrections()
+documento.get_lines()
 documento.get_regions()
 
 # i = 0

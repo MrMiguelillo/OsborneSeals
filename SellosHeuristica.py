@@ -216,9 +216,11 @@ class LineSeparator:
         diff = np.sqrt(diff)
         med_abs_deviation = np.median(diff)
 
-        modified_z_score = 0.6745 * diff / med_abs_deviation
-
-        return modified_z_score > thresh
+        if med_abs_deviation == 0:
+            return np.ones(len(points), dtype=np.bool)
+        else:
+            modified_z_score = 0.6745 * diff / med_abs_deviation
+            return modified_z_score > thresh
 
 
 class Region:
@@ -372,6 +374,7 @@ class Region:
             "filled_area": True,
             "simmetry": False,
             "position": True,
+            "between_lines": True,
         }
 
         def __init__(self, document, region):
@@ -381,11 +384,15 @@ class Region:
                 "filled_area": False,
                 "simmetry": False,
                 "position": False,
+                "between_lines": False,
             }
             self.document = document
             self.region = region
 
         def area(self):
+            """
+            Test to filter out small noise regions
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             if width * height <= Region.settings.get("max_area"):
@@ -394,6 +401,10 @@ class Region:
                 self.passed_tests.update({"area": True})
 
         def aspect_ratio(self):
+            """
+            Regions made up of words tend to be very long in width. Regions made up of noise tend to be very long in
+             height. This test attempts to filter those regions out.
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             if (width / height > Region.settings.get("max_aspect_ratio") or
@@ -403,6 +414,9 @@ class Region:
                 self.passed_tests.update({"aspect_ratio": True})
 
         def filled_area_ratio(self):
+            """
+            Tests if the region has enough filled area. If there are too many holes the region is not a seal.
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             filled_area = self.region.filled_area
@@ -496,10 +510,36 @@ class Region:
             else:
                 self.passed_tests.update({"position": True})
 
+        def is_between_lines(self):
+            """
+            Tests if region contains more than one line. In that case, region is not a seal.
+            
+            NOTE: Page is stored as the second value in lines_y where --> 0->1st page; 1->2nd page
+            """
+            if not self.document.has_2_pages:
+                lines_y = self.document.lines_y
+            else:
+                page = int(self.region.minc > int(self.document.bin_img.shape[1]/2))
+                line_list = []
+                for ly in self.document.lines_y:
+                    if ly[1] == page:
+                        line_list.append(ly)
+                lines_y = np.array(line_list)
+
+            nearest_higher_index = np.searchsorted(lines_y[:, 0], self.region.minr).item()
+            if nearest_higher_index < len(lines_y):
+                nearest_higher = lines_y[nearest_higher_index, 0]
+            else:
+                nearest_higher = 0  # if we reach this condition, the test should get passed anyway
+            if self.region.minr < nearest_higher < self.region.maxr:
+                self.passed_tests.update({"between_lines": False})
+            else:
+                self.passed_tests.update({"between_lines": True})
+
         def apply_active_tests(self):
             """
-            Applies whichever test might be active and updates region_is_seal accordingly. If it is, it gets added to
-            seals list.
+            Applies whichever test might be active and updates region_is_seal accordingly. If the region passes every
+            test, it gets added to seals list.
             """
             self.region.region_is_seal = True
             if self.region.test.active_tests.get("area") is True:
@@ -517,6 +557,9 @@ class Region:
             if self.region.test.active_tests.get("position") is True:
                 self.region.test.position()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("position")
+            if self.region.test.active_tests.get("between_lines") is True:
+                self.region.test.is_between_lines()
+                self.region.region_is_seal *= self.region.test.passed_tests.get("between_lines")
 
             if self.region.region_is_seal:
                 self.document.seals.append(self.region)
@@ -535,11 +578,12 @@ class Documento:
     regions = []
     seals = []
     has_2_pages = False
-    lines_y = []
+    lines_y = np.array([])
 
     def __init__(self):
         del self.regions[:]
         del self.seals[:]
+        self.lines_y = np.array([[]])
 
     def load_img(self, path):
         self.path = path
@@ -570,17 +614,18 @@ class Documento:
 
             return (out > 5).astype('uint8')
 
-    @staticmethod
-    def get_lines(bin_img):
-        if LineSeparator.has_two_pages(bin_img):
-            Documento.has_2_pages = True
-            ranges = ((0, int(bin_img.shape[1] / 2)),
-                      (int(bin_img.shape[1] / 2), bin_img.shape[1]))
+    def get_lines(self):
+        if LineSeparator.has_two_pages(self.bin_img):
+            self.has_2_pages = True
+            ranges = ((0, int(self.bin_img.shape[1] / 2)),
+                      (int(self.bin_img.shape[1] / 2), self.bin_img.shape[1]))
         else:
-            ranges = ((0, bin_img.shape[1]),)
+            self.has_2_pages = False
+            ranges = ((0, self.bin_img.shape[1]),)
 
+        lines_y = []
         for page, rng in enumerate(ranges):
-            hist = LineSeparator.proyect(bin_img[:, rng[0]:rng[1]], axis=LineSeparator.axis["horizontal"])
+            hist = LineSeparator.proyect(self.bin_img[:, rng[0]:rng[1]], axis=LineSeparator.axis["horizontal"])
 
             smooth_hist = LineSeparator.savitzky_golay(hist, 51, 3)
 
@@ -599,10 +644,15 @@ class Documento:
                     else:
                         is_out[i] = False
 
-            del Documento.lines_y[:]
             for i, xs in enumerate(min_x):
                 if not is_out[i]:
-                    Documento.lines_y.append([xs, page])
+                    # cv2.line(self.bin_img, (rng[0], xs), (rng[1], xs), 1, 10)
+                    lines_y.append([xs, page])
+
+        self.lines_y = np.array(lines_y)
+        # self.lines_y = np.zeros((len(lines_y), 2), dtype=np.int)
+        # for i, ly in enumerate(lines_y):
+        #     self.lines_y[i] = ly
 
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
@@ -614,10 +664,11 @@ class Documento:
         regs = measure.regionprops(self.label_img)
         i = 0
         del self.regions[:]
-        self.get_lines(self.bin_img)
         for reg in regs:
             self.regions.append(Region(self, reg.bbox, reg.area, i))
             i += 1
+            # cv2.rectangle(self.bin_img, (reg.bbox[1], reg.bbox[0]), (reg.bbox[3], reg.bbox[2]), 180, 3)
+            # cv2.putText(self.bin_img, str(i), (reg.bbox[1], reg.bbox[0]), cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
 
     def elim_self_contain(self):
         for seal in self.seals:
