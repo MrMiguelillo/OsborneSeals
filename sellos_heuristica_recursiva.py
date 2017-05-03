@@ -11,7 +11,7 @@ found_seal = np.empty(NUM_DOCUMENTOS)
 
 path = paths.path_to_imgs
 walk = os.walk(path)
-db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results3')
+db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results4')
 
 i = 0
 for root, dirs, files in walk:
@@ -24,6 +24,7 @@ for root, dirs, files in walk:
         documento.load_img(img_path)
         documento.get_bin_img()
         documento.apply_img_corrections()
+        documento.get_lines()
         documento.get_regions()
 
         for region in documento.regions:

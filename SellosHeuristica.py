@@ -140,12 +140,11 @@ class LineSeparator:
     @staticmethod
     def find_min(a):
         """
-        Encontrar el mínimo valor que se encuentre. Si entre mínimo y mínimo hay menos de, digamos 60px, se ignora el
-        más grande de los dos, PUNTO.
+        Encontrar el mínimos en array 'a'. Si entre mínimo y mínimo hay menos de min_lin_dist_px píxeles se ignora el
+        más grande de los dos.
         :param a: Array to find local minima in.
         :return: Index of local minima in array
         """
-        found_mins = []
         # min_val = float('inf')
         # min_i = 0
         # for i, value in enumerate(a):
@@ -171,17 +170,18 @@ class LineSeparator:
                 min_points.append((i, value))
 
         min_points.sort(key=lambda p: p[1])  # lambda function tells sort() which number of the tuple to use
-        true_mins.append(min_points[0])
+        if len(min_points) > 0:
+            true_mins.append(min_points[0])
 
-        for point in min_points[1:]:
-            too_close = False
-            for true_min in true_mins:
-                dist = abs(point[0] - true_min[0])
-                if dist < min_dist:
-                    too_close = True
+            for point in min_points[1:]:
+                too_close = False
+                for true_min in true_mins:
+                    dist = abs(point[0] - true_min[0])
+                    if dist < min_dist:
+                        too_close = True
 
-            if not too_close:
-                true_mins.append(point)
+                if not too_close:
+                    true_mins.append(point)
 
         return true_mins
 
@@ -626,6 +626,9 @@ class Documento:
         lines_y = []
         for page, rng in enumerate(ranges):
             hist = LineSeparator.proyect(self.bin_img[:, rng[0]:rng[1]], axis=LineSeparator.axis["horizontal"])
+
+            if hist.max() == 0:
+                continue
 
             smooth_hist = LineSeparator.savitzky_golay(hist, 51, 3)
 
