@@ -1,23 +1,232 @@
 import cv2
 import numpy as np
 from skimage import measure
+from itertools import groupby
 
 
 class LineSeparator:
+    settings = {
+        "min_lin_dist_px": 60
+    }
+
+    axis = {
+        "vertical": 0,
+        "horizontal": 1,
+    }
+
     @staticmethod
-    def vertical_histogram(bin_img):
+    def proyect(bin_img, axis):
+        """
+        Counts the amount of pixels after projecting the binary image towards one of the two axis
+        :param bin_img: 
+        :param axis: 
+        :return: 
+        """
         if np.array_equal(bin_img, bin_img.astype(bool)):
-            hist = np.sum(bin_img, 1)
+            hist = np.sum(bin_img, axis)
         else:
             raise NameError("Image passed to LineSeparator is not binary")
 
         return hist
 
+    @staticmethod
+    def longest_streak(a):
+        """
+        Finds longest streak in a list or numpy array
+        :param a: list or numpy array
+        :return: longest streak found
+        """
+        lst = []
+        for n, c in groupby(a):
+            streak = list(c)
+            if len(streak) > len(lst):
+                lst = streak
+
+        return lst
+
+    @staticmethod
+    def has_two_pages(bin_img):
+        """
+        Return true if the longest streak in a vertical projection is made on zeros and is longer than 1/7 of the 
+        document width
+        :param bin_img: Document image to compute if it has two pages or not, in binary format 
+        :return: True if it has 2 pages, False otherwise. It is based on the assumption of 2 pages max per image.
+        """
+        first_col = int(bin_img.shape[1] / 3)
+        last_col = int(2 * bin_img.shape[1] / 3)
+        hist = LineSeparator.proyect(bin_img[:, first_col:last_col], LineSeparator.axis["vertical"])
+        for i, el in enumerate(hist):
+            if el <= 10:
+                hist[i] = 0
+
+        max_streak = LineSeparator.longest_streak(hist)
+        if max_streak[0] == 0 and len(max_streak) > int(bin_img.shape[1] / 7):
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def savitzky_golay(y, window_size, order, deriv=0, rate=1):
+        """Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
+        The Savitzky-Golay filter removes high frequency noise from data.
+        It has the advantage of preserving the original shape and
+        features of the signal better than other types of filtering
+        approaches, such as moving averages techniques.
+        Parameters
+        ----------
+        y : array_like, shape (N,)
+            the values of the time history of the signal.
+        window_size : int
+            the length of the window. Must be an odd integer number.
+        order : int
+            the order of the polynomial used in the filtering.
+            Must be less then `window_size` - 1.
+        deriv: int
+            the order of the derivative to compute (default = 0 means only smoothing)
+        Returns
+        -------
+        ys : ndarray, shape (N)
+            the smoothed signal (or it's n-th derivative).
+        Notes
+        -----
+        The Savitzky-Golay is a type of low-pass filter, particularly
+        suited for smoothing noisy data. The main idea behind this
+        approach is to make for each point a least-square fit with a
+        polynomial of high order over a odd-sized window centered at
+        the point.
+        Examples
+        --------
+        t = np.linspace(-4, 4, 500)
+        y = np.exp( -t**2 ) + np.random.normal(0, 0.05, t.shape)
+        ysg = savitzky_golay(y, window_size=31, order=4)
+        import matplotlib.pyplot as plt
+        plt.plot(t, y, label='Noisy signal')
+        plt.plot(t, np.exp(-t**2), 'k', lw=1.5, label='Original signal')
+        plt.plot(t, ysg, 'r', label='Filtered signal')
+        plt.legend()
+        plt.show()
+        References
+        ----------
+        .. [1] A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
+           Data by Simplified Least Squares Procedures. Analytical
+           Chemistry, 1964, 36 (8), pp 1627-1639.
+        .. [2] Numerical Recipes 3rd Edition: The Art of Scientific Computing
+           W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
+           Cambridge University Press ISBN-13: 9780521880688
+        """
+        from math import factorial
+
+        try:
+            window_size = np.abs(np.int(window_size))
+            order = np.abs(np.int(order))
+        except ValueError as msg:
+            raise ValueError("window_size and order have to be of type int")
+        if window_size % 2 != 1 or window_size < 1:
+            raise TypeError("window_size size must be a positive odd number")
+        if window_size < order + 2:
+            raise TypeError("window_size is too small for the polynomials order")
+        order_range = range(order + 1)
+        half_window = (window_size - 1) // 2
+        # precompute coefficients
+        b = np.mat([[k ** i for i in order_range] for k in range(-half_window, half_window + 1)])
+        m = np.linalg.pinv(b).A[deriv] * rate ** deriv * factorial(deriv)
+        # pad the signal at the extremes with
+        # values taken from the signal itself
+        firstvals = y[0] - np.abs(y[1:half_window + 1][::-1] - y[0])
+        lastvals = y[-1] + np.abs(y[-half_window - 1:-1][::-1] - y[-1])
+        y = np.concatenate((firstvals, y, lastvals))
+        return np.convolve(m[::-1], y, mode='valid')
+
+    @staticmethod
+    def find_min(a):
+        """
+        Encontrar el mínimos en array 'a'. Si entre mínimo y mínimo hay menos de min_lin_dist_px píxeles se ignora el
+        más grande de los dos.
+        :param a: Array to find local minima in.
+        :return: Index of local minima in array
+        """
+        # min_val = float('inf')
+        # min_i = 0
+        # for i, value in enumerate(a):
+        #     if value < min_val:
+        #         dist = i - min_i
+        #         min_val = value
+        #         min_i = i
+        #         if dist >= LineSeparator.settings.get("min_lin_dist_px"):
+        #             found_mins.append((min_i, min_val))
+        #     else:
+        #         dist = i - min_i
+        #         if dist >= int(LineSeparator.settings.get("min_lin_dist_px") / 2):
+        #             min_val = float('inf')
+
+        # take those points which are smaller than their immediate neighbours
+        is_min = np.r_[True, a[1:] < a[:-1]] & np.r_[a[:-1] < a[1:], True]
+        min_points = []
+        true_mins = []
+        min_dist = LineSeparator.settings.get("min_lin_dist_px")
+
+        for i, value in enumerate(a):
+            if is_min[i]:
+                min_points.append((i, value))
+
+        min_points.sort(key=lambda p: p[1])  # lambda function tells sort() which number of the tuple to use
+        if len(min_points) > 0:
+            true_mins.append(min_points[0])
+
+            for point in min_points[1:]:
+                too_close = False
+                for true_min in true_mins:
+                    dist = abs(point[0] - true_min[0])
+                    if dist < min_dist:
+                        too_close = True
+
+                if not too_close:
+                    true_mins.append(point)
+
+        return true_mins
+
+    @staticmethod
+    def is_outlier(points, thresh=2.0035):
+        """
+        Returns a boolean array with True if points are outliers and False 
+        otherwise.
+
+        Parameters:
+        -----------
+            points : An numobservations by numdimensions array of observations
+            thresh : The modified z-score to use as a threshold. Observations with
+                a modified z-score (based on the median absolute deviation) greater
+                than this value will be classified as outliers.
+                NOTE: Thresh calculated from average of min and max thresholds that would work for test image.
+
+        Returns:
+        --------
+            mask : A numobservations-length boolean array.
+
+        References:
+        ----------
+            Boris Iglewicz and David Hoaglin (1993), "Volume 16: How to Detect and
+            Handle Outliers", The ASQC Basic References in Quality Control:
+            Statistical Techniques, Edward F. Mykytka, Ph.D., Editor. 
+        """
+        if len(points.shape) == 1:
+            points = points[:, None]
+        median = np.median(points, axis=0)
+        diff = np.sum((points - median) ** 2, axis=-1)
+        diff = np.sqrt(diff)
+        med_abs_deviation = np.median(diff)
+
+        if med_abs_deviation == 0:
+            return np.ones(len(points), dtype=np.bool)
+        else:
+            modified_z_score = 0.6745 * diff / med_abs_deviation
+            return modified_z_score > thresh
+
 
 class Region:
     settings = {
         "max_area": 40000,
-        "max_aspect_ratio": 2,
+        "max_aspect_ratio": 3,
         "min_filled_area_ratio": 0.2,
         "max_filled_area_ratio": 0.9,
         "simmetry_ratio_thresh": 0.25,
@@ -31,6 +240,9 @@ class Region:
         self.id = reg_id
         self.region_is_seal = False
         self.test = self.Tests(document, self)
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     class Bbox:
         @staticmethod
@@ -50,21 +262,21 @@ class Region:
             b_width = b_maxr - b_minr + min_separacion
             b_height = b_maxc - b_minc + min_separacion
 
-            a_x = a_minr
-            a_y = a_minc
-            b_x = b_minr
-            b_y = b_minc
+            a_x = a_minr + a_width / 2
+            a_y = a_minc + a_height / 2
+            b_x = b_minr + b_width / 2
+            b_y = b_minc + b_height / 2
 
-            return (a_x <= b_x + b_width and
-                    b_x <= a_x + a_width and
-                    a_y <= b_y + b_height and
-                    b_y <= a_y + a_height)
+            return (abs(a_x - b_x) * 2 < a_width + b_width and
+                    abs(a_y - b_y) * 2 < a_height + b_height)
 
         @staticmethod
         def reetiquetado(regions, label_image):
+            j = 0
             for region in regions:
+                j += 1
                 all_other_regions = regions
-                for i in range(1, len(all_other_regions)):
+                for i in range(0, len(all_other_regions)):
                     if (Region.Bbox.colision(region.bbox, all_other_regions[i].bbox, 4) and
                        region.label != all_other_regions[i].label):
                         for points in all_other_regions[i].coords:
@@ -161,6 +373,8 @@ class Region:
             "aspect_ratio": True,
             "filled_area": True,
             "simmetry": False,
+            "position": True,
+            "between_lines": True,
         }
 
         def __init__(self, document, region):
@@ -169,11 +383,16 @@ class Region:
                 "aspect_ratio": False,
                 "filled_area": False,
                 "simmetry": False,
+                "position": False,
+                "between_lines": False,
             }
             self.document = document
             self.region = region
 
         def area(self):
+            """
+            Test to filter out small noise regions
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             if width * height <= Region.settings.get("max_area"):
@@ -182,6 +401,10 @@ class Region:
                 self.passed_tests.update({"area": True})
 
         def aspect_ratio(self):
+            """
+            Regions made up of words tend to be very long in width. Regions made up of noise tend to be very long in
+             height. This test attempts to filter those regions out.
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             if (width / height > Region.settings.get("max_aspect_ratio") or
@@ -191,6 +414,9 @@ class Region:
                 self.passed_tests.update({"aspect_ratio": True})
 
         def filled_area_ratio(self):
+            """
+            Tests if the region has enough filled area. If there are too many holes the region is not a seal.
+            """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
             filled_area = self.region.filled_area
@@ -274,9 +500,46 @@ class Region:
                     self.region.minc = new_coords[2]
                     self.region.maxc = new_coords[3]
 
+        def position(self):
+            height = (self.region.maxr + self.region.minr) / 2
+
+            docr = self.document.img.shape[0]
+
+            if height > docr / 2:
+                self.passed_tests.update({"position": False})
+            else:
+                self.passed_tests.update({"position": True})
+
+        def is_between_lines(self):
+            """
+            Tests if region contains more than one line. In that case, region is not a seal.
+            
+            NOTE: Page is stored as the second value in lines_y where --> 0->1st page; 1->2nd page
+            """
+            if not self.document.has_2_pages:
+                lines_y = self.document.lines_y
+            else:
+                page = int(self.region.minc > int(self.document.bin_img.shape[1]/2))
+                line_list = []
+                for ly in self.document.lines_y:
+                    if ly[1] == page:
+                        line_list.append(ly)
+                lines_y = np.array(line_list)
+
+            nearest_higher_index = np.searchsorted(lines_y[:, 0], self.region.minr).item()
+            if nearest_higher_index < len(lines_y):
+                nearest_higher = lines_y[nearest_higher_index, 0]
+            else:
+                nearest_higher = 0  # if we reach this condition, the test should get passed anyway
+            if self.region.minr < nearest_higher < self.region.maxr:
+                self.passed_tests.update({"between_lines": False})
+            else:
+                self.passed_tests.update({"between_lines": True})
+
         def apply_active_tests(self):
             """
-            Commented code is here for debugging purposes
+            Applies whichever test might be active and updates region_is_seal accordingly. If the region passes every
+            test, it gets added to seals list.
             """
             self.region.region_is_seal = True
             if self.region.test.active_tests.get("area") is True:
@@ -291,13 +554,15 @@ class Region:
             if self.region.test.active_tests.get("simmetry") is True:
                 self.region.test.symmetry()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("simmetry")
+            if self.region.test.active_tests.get("position") is True:
+                self.region.test.position()
+                self.region.region_is_seal *= self.region.test.passed_tests.get("position")
+            if self.region.test.active_tests.get("between_lines") is True:
+                self.region.test.is_between_lines()
+                self.region.region_is_seal *= self.region.test.passed_tests.get("between_lines")
 
-            # if self.region.region_is_seal:
-            #     cv2.rectangle(self.document.bin_img, (self.region.minc, self.region.minr),
-            #                   (self.region.maxc, self.region.maxr), 180, 3)
-            #     # For testing purposes:
-            #     cv2.putText(self.document.bin_img, str(self.region.id), (self.region.minc, self.region.minr),
-            #                 cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
+            if self.region.region_is_seal:
+                self.document.seals.append(self.region)
 
 
 class Documento:
@@ -311,6 +576,14 @@ class Documento:
     kernel = np.ones((11, 11), np.uint8)
     label_img = np.array([])
     regions = []
+    seals = []
+    has_2_pages = False
+    lines_y = np.array([])
+
+    def __init__(self):
+        del self.regions[:]
+        del self.seals[:]
+        self.lines_y = np.array([[]])
 
     def load_img(self, path):
         self.path = path
@@ -323,13 +596,66 @@ class Documento:
     def apply_img_corrections(self, img=None):
         if img is None:
             self.bin_img = cv2.GaussianBlur(self.bin_img, (29, 29), 0)
+            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+            mask = cv2.morphologyEx(self.bin_img, cv2.MORPH_CLOSE, se1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+
+            out = self.img * mask
+            self.bin_img = (out > 5).astype('uint8')
         else:
-            return cv2.GaussianBlur(img, (29, 29), 0)
-        # if img is None:
-        #     self.bin_img = cv2.dilate(self.bin_img, self.kernel)
-        #     return None
-        # else:
-        #     return cv2.dilate(img, self.kernel)
+            aux_img = cv2.GaussianBlur(img, (29, 29), 0)
+            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+            mask = cv2.morphologyEx(aux_img, cv2.MORPH_CLOSE, se1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+
+            out = self.img * mask
+
+            return (out > 5).astype('uint8')
+
+    def get_lines(self):
+        if LineSeparator.has_two_pages(self.bin_img):
+            self.has_2_pages = True
+            ranges = ((0, int(self.bin_img.shape[1] / 2)),
+                      (int(self.bin_img.shape[1] / 2), self.bin_img.shape[1]))
+        else:
+            self.has_2_pages = False
+            ranges = ((0, self.bin_img.shape[1]),)
+
+        lines_y = []
+        for page, rng in enumerate(ranges):
+            hist = LineSeparator.proyect(self.bin_img[:, rng[0]:rng[1]], axis=LineSeparator.axis["horizontal"])
+
+            if hist.max() == 0:
+                continue
+
+            smooth_hist = LineSeparator.savitzky_golay(hist, 51, 3)
+
+            mins = LineSeparator.find_min(smooth_hist)
+            min_x = [i[0] for i in mins]
+            min_y = [i[1] for i in mins]
+
+            is_out = LineSeparator.is_outlier(np.array(min_y))
+            outliers_x = []
+            outliers_y = []
+            for i, x in enumerate(is_out):
+                if x:
+                    if hist[min_x[i]] > 0:
+                        outliers_x.append(min_x[i])
+                        outliers_y.append(min_y[i])
+                    else:
+                        is_out[i] = False
+
+            for i, xs in enumerate(min_x):
+                if not is_out[i]:
+                    # cv2.line(self.bin_img, (rng[0], xs), (rng[1], xs), 1, 10)
+                    lines_y.append([xs, page])
+
+        self.lines_y = np.array(lines_y)
+        # self.lines_y = np.zeros((len(lines_y), 2), dtype=np.int)
+        # for i, ly in enumerate(lines_y):
+        #     self.lines_y[i] = ly
 
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
@@ -344,3 +670,23 @@ class Documento:
         for reg in regs:
             self.regions.append(Region(self, reg.bbox, reg.area, i))
             i += 1
+            # cv2.rectangle(self.bin_img, (reg.bbox[1], reg.bbox[0]), (reg.bbox[3], reg.bbox[2]), 180, 3)
+            # cv2.putText(self.bin_img, str(i), (reg.bbox[1], reg.bbox[0]), cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
+
+    def elim_self_contain(self):
+        for seal in self.seals:
+            seal_bbox = (seal.minr, seal.minc, seal.maxr, seal.maxc)
+            j = 0
+            while j < len(self.seals):
+                bbox2 = (self.seals[j].minr, self.seals[j].minc, self.seals[j].maxr, self.seals[j].maxc)
+                if Region.Bbox.colision(seal_bbox, bbox2, 4) and seal != self.seals[j]:
+                    self.regions[seal.id].minr = self.seals[j].minr = min(seal.minr, self.seals[j].minr)
+                    self.regions[seal.id].minc = self.seals[j].minc = min(seal.minc, self.seals[j].minc)
+                    self.regions[seal.id].maxr = self.seals[j].maxr = max(seal.maxr, self.seals[j].maxr)
+                    self.regions[seal.id].maxc = self.seals[j].maxc = max(seal.maxc, self.seals[j].maxc)
+                    self.regions[seal.id].filled_area = self.seals[j].filled_area =\
+                        seal.filled_area + self.seals[j].filled_area
+                    del self.seals[j]
+                j += 1
+
+# TODO: Make collision distance a parameter at "settings"
