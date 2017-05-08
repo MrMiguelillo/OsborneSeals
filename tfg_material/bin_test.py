@@ -13,12 +13,12 @@ img = cv2.imread(file)
 nombre = os.path.splitext(os.path.basename(file))[0]
 
 cv2.namedWindow('image_window', cv2.WINDOW_NORMAL)
-cv2.namedWindow('control_window', cv2.WINDOW_NORMAL)
+cv2.namedWindow('control_window', cv2.WINDOW_OPENGL)
 
 METHODLABEL = '1:OTSU-2:FIX-3:ADAP'
 
-cv2.createTrackbar('Vecinity width', 'control_window', 0, 100, do_nothing)
-cv2.createTrackbar('Vecinity height', 'control_window', 0, 100, do_nothing)
+cv2.createTrackbar('Vecinity width', 'control_window', 0, 10, do_nothing)
+cv2.createTrackbar('Vecinity height', 'control_window', 0, 10, do_nothing)
 cv2.createTrackbar('Sigma X', 'control_window', 0, 100, do_nothing)
 cv2.createTrackbar('Sigma Y', 'control_window', 0, 100, do_nothing)
 cv2.createTrackbar(METHODLABEL, 'control_window', 0, 2, do_nothing)
@@ -52,6 +52,6 @@ while 1:
         break
     elif k == 9:  # TAB key
         filestring = '../%s_met_%d_vec_%d_sig_%d_thr_%d.png' % (nombre, method, vec_w, sigX, threshold)
-        cv2.imwrite(filestring, bin_img)
+        # cv2.imwrite(filestring, bin_img)
 
 cv2.destroyAllWindows()
