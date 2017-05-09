@@ -19,8 +19,8 @@ def detectar_sello(img, num_elements):
         # if (elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i]) > max_ratio and
         #         elim_sellos[i].position[0] < img.shape[0] / 2):
         if elim_sellos[i].total_matches > 0:
-            if (elim_sellos[i].max_occurrences / elim_sellos[i].total_matches > max_ratio and
-                    elim_sellos[i].position[0] < img.shape[0] / 2):
+            if elim_sellos[i].max_occurrences / elim_sellos[i].total_matches > max_ratio:
+                # and elim_sellos[i].position[0] < img.shape[0] / 2):
                 max_ratio = elim_sellos[i].max_occurrences / len(elim_sellos[i].desc_saved[i])
                 real_seal = i
 
