@@ -8,7 +8,9 @@ from Umbralizacion import Umbralizacion
 def do_nothing(x):
     pass
 
-file = path_to_imgs + '1862-L119.M13/109/IMG_0001.png'
+# file = path_to_imgs + '1823-L119.M3/117/IMG_0001.png'
+# file = path_to_imgs + '1863-L119.M13/107/IMG_0001.png'
+file = path_to_imgs + '1883-L119.M29/31/IMG_0001.png'
 img = cv2.imread(file)
 nombre = os.path.splitext(os.path.basename(file))[0]
 
