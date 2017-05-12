@@ -274,15 +274,25 @@ class Region:
         def reetiquetado(regions, label_image):
             j = 0
             for region in regions:
-                j += 1
-                all_other_regions = regions
-                for i in range(0, len(all_other_regions)):
-                    if (Region.Bbox.colision(region.bbox, all_other_regions[i].bbox, 4) and
-                       region.label != all_other_regions[i].label):
-                        for points in all_other_regions[i].coords:
-                            label_image[points[0], points[1]] = min(region.label, all_other_regions[i].label)
-                        region.label = min(region.label, all_other_regions[i].label)
-                        regions[i].label = min(region.label, all_other_regions[i].label)
+                # Eliminar borde
+                minr, minc, maxr, maxc = region.bbox
+                bbox_height = maxr - minr
+                bbox_width = maxc - minc
+                img_dims = label_image.shape
+                if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.4:
+                    for points in region.coords:
+                        label_image[points[0], points[1]] = 0
+                else:
+                    # Colisiones
+                    j += 1
+                    all_other_regions = regions
+                    for i in range(0, len(all_other_regions)):
+                        if (Region.Bbox.colision(region.bbox, all_other_regions[i].bbox, 4) and
+                           region.label != all_other_regions[i].label):
+                            for points in all_other_regions[i].coords:
+                                label_image[points[0], points[1]] = min(region.label, all_other_regions[i].label)
+                            region.label = min(region.label, all_other_regions[i].label)
+                            regions[i].label = min(region.label, all_other_regions[i].label)
 
             return label_image
     # TODO: Comprobar qué ordenación tienen los bboxes para ahorrar comprobaciones
@@ -606,7 +616,7 @@ class Documento:
         else:
             aux_img = cv2.GaussianBlur(img, (29, 29), 0)
             se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
-            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
             mask = cv2.morphologyEx(aux_img, cv2.MORPH_CLOSE, se1)
             mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
 
@@ -660,8 +670,8 @@ class Documento:
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
         regs = measure.regionprops(aux_label_img)
-        aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
-        regs = measure.regionprops(aux_label_img)
+        # aux_label_img = Region.Bbox.eliminar_borde(regions=regs, label_image=aux_label_img)
+        # regs = measure.regionprops(aux_label_img)
 
         self.label_img = Region.Bbox.reetiquetado(regs, aux_label_img)
         regs = measure.regionprops(self.label_img)
