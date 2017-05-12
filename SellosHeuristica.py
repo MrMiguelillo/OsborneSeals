@@ -271,6 +271,7 @@ class Region:
                     abs(a_y - b_y) * 2 < a_height + b_height)
 
         @staticmethod
+        # TODO: Separar colisiones y eliminar borde en funciones sin bucle y llamarlas
         def reetiquetado(regions, label_image):
             j = 0
             for region in regions:
