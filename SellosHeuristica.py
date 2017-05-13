@@ -229,9 +229,9 @@ class Region:
         "max_aspect_ratio": 3,
         "min_filled_area_ratio": 0.2,
         "max_filled_area_ratio": 0.9,
-        "simmetry_ratio_thresh": 0.25,
-        "simm_recheck_enlargement_px": 10,
-        "simm_recheck_thresh": 0.1,  # percentage tweak to original binaryzation threshold
+        "symmetry_ratio_thresh": 0.25,
+        "symm_recheck_enlargement_px": 10,
+        "symm_recheck_thresh": 0.1,  # percentage tweak to original binaryzation threshold
     }
 
     def __init__(self, document, coords, filled_area, reg_id):
@@ -383,7 +383,7 @@ class Region:
             "area": True,
             "aspect_ratio": True,
             "filled_area": True,
-            "simmetry": False,
+            "symmetry": False,
             "position": True,
             "between_lines": True,
         }
@@ -393,7 +393,7 @@ class Region:
                 "area": False,
                 "aspect_ratio": False,
                 "filled_area": False,
-                "simmetry": False,
+                "symmetry": False,
                 "position": False,
                 "between_lines": False,
             }
@@ -413,8 +413,8 @@ class Region:
 
         def aspect_ratio(self):
             """
-            Regions made up of words tend to be very long in width. Regions made up of noise tend to be very long in
-             height. This test attempts to filter those regions out.
+            Regions made up of words tend to be very long in width. Regions made up of paper crease tend to be very long
+            in height. This test attempts to filter those regions out.
             """
             width = self.region.maxr - self.region.minr
             height = self.region.maxc - self.region.minc
@@ -432,7 +432,7 @@ class Region:
             height = self.region.maxc - self.region.minc
             filled_area = self.region.filled_area
             ratio = float(filled_area) / (width * height)
-            # 0.9 condition just to avoid black regions false positives
+            # max ratio condition just to avoid black regions false positives
             if (ratio < Region.settings.get("min_filled_area_ratio") or
                ratio > Region.settings.get("max_filled_area_ratio")):
                 self.passed_tests.update({"filled_area": False})
@@ -460,7 +460,7 @@ class Region:
             img_left = bin_seal[0:fil, 0:int(col / 2)]
 
             flip_left_img = cv2.flip(img_left, 1)  # 1 means y axis
-            subtracted_img = abs((flip_left_img / 255 - img_right / 255)) * 255
+            subtracted_img = flip_left_img ^ img_right
 
             sub_area = np.sum(subtracted_img)
             ref_area = (np.sum(img_left) + np.sum(img_right)) / 2.0
@@ -477,26 +477,26 @@ class Region:
             seal_img = self.document.bin_img[minr:maxr, minc:maxc]
             ratio = self.symmetry_ratio(seal_img)
 
-            if ratio < Region.settings.get("simmetry_ratio_thresh"):
-                thickness = Region.settings.get("simm_recheck_enlargement_px")
+            if ratio < Region.settings.get("symmetry_ratio_thresh"):
+                thickness = Region.settings.get("symm_recheck_enlargement_px")
                 enlarged_img = self.document.img[abs(minr - thickness):maxr + thickness,
                                                  abs(minc - thickness):maxc + thickness]
                 enlarged_img_coords = [minr - thickness, maxr + thickness, minc - thickness, maxc + thickness]
 
-                dark_thresh = self.document.bin_thresh * (1 + Region.settings.get("simm_recheck_thresh"))
+                dark_thresh = self.document.bin_thresh * (1 + Region.settings.get("symm_recheck_thresh"))
                 darker_seal_img = (enlarged_img < dark_thresh).astype('uint8') * 255
                 darker_seal_img = self.document.apply_img_corrections(darker_seal_img)
                 cropped_img, new_coords = Region.Bbox.detectar_bbox(darker_seal_img, enlarged_img_coords)
                 ratio = self.symmetry_ratio(cropped_img)
 
-                if ratio < Region.settings.get("simmetry_ratio_thresh"):
-                    light_thresh = self.document.bin_thresh * (1 - Region.settings.get("simm_recheck_thresh"))
+                if ratio < Region.settings.get("symmetry_ratio_thresh"):
+                    light_thresh = self.document.bin_thresh * (1 - Region.settings.get("symm_recheck_thresh"))
                     lighter_seal_img = (enlarged_img < light_thresh).astype('uint8') * 255
                     lighter_seal_img = self.document.apply_img_corrections(lighter_seal_img)
                     cropped_img, new_coords = Region.Bbox.detectar_bbox(lighter_seal_img, enlarged_img_coords)
                     ratio = self.symmetry_ratio(cropped_img)
 
-                    if ratio < Region.settings.get("simmetry_ratio_thresh"):
+                    if ratio < Region.settings.get("symmetry_ratio_thresh"):
                         self.passed_tests.update({"filled_area": False})
                     else:
                         self.passed_tests.update({"filled_area": True})
@@ -562,9 +562,9 @@ class Region:
             if self.region.test.active_tests.get("filled_area") is True:
                 self.region.test.filled_area_ratio()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("filled_area")
-            if self.region.test.active_tests.get("simmetry") is True:
+            if self.region.test.active_tests.get("symmetry") is True:
                 self.region.test.symmetry()
-                self.region.region_is_seal *= self.region.test.passed_tests.get("simmetry")
+                self.region.region_is_seal *= self.region.test.passed_tests.get("symmetry")
             if self.region.test.active_tests.get("position") is True:
                 self.region.test.position()
                 self.region.region_is_seal *= self.region.test.passed_tests.get("position")
