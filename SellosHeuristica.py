@@ -143,22 +143,8 @@ class LineSeparator:
         Encontrar el mínimos en array 'a'. Si entre mínimo y mínimo hay menos de min_lin_dist_px píxeles se ignora el
         más grande de los dos.
         :param a: Array to find local minima in.
-        :return: Index of local minima in array
+        :return: Indexes of local minima in array
         """
-        # min_val = float('inf')
-        # min_i = 0
-        # for i, value in enumerate(a):
-        #     if value < min_val:
-        #         dist = i - min_i
-        #         min_val = value
-        #         min_i = i
-        #         if dist >= LineSeparator.settings.get("min_lin_dist_px"):
-        #             found_mins.append((min_i, min_val))
-        #     else:
-        #         dist = i - min_i
-        #         if dist >= int(LineSeparator.settings.get("min_lin_dist_px") / 2):
-        #             min_val = float('inf')
-
         # take those points which are smaller than their immediate neighbours
         is_min = np.r_[True, a[1:] < a[:-1]] & np.r_[a[:-1] < a[1:], True]
         min_points = []
