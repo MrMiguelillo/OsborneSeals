@@ -4,7 +4,7 @@ import SellosHeuristica as Sh
 from Database import DatabaseHeur
 
 path = paths.path_to_imgs
-img_path = path + '/1882-L123.M17/23/IMG_0002.png'
+img_path = path + '/1882-L123.M17/23/IMG_0001.png'
 db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results1')
 
 documento = Sh.Documento()

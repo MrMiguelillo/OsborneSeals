@@ -1,7 +1,7 @@
 import cv2
 import os
 from paths import path_to_imgs
-from Umbralizacion import Umbralizacion
+from tfg_material.Umbralizacion import Umbralizacion
 
 
 def do_nothing(x):
