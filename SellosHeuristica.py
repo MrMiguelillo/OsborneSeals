@@ -371,7 +371,7 @@ class Region:
         active_tests = {
             "area": True,
             "aspect_ratio": True,
-            "filled_area": True,
+            "filled_area": False,
             "simmetry": False,
             "position": True,
             "between_lines": True,

@@ -34,9 +34,12 @@ for root, dirs, files in walk:
         for seal in documento.seals:
             seal_img = documento.img[seal.minr:seal.maxr, seal.minc:seal.maxc]
 
-            cv2.imwrite(paths.path_to_heur + '/' + str(i) + curr_file, seal_img)
-            db.insert_results({
-                "path": root.replace("\\", "/"),
-                "reg_id": str(i),
-            })
+            width = seal.maxr - seal.minr
+            height = seal.maxc - seal.minc
+            cv2.imwrite(paths.path_to_heur + '/' + str(float(seal.filled_area) / (width * height))
+                        + '_' + str(i) + curr_file, seal_img)
+            # db.insert_results({
+            #     "path": root.replace("\\", "/"),
+            #     "reg_id": str(i),
+            # })
             i += 1
