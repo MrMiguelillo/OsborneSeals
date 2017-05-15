@@ -6,10 +6,10 @@ from matplotlib import pyplot as plt
 from SellosHeuristica import LineSeparator as LiSe
 
 path = paths.path_to_imgs
-img = cv2.imread(path+'/1863-L119.M13/107/IMG_0002.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread(path+'/1873-L123.M11/139/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
 
 otsu_thresh, bin_img = cv2.threshold(img, 0, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-bin_blurred = cv2.GaussianBlur(bin_img, (29, 29), 0)
+bin_blurred = cv2.GaussianBlur(bin_img, (11, 11), 0)
 
 if LiSe.has_two_pages(bin_blurred):
     ranges = ((0                            , int(bin_blurred.shape[1] / 2)),
@@ -19,7 +19,7 @@ else:
 
 for rng in ranges:
     hist = LiSe.proyect(bin_blurred[:, rng[0]:rng[1]], axis=LiSe.axis["horizontal"])
-    # plt.plot(hist, 'b')
+    # plt.plot(hist, 'r')
 
     smooth_hist = LiSe.savitzky_golay(hist, 51, 3)
     plt.plot(smooth_hist, 'b')
@@ -45,7 +45,7 @@ for rng in ranges:
         if not is_out[i]:
             cv2.line(bin_blurred, (rng[0], xs), (rng[1], xs), 1, 10)
 
-    cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
-    cv2.imshow('Imagen', bin_blurred[:, rng[0]:rng[1]]*255)
-    plt.show()
-    cv2.waitKey()
+cv2.namedWindow('Imagen', cv2.WINDOW_NORMAL)
+cv2.imshow('Imagen', bin_blurred*255)
+plt.show()
+cv2.waitKey()
