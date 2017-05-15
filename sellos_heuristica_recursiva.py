@@ -11,7 +11,7 @@ found_seal = np.empty(NUM_DOCUMENTOS)
 
 path = paths.path_to_imgs
 walk = os.walk(path)
-db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results4')
+db = DatabaseHeur('docs_osborne', 'testuser', 'test123', 'heur_results6')
 
 i = 0
 for root, dirs, files in walk:
@@ -23,7 +23,7 @@ for root, dirs, files in walk:
         documento = Sh.Documento()
         documento.load_img(img_path)
         documento.get_bin_img()
-        documento.apply_img_corrections()
+        # documento.apply_img_corrections()
         documento.get_lines()
         documento.get_regions()
 
@@ -36,10 +36,9 @@ for root, dirs, files in walk:
 
             width = seal.maxr - seal.minr
             height = seal.maxc - seal.minc
-            cv2.imwrite(paths.path_to_heur + '/' + str(float(seal.filled_area) / (width * height))
-                        + '_' + str(i) + curr_file, seal_img)
-            # db.insert_results({
-            #     "path": root.replace("\\", "/"),
-            #     "reg_id": str(i),
-            # })
+            cv2.imwrite(paths.path_to_heur + '/' + str(i) + curr_file, seal_img)
+            db.insert_results({
+                "path": root.replace("\\", "/"),
+                "reg_id": str(i),
+            })
             i += 1

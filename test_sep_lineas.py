@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from SellosHeuristica import LineSeparator as LiSe
 
 path = paths.path_to_imgs
-img = cv2.imread(path+'/1873-L123.M11/139/IMG_0001.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread(path+'/2016_09_09/181/IMG_0002.png', cv2.IMREAD_GRAYSCALE)
 
 otsu_thresh, bin_img = cv2.threshold(img, 0, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 bin_blurred = cv2.GaussianBlur(bin_img, (11, 11), 0)
