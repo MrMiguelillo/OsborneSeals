@@ -530,12 +530,14 @@ class Region:
                         line_list.append(ly)
                 lines_y = np.array(line_list)
 
-            nearest_higher_index = np.searchsorted(lines_y[:, 0], self.region.minr).item()
+            height = self.region.maxr - self.region.minr
+            nearest_higher_index = np.searchsorted(lines_y[:, 0], self.region.minr + int(height/3)).item()
             if nearest_higher_index < len(lines_y):
                 nearest_higher = lines_y[nearest_higher_index, 0]
             else:
                 nearest_higher = 0  # if we reach this condition, the test should get passed anyway
-            if self.region.minr < nearest_higher < self.region.maxr:
+
+            if self.region.minr + int(height/3) < nearest_higher < self.region.maxr - int(height/3):
                 self.passed_tests.update({"between_lines": False})
             else:
                 self.passed_tests.update({"between_lines": True})
