@@ -60,7 +60,7 @@ class LineSeparator:
                 hist[i] = 0
 
         max_streak = LineSeparator.longest_streak(hist)
-        if max_streak[0] == 0 and len(max_streak) > int(bin_img.shape[1] / 7):
+        if len(max_streak) > int(bin_img.shape[1] / 40):
             return True
         else:
             return False
@@ -279,10 +279,14 @@ class Region:
                 for i in range(0, len(all_other_regions)):
                     if (Region.Bbox.colision(region.bbox, all_other_regions[i].bbox, 4) and
                        region.label != all_other_regions[i].label):
-                        for points in all_other_regions[i].coords:
-                            label_image[points[0], points[1]] = min(region.label, all_other_regions[i].label)
-                        region.label = min(region.label, all_other_regions[i].label)
-                        regions[i].label = min(region.label, all_other_regions[i].label)
+                        if region.label < all_other_regions[i].label:
+                            for points in all_other_regions[i].coords:
+                                label_image[points[0], points[1]] = region.label
+                                all_other_regions[i].label = region.label
+                        else:
+                            for points in region.coords:
+                                label_image[points[0], points[1]] = all_other_regions[i].label
+                                region.label = all_other_regions[i].label
 
             return label_image
     # TODO: Comprobar qué ordenación tienen los bboxes para ahorrar comprobaciones
@@ -304,7 +308,7 @@ class Region:
                 bbox_height = maxr - minr
                 bbox_width = maxc - minc
                 img_dims = label_image.shape
-                if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.4:
+                if bbox_height * bbox_width > img_dims[0] * img_dims[1] * 0.3:
                     for points in region.coords:
                         label_image[points[0], points[1]] = 0
 
@@ -371,9 +375,9 @@ class Region:
         active_tests = {
             "area": True,
             "aspect_ratio": True,
-            "filled_area": False,
+            "filled_area": True,
             "simmetry": False,
-            "position": True,
+            "position": False,
             "between_lines": True,
         }
 
@@ -595,23 +599,29 @@ class Documento:
 
     def apply_img_corrections(self, img=None):
         if img is None:
-            self.bin_img = cv2.GaussianBlur(self.bin_img, (29, 29), 0)
-            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
-            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
-            mask = cv2.morphologyEx(self.bin_img, cv2.MORPH_CLOSE, se1)
-            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+            aux_img = self.bin_img
+        else:
+            aux_img = img
+        #     self.bin_img = cv2.GaussianBlur(self.bin_img, (11, 11), 0)
+        #     se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+        #     se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+        #     mask = cv2.morphologyEx(self.bin_img, cv2.MORPH_CLOSE, se1)
+        #     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
+        #
+        #     out = self.img * mask
+        #     self.bin_img = (out > 5).astype('uint8')
+        # else:
+        aux_img = cv2.GaussianBlur(aux_img, (11, 11), 0)
+        se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
+        se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+        mask = cv2.morphologyEx(aux_img, cv2.MORPH_CLOSE, se1)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
 
-            out = self.img * mask
+        out = self.img * mask
+
+        if img is None:
             self.bin_img = (out > 5).astype('uint8')
         else:
-            aux_img = cv2.GaussianBlur(img, (29, 29), 0)
-            se1 = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
-            se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
-            mask = cv2.morphologyEx(aux_img, cv2.MORPH_CLOSE, se1)
-            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
-
-            out = self.img * mask
-
             return (out > 5).astype('uint8')
 
     def get_lines(self):
