@@ -627,10 +627,14 @@ class Documento:
             return (out > 5).astype('uint8')
 
     def get_lines(self):
+        """
+        Calcula la coordenada vertical de la separación en líneas del documento.
+        :return: Almacena las coordenadas en self.lines_y
+        """
         if LineSeparator.has_two_pages(self.bin_img):
             self.has_2_pages = True
-            ranges = ((0, int(self.bin_img.shape[1] / 2)),
-                      (int(self.bin_img.shape[1] / 2), self.bin_img.shape[1]))
+            ranges = ((0, self.bin_img.shape[1] // 2),
+                      (self.bin_img.shape[1] // 2, self.bin_img.shape[1]))
         else:
             self.has_2_pages = False
             ranges = ((0, self.bin_img.shape[1]),)
@@ -665,9 +669,6 @@ class Documento:
                     lines_y.append([xs, page])
 
         self.lines_y = np.array(lines_y)
-        # self.lines_y = np.zeros((len(lines_y), 2), dtype=np.int)
-        # for i, ly in enumerate(lines_y):
-        #     self.lines_y[i] = ly
 
     def get_regions(self):
         aux_label_img = measure.label(self.bin_img)
@@ -686,6 +687,10 @@ class Documento:
             # cv2.putText(self.bin_img, str(i), (reg.bbox[1], reg.bbox[0]), cv2.FONT_HERSHEY_PLAIN, 3, 180, 3)
 
     def elim_self_contain(self):
+        """
+        Elimina aquellas regiones que se encuentran contenidas dentro de otras regiones. Una segunda pasada del
+        detector de colisiones solventaría esto, pero allí hay demasiadas regiones aún, y sería muy lento.
+        """
         for seal in self.seals:
             seal_bbox = (seal.minr, seal.minc, seal.maxr, seal.maxc)
             j = 0
