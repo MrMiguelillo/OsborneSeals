@@ -6,8 +6,8 @@ from Database import DatabaseHeur
 import SellosHeuristica as Sh
 import paths
 
-NUM_DOCUMENTOS = 27
-found_seal = np.empty(NUM_DOCUMENTOS)
+# NUM_DOCUMENTOS = 27
+# found_seal = np.empty(NUM_DOCUMENTOS)
 
 path = paths.path_to_imgs
 walk = os.walk(path)
